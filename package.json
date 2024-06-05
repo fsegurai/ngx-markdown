@@ -42,7 +42,6 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci_cd": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
-    "coveralls": "cat \"./coverage/lcov.info\" | \"./node_modules/coveralls/bin/coveralls.js\"",
     "gh-pages:build": "yarn build:demo --aot --base-href /ngx-markdown/",
     "gh-pages:postbuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser",
     "gh-pages:deploy": "angular-cli-ghpages --dir=\"dist/demo/browser\" --no-silent",
