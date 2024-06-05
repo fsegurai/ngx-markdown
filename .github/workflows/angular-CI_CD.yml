@@ -31,8 +31,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -59,13 +57,12 @@ jobs:
       - name: Test Angular project
         run: yarn test:ci_cd
 
-      - name: Build demo
-        run: yarn gh-pages:build
-
-      - name: Post-build actions
-        run: yarn gh-pages:postbuild
+      - name: Build Angular project demo
+        run: yarn build:demo
 
       - name: Deploy to GitHub Pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn gh-pages:deploy 
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.PROJECT_DIR }}
+          publish_branch: gh-pages
