@@ -60,9 +60,13 @@ jobs:
       - name: Build demo
         run: yarn build:demo
 
+      - name: List contents of publish directory
+        run: ls -la ${{ env.PROJECT_DIR }}
+
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ env.PROJECT_DIR }}
           publish_branch: gh-pages
+          force_orphan: true
