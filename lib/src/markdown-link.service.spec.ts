@@ -53,18 +53,6 @@ describe('MarkdownLinkService', () => {
     expect(service['isExternalUrl']('internal/path')).toBeFalse();
   });
 
-  it('should identify hashtag URLs', () => {
-    expect(service['isHashtagUrl']('hashtag:test')).toBeTrue();
-    expect(service['isHashtagUrl']('/hashtag:test')).toBeTrue();
-    expect(service['isHashtagUrl']('http://example.com')).toBeFalse();
-  });
-
-  it('should identify mention URLs', () => {
-    expect(service['isMentionUrl']('mention:test')).toBeTrue();
-    expect(service['isMentionUrl']('/mention:test')).toBeTrue();
-    expect(service['isMentionUrl']('http://example.com')).toBeFalse();
-  });
-
   it('should identify internal URLs', () => {
     expect(service['isInternalUrl']('#anchor')).toBeTrue();
     expect(service['isInternalUrl']('../relative/path')).toBeTrue();

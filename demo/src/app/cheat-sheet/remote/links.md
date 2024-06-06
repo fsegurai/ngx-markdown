@@ -8,13 +8,9 @@ There are several ways to create links.
 
 [I'm a relative reference to a repository file](../blob/master/LICENSE)
 
-[I'm a hashtag link](hashtag:hash)
-
-[I'm a mention link](mention:user)
-
 [You can use numbers for reference-style link definitions][1]
 
-[I'm a router link to another SPA page](/syntax-highlight#language-pipe)
+[I'm a router link to another SPA page](internal:/syntax-highlight#language-pipe)
 
 [I'm a router link on the same page](#headers)
 
