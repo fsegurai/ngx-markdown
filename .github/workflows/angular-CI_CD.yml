@@ -67,3 +67,22 @@ jobs:
           publish_dir: ${{ env.PROJECT_DIR }}
           publish_branch: gh-pages
           force_orphan: true
+
+      # Deploy to GitHub Pages
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
