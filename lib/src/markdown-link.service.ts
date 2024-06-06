@@ -13,44 +13,42 @@ export class MarkdownLinkService {
 
   private isExternalUrl(href: string | null): boolean {
     return !href
+      || href.startsWith('/')
       || href.startsWith('http:')
       || href.startsWith('https:')
       || href.startsWith('mailto:')
       || href.startsWith('tel:')
-      || href.startsWith('/');
+      || href.startsWith('sms:')
+      || href.startsWith('geo:')
+      || href.startsWith('ftp:')
+      || href.startsWith('file:')
+      || href.startsWith('data:');
   }
 
   private externalUrlHandler(target: HTMLElement): void {
-    const hyperlink = target.getAttribute('href');
-    if (!hyperlink) return;
+    const hyperlink = target.getAttribute('href')!;
 
     target.setAttribute('target', '_blank');
-  }
-
-  private isHashtagUrl(href: string | null): boolean {
-    return !href
-      || href?.includes('hashtag:')
-      || href?.includes('/hashtag:');
-  }
-
-  private isMentionUrl(href: string | null): boolean {
-    return !href
-      || href?.includes('mention:')
-      || href?.includes('/mention:');
+    window.open(hyperlink, '_blank');
   }
 
   private isInternalUrl(href: string | null): boolean {
     return !href
       || href.startsWith('#')
+      || href.includes('#')
+      || href.startsWith('/internal:')
       || href.startsWith('../');
   }
 
   private internalUrlHandler(target: HTMLAnchorElement): void {
-    const hyperlink = target.getAttribute('href');
+    let hyperlink = target.getAttribute('href')!;
 
-    if (!hyperlink) return;
+    if (hyperlink.startsWith('/internal:')) {
+      hyperlink = hyperlink.replace('/internal:', '');
+    }
 
     this.navigate(`/${hyperlink}`);
+
     return;
   }
 
@@ -104,23 +102,22 @@ export class MarkdownLinkService {
     if (!(element instanceof HTMLAnchorElement)) return;
 
     const href = element.getAttribute('href');
-    event.preventDefault();
 
-    // If a hashtag or mention is clicked
-    if (this.isHashtagUrl(href) || this.isMentionUrl(href)) {
-      event.stopPropagation();
-      return;
-    }
+    if (!href) return;
+
+    event.preventDefault();
 
     // If an internal URL is clicked
     if (this.isInternalUrl(href)) {
       this.internalUrlHandler(element);
+      event.stopPropagation();
       return;
     }
 
     // If an external URL is clicked
     if (this.isExternalUrl(href)) {
       this.externalUrlHandler(element);
+      event.stopPropagation();
       return;
     }
   }
