@@ -68,6 +68,12 @@ jobs:
           publish_branch: gh-pages
           force_orphan: true
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: ${{ env.PROJECT_DIR }}
+
   # Deploy to GitHub Pages
   deploy:
     runs-on: ubuntu-latest
