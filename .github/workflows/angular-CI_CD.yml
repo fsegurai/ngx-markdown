@@ -54,13 +54,13 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Test Angular project
+      - name: Test library
         run: yarn test:ci_cd
 
-      - name: Build Angular project demo
+      - name: Build demo
         run: yarn build:demo
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
