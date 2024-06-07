@@ -8,23 +8,31 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  Optional,
   Output,
   TemplateRef,
   Type,
   ViewContainerRef,
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { NavigationExtras, Router } from '@angular/router';
+import { from, merge, Subject } from 'rxjs';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { KatexOptions } from './katex-options';
 import { MarkdownLinkService } from './markdown-link.service';
 import { MarkdownService, ParseOptions, RenderOptions } from './markdown.service';
 import { MermaidAPI } from './mermaid-options';
 import { PrismPlugin } from './prism-plugin';
 
+export interface MarkdownRouterLinkOptions {
+  global?: NavigationExtras;
+  paths?: { [path: string]: NavigationExtras | undefined };
+}
+
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'markdown, [markdown]',
   template: `
+    <ng-container *ngIf="changed$ | async"/>
     <ng-content></ng-content>
   `,
   imports: [CommonModule],
@@ -42,7 +50,7 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @Input() data: string | null | undefined;
   @Input() src: string | null | undefined;
-  @Input() isBrowserMode = true;
+  @Input() disableHostListener = false;
 
   @Input()
   get disableSanitizer(): boolean {
@@ -152,6 +160,7 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() prompt: string | undefined;
   @Input() output: string | undefined;
   @Input() user: string | undefined;
+  @Input() routerLinkOptions: MarkdownRouterLinkOptions | undefined;
 
   // Event emitters
   @Output() error = new EventEmitter<string | Error>();
@@ -160,10 +169,18 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private changed = new Subject<void>();
 
+  protected changed$ = merge(this.ready, this.changed).pipe(
+    map(() => this.element.nativeElement.querySelectorAll('a')),
+    switchMap(links => from(links)),
+    filter(link => link.getAttribute('href')?.includes('/routerLink:') === true),
+    tap(link => link.setAttribute('data-routerLink', link.getAttribute('href')!.replace('/routerLink:', ''))),
+    tap(link => link.setAttribute('href', link.getAttribute('href')!.replace('/routerLink:', ''))),
+  );
+
   @HostListener('click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     // If the component is used in browser mode, intercept the click event
-    if(this.isBrowserMode) this.markdownLinkService.interceptClick(event);
+    if (!this.disableHostListener) this.markdownLinkService.interceptClick(event, this.routerLinkOptions);
   }
 
   private _clipboard = false;
@@ -183,11 +200,13 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     private markdownLinkService: MarkdownLinkService,
     public element: ElementRef<HTMLElement>,
     public viewContainerRef: ViewContainerRef,
+    @Optional() public router?: Router,
   ) {
   }
 
   ngOnChanges(): void {
     this.loadContent();
+    this.changed.next();
   }
 
   loadContent(): void {

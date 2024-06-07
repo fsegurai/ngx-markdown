@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {ActivatedRoute, Router, UrlTree} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
+import { MarkdownRouterLinkOptions } from './markdown.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MarkdownLinkService {
   constructor(
-    private _route: ActivatedRoute,
     private _router: Router,
   ) {
   }
@@ -32,72 +32,51 @@ export class MarkdownLinkService {
     window.open(hyperlink, '_blank');
   }
 
-  private isInternalUrl(href: string | null): boolean {
-    return !href
-      || href.startsWith('#')
-      || href.includes('#')
-      || href.startsWith('/internal:')
-      || href.startsWith('../');
+  private isInternalUrl(href: string, element: HTMLAnchorElement): boolean {
+    return !href || (
+      /^#|\/routerLink|\.\.\//.test(href) ||
+      element.getAttributeNames().some(n => n.includes('_ngcontent') || n.toLowerCase().includes('data-routerlink'))
+    );
   }
 
-  private internalUrlHandler(target: HTMLAnchorElement): void {
-    let hyperlink = target.getAttribute('href')!;
+  private internalUrlHandler(target: HTMLAnchorElement, routerLinkOptions?: MarkdownRouterLinkOptions): void {
+    const anchor = target.nodeName.toLowerCase() === 'a' ? target : target.closest('a');
+    const path = anchor!.getAttribute('href')!;
 
-    if (hyperlink.startsWith('/internal:')) {
-      hyperlink = hyperlink.replace('/internal:', '');
+    if (path.startsWith('#')) {
+      this._router.navigate([], { fragment: path.slice(1) });
+      return;
     }
 
-    this.navigate(`/${hyperlink}`);
+    // Get the routerLink commands to navigate to
+    let commands = [anchor!.getAttribute('data-routerLink')!];
+
+    let extras: NavigationExtras | undefined;
+    // Find the path in the routerLinkOptions
+    if (routerLinkOptions?.paths) {
+      extras = routerLinkOptions.paths[path];
+    }
+    // Get the global options if no path was found
+    if (!extras && routerLinkOptions?.global) {
+      extras = routerLinkOptions.global;
+    }
+    // If the route has a fragment, add it to the extras and remove it from the commands to leave the path
+    if (path.includes('#')) {
+      extras = extras || {};
+      extras.fragment = path.split('#')[1];
+      commands[0] = commands[0].split('#')[0];
+    }
+
+    // Remove the first slash from the path
+    commands = commands.map(c => c.startsWith('/') ? c.slice(1) : c);
+
+    // Navigate to the path using the router service
+    this._router.navigate(commands, extras);
 
     return;
   }
 
-  /**
-   * Strips the query string from a URL
-   * @param url - The URL to strip the query string from
-   * @private - This method is private and should not be accessed outside of this class
-   */
-  private stripQuery(url: string): string {
-    const result = /[^?]*/.exec(url);
-    return result ? result[0] : url;
-  }
-
-  /**
-   * Strips the fragment and query string from a URL
-   * @param url - The URL to strip the fragment and query string from
-   * @private - This method is private and should not be accessed outside of this class
-   */
-  private stripFragmentAndQuery(url: string): string {
-    const result = /[^#]*/.exec(url);
-    return this.stripQuery(result ? result[0] : url);
-  }
-
-  /**
-   * Generates a URL tree from a URL
-   * @param url - The URL to generate a URL tree from
-   * @private - This method is private and should not be accessed outside of this class
-   */
-  private getUrlTree(url: string): UrlTree {
-    const urlPath = this.stripFragmentAndQuery(url) || this.stripFragmentAndQuery(this._router.url);
-    const parsedUrl = this._router.parseUrl(url);
-    const fragment = parsedUrl.fragment || undefined;
-    const queryParams = parsedUrl.queryParams;
-    return this._router.createUrlTree([urlPath], {relativeTo: this._route, fragment, queryParams});
-  }
-
-  /**
-   * Navigates to a URL
-   * @param url - The URL to navigate to
-   * @param replaceUrl - Whether to replace the current URL in the browser history
-   * @private - This method is private and should not be accessed outside of this class
-   */
-  private navigate(url: string, replaceUrl = false) {
-    const urlTree = this.getUrlTree(url);
-    this._router.navigated = false;
-    this._router.navigateByUrl(urlTree, {replaceUrl});
-  }
-
-  interceptClick(event: Event) {
+  interceptClick(event: Event, routerLinkOptions?: MarkdownRouterLinkOptions): void {
     const element = event.target;
     if (!(element instanceof HTMLAnchorElement)) return;
 
@@ -106,18 +85,17 @@ export class MarkdownLinkService {
     if (!href) return;
 
     event.preventDefault();
+    event.stopPropagation();
 
     // If an internal URL is clicked
-    if (this.isInternalUrl(href)) {
-      this.internalUrlHandler(element);
-      event.stopPropagation();
+    if (this.isInternalUrl(href, element)) {
+      this.internalUrlHandler(element, routerLinkOptions);
       return;
     }
 
     // If an external URL is clicked
     if (this.isExternalUrl(href)) {
       this.externalUrlHandler(element);
-      event.stopPropagation();
       return;
     }
   }
