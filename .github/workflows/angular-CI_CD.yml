@@ -57,8 +57,14 @@ jobs:
       - name: Test library
         run: yarn test:ci_cd
 
-      - name: Build demo
-        run: yarn build:demo
+      - name: Build demo - Step 01
+        run: yarn gh-pages:build
+
+      - name: Build demo - Step 02
+        run: yarn gh-pages:postbuild
+
+      - name: Build demo - Step 03
+        run: angular-cli-ghpages --dir=${{ env.PROJECT_DIR }} --no-silent
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
