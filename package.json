@@ -43,7 +43,7 @@
     "test": "ng test",
     "test:ci_cd": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "gh-pages:build": "yarn build:demo --aot --base-href /ngx-markdown/",
-    "gh-pages:copy404": "cpy ./dist/demo/browser/index.html ./dist/demo/browser/404.html/",
+    "gh-pages:copy404": "cpy ./dist/demo/browser/index.html ./dist/demo/browser/ --rename=404.html",
     "gh-pages:postbuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser",
     "gh-pages:deploy": "angular-cli-ghpages --dir=\"dist/demo/browser\" --no-silent",
     "publish:lib": "npm publish --access public ./dist/lib",
