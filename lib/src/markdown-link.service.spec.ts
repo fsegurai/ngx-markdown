@@ -24,7 +24,7 @@ describe('MarkdownLinkService', () => {
         {
           provide: Router,
           useValue: {
-            navigateByUrl: jasmine.createSpy('navigateByUrl'),
+            navigate: jasmine.createSpy('navigate'),
             createUrlTree: jasmine.createSpy('createUrlTree'),
             navigated: false,
             parseUrl: jasmine.createSpy('parseUrl').and.returnValue({
@@ -54,9 +54,10 @@ describe('MarkdownLinkService', () => {
   });
 
   it('should identify internal URLs', () => {
-    expect(service['isInternalUrl']('#anchor')).toBeTrue();
-    expect(service['isInternalUrl']('../relative/path')).toBeTrue();
-    expect(service['isInternalUrl']('http://example.com')).toBeFalse();
+    const anchor = document.createElement('a');
+    expect(service['isInternalUrl']('#anchor', anchor)).toBeTrue();
+    expect(service['isInternalUrl']('../relative/path', anchor)).toBeTrue();
+    expect(service['isInternalUrl']('http://example.com', anchor)).toBeFalse();
   });
 
   it('should navigate to internal URLs in browser mode', () => {
@@ -76,6 +77,6 @@ describe('MarkdownLinkService', () => {
     spyOn(document, 'querySelectorAll').and.returnValue(mockNodeList);
 
     service['internalUrlHandler'](anchor);
-    expect(router.navigateByUrl).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalled();
   });
 });

@@ -10,10 +10,6 @@ There are several ways to create links.
 
 [You can use numbers for reference-style link definitions][1]
 
-[I'm a router link to another SPA page](internal:/syntax-highlight#language-pipe)
-
-[I'm a router link on the same page](#headers)
-
 Or leave it empty and use the [link text itself].
 
 URLs and URLs in angle brackets will automatically get turned into links.
@@ -27,3 +23,23 @@ Some text to show that the reference links can follow later.
 [1]: http://slashdot.org
 
 [link text itself]: http://www.reddit.com
+
+[I'm an Angular routerlink with page section](/routerLink:/syntax-highlight#language-pipe)
+
+[I'm an Angular routerlink](/routerLink:/syntax-highlight)
+
+[I'm a router link on the same page](/routerLink:/cheat-sheet#headers)
+
+```html
+<markdown src="/path/to/markdown.md" [routerLinkOptions]="{
+  global: {
+    queryParams: { key: 'value' },
+  },
+  paths: {
+    '/path/to/page': {
+      queryParams: { key: 'value' },
+    }
+  }
+}">
+</markdown>
+```
