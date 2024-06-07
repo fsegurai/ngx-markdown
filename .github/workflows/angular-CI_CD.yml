@@ -63,10 +63,13 @@ jobs:
       - name: Build demo - Step 02
         run: yarn gh-pages:postbuild
 
-      - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ env.PROJECT_DIR }}
-          publish_branch: gh-pages
-          force_orphan: true
+      - name: Build demo - Step 03
+        run: yarn gh-pages:deploy
+
+      # - name: Deploy to gh-pages branch
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ${{ env.PROJECT_DIR }}
+      #     publish_branch: gh-pages
+      #     force_orphan: true
