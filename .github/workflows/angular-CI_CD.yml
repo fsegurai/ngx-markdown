@@ -61,6 +61,9 @@ jobs:
         run: yarn gh-pages:build
 
       - name: Build demo - Step 02
+        run: yarn gh-pages:copy404
+
+      - name: Build demo - Step 03
         run: yarn gh-pages:postbuild
 
       - name: Deploy to gh-pages branch
