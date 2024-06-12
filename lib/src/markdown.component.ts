@@ -26,6 +26,9 @@ import { PrismPlugin } from './prism-plugin';
 export interface MarkdownRouterLinkOptions {
   global?: NavigationExtras;
   paths?: { [path: string]: NavigationExtras | undefined };
+  internalBrowserHandler?: boolean;
+  internalDesktopHandler?: boolean;
+  externalBrowserHandler?: boolean;
 }
 
 @Component({
@@ -50,7 +53,7 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @Input() data: string | null | undefined;
   @Input() src: string | null | undefined;
-  @Input() disableHostListener = false;
+  @Input() disableRouterLinkHandler: boolean | undefined = false;
 
   @Input()
   get disableSanitizer(): boolean {
@@ -180,7 +183,9 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   @HostListener('click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     // If the component is used in browser mode, intercept the click event
-    if (!this.disableHostListener) this.markdownLinkService.interceptClick(event, this.routerLinkOptions);
+    if (this.disableRouterLinkHandler) return;
+
+    this.markdownLinkService.interceptClick(event, this.routerLinkOptions);
   }
 
   private _clipboard = false;
