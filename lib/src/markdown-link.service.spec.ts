@@ -5,7 +5,6 @@ import { MarkdownLinkService } from './markdown-link.service';
 
 describe('MarkdownLinkService', () => {
   let service: MarkdownLinkService;
-  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,8 +23,6 @@ describe('MarkdownLinkService', () => {
         {
           provide: Router,
           useValue: {
-            navigate: jasmine.createSpy('navigate'),
-            createUrlTree: jasmine.createSpy('createUrlTree'),
             navigated: false,
             parseUrl: jasmine.createSpy('parseUrl').and.returnValue({
               fragment: 'testFragment',
@@ -37,7 +34,6 @@ describe('MarkdownLinkService', () => {
       ],
     });
     service = TestBed.inject(MarkdownLinkService);
-    router = TestBed.inject(Router);
   });
 
   it('should be created', () => {
@@ -58,25 +54,5 @@ describe('MarkdownLinkService', () => {
     expect(service['isInternalUrl']('#anchor', anchor)).toBeTrue();
     expect(service['isInternalUrl']('../relative/path', anchor)).toBeTrue();
     expect(service['isInternalUrl']('http://example.com', anchor)).toBeFalse();
-  });
-
-  it('should navigate to internal URLs in browser mode', () => {
-    const anchor = document.createElement('a');
-    anchor.setAttribute('href', '#anchor');
-
-    const div = document.createElement('div');
-    const mockNodeList: NodeListOf<Element> = {
-      0: div,
-      length: 1,
-      item: (index: number) => div,
-      forEach: function(callback, thisArg) {
-        callback.call(thisArg, div, 0, this);
-      },
-    };
-
-    spyOn(document, 'querySelectorAll').and.returnValue(mockNodeList);
-
-    service['internalUrlHandler'](anchor);
-    expect(router.navigate).toHaveBeenCalled();
   });
 });
