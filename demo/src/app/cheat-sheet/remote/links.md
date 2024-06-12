@@ -24,22 +24,26 @@ Some text to show that the reference links can follow later.
 
 [link text itself]: http://www.reddit.com
 
-[I'm an Angular routerlink with page section](/routerLink:/syntax-highlight#language-pipe)
+[I'm an Angular routerLink to another view with section](/routerLink:/syntax-highlight#language-pipe)
 
-[I'm an Angular routerlink](/routerLink:/syntax-highlight)
+[I'm an Angular routerLink to another view](/routerLink:/syntax-highlight)
 
-[I'm a router link on the same page](/routerLink:/cheat-sheet#headers)
+[I'm an Angular routerLink to a section on the same view](/routerLink:#headers)
 
 ```html
-<markdown src="/path/to/markdown.md" [routerLinkOptions]="{
-  global: {
-    queryParams: { key: 'value' },
-  },
-  paths: {
-    '/path/to/page': {
-      queryParams: { key: 'value' },
-    }
-  }
-}">
+<markdown src="/path/to/markdown.md" 
+          [routerLinkOptions]="{
+            global: {
+              queryParams: { key: 'value' },
+            },
+            paths: {
+              '/path/to/page': {
+                queryParams: { key: 'value' },
+              }
+            },
+            internalBrowserHandler: boolean, // For browser usage
+            internalDesktopHandler: boolean, // For desktop usage (like electron)
+            externalBrowserHandler: boolean, // For browser usage
+          }">
 </markdown>
 ```
