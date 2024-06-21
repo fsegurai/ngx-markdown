@@ -398,7 +398,15 @@ Using `markdown` component and/or directive, you will be able to use the `clipbo
 
 The `clipboard` plugin provide an unstyled default button with a default behavior out of the box if no alternative is used.
 
-To customize the default button styling, use the `.markdown-clipboard-button` CSS selector in your global `styles.css/scss` file. You can also customized the "copied" state happening after the button is clicked using the `.copied` CSS selector.
+#### Customize button toolbar
+
+The clipboard button is placed inside a wrapper element that can be customized using the `.markdown-clipboard-toolbar` CSS selector in your global `styles.css/scss` file.
+
+This allows to override the default positioning of the clipboard button and play with the visibility of the button using the `.hover` CSS selector that is applied on the toolbar when the mouse cursor enters and leaves the code block element.
+
+#### Customize default button
+
+To customize the default button styling, use the `.markdown-clipboard-button` CSS selector in your global `styles.css/scss` file. You can also customize the "copied" state happening after the button is clicked using the `.copied` CSS selector.
 
 #### Using global configuration
 
@@ -950,10 +958,12 @@ A demo is available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai
 
 The following commands will clone the repository, install npm dependencies and serve the application @ [http://localhost:4200](http://localhost:4200)
 
+It is recommended to use `yarn` as the package manager to handle the large number of dependencies as it is faster than `npm` and it will mostly not cause any issues.
+
 ```bash
 git clone https://github.com/fsegurai/ngx-markdown.git
-npm install
-npm start
+yarn install
+yarn start
 ```
 
 ## License
