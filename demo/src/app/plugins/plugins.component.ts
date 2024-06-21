@@ -30,7 +30,7 @@ export default class PluginsComponent implements OnInit {
 
   readonly clipboardButton = ClipboardButtonComponent;
 
-  emojiMarkdown = '# I :heart: ngx-markdown';
+  emojiMarkdown = '# I :heart: @fsegurai/ngx-markdown';
 
   katexMarkdown =
     `#### \`katex\` directive example

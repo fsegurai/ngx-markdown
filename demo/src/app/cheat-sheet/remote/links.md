@@ -26,9 +26,9 @@ Some text to show that the reference links can follow later.
 
 [I'm an Angular routerLink to another view with section](/routerLink:/syntax-highlight#language-pipe)
 
-[I'm an Angular routerLink to another view](/routerLink:/syntax-highlight)
+[I'm an Angular routerLink to another view](/routerLink:/ngx-markdown/syntax-highlight)
 
-[I'm an Angular routerLink to a section on the same view](/routerLink:#headers)
+[I'm an Angular routerLink to a section on the same view](/routerLink:/ngx-markdown/cheat-sheet#headers)
 
 ```html
 <markdown src="/path/to/markdown.md" 

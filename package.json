@@ -1,7 +1,7 @@
 {
   "name": "@fsegurai/ngx-markdown",
   "version": "17.0.0-beta.15",
-  "description": "Angular library that uses marked to parse markdown to html combined with Prism.js for synthax highlights",
+  "description": "Angular library that uses marked to parse markdown to html combined with Prism.js for syntax highlights",
   "homepage": "https://github.com/fsegurai/ngx-markdown",
   "license": "MIT",
   "author": {
@@ -42,7 +42,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci_cd": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
-    "gh-pages:build": "yarn build:demo --base-href=./",
+    "gh-pages:build": "yarn build:demo --aot --base-href=./",
     "gh-pages:copy404": "cpy ./dist/demo/browser/index.html ./dist/demo/browser/ --rename=404.html",
     "gh-pages:postbuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser",
     "gh-pages:deploy": "angular-cli-ghpages --dir=\"dist/demo/browser\" --no-silent",
