@@ -19,7 +19,7 @@ Main project is maintained by [jfcere](https://github.com/jfcere), please consid
 - [Mermaid](https://mermaid-js.github.io/) for diagrams and charts visualization
 - [Clipboard.js](https://clipboardjs.com/) to copy code blocks to clipboard
 
-Demo available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.github.io/ngx-markdown) 
+Demo available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.github.io/ngx-markdown)
 
 ### Table of contents
 
@@ -104,6 +104,7 @@ Using `markdown` component and/or directive, you will be able to use the `lineNu
 Additionally, you can use `start` input property to specify the offset number for the first display line.
 
 ```html
+
 <markdown
   lineNumbers
   [start]="5"
@@ -139,6 +140,7 @@ Using `markdown` component and/or directive, you will be able to use the `lineHi
 Use `line` input property to specify the line(s) to highlight and optionally there is a `lineOffset` property to specify the starting line of code your snippet represents.
 
 ```html
+
 <markdown
   lineHighlight
   [line]="'6, 10-16'"
@@ -182,6 +184,7 @@ You may also specify the lines to be presented as output (no prompt and no highl
 - Whitespace is allowed anywhere and will be stripped off
 
 ```html
+
 <markdown
   commandLine
   [user]="'chris'"
@@ -194,6 +197,7 @@ You may also specify the lines to be presented as output (no prompt and no highl
 Optionally, to automatically present some lines as output without providing the line numbers, you can prefix those lines with any string and specify the prefix using the `filterOutput` input property. For example, `[filterOutput]="'(out)'"` will treat lines beginning with `(out)` as output and remove the prefix.
 
 ```html
+
 <markdown
   commandLine
   [prompt]="'PS C:\Users\Chris>'"
@@ -234,6 +238,7 @@ If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angu
 Using `markdown` component and/or directive, you will be able to use the `emoji` property to activate [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) plugin that converts emoji shortnames such as `:heart:` to native unicode emojis.
 
 ```html
+
 <markdown emoji>
   I :heart: ngx-markdown
 </markdown>
@@ -275,6 +280,7 @@ If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angu
 Using `markdown` component and/or directive, you will be able to use the `katex` property to activate [KaTeX](https://katex.org/) plugin that renders mathematical expression to HTML.
 
 ```html
+
 <markdown
   katex
   [src]="path/to/file.md">
@@ -286,7 +292,8 @@ Optionally, you can use `katexOptions` property to specify both the [KaTeX optio
 ```typescript
 import {KatexOptions} from 'ngx-markdown';
 
-public options: KatexOptions = {
+public
+options: KatexOptions = {
   displayMode: true,
   throwOnError: false,
   errorColor: '#cc0000',
@@ -296,6 +303,7 @@ public options: KatexOptions = {
 ```
 
 ```html
+
 <markdown
   katex
   [katexOptions]="options"
@@ -332,6 +340,7 @@ If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angu
 Using `markdown` component and/or directive, you will be able to use the `mermaid` property to activate [Mermaid](https://mermaid-js.github.io/) plugin that renders Markdown-inspired text definitions to create and modify diagrams dynamically.
 
 ```html
+
 <markdown
   mermaid
   [src]="path/to/file.md">
@@ -343,7 +352,8 @@ Optionally, you can specify mermaid [configuration options](https://mermaid.js.o
 ```typescript
 import {MermaidAPI} from 'ngx-markdown';
 
-public options: MermaidAPI.Config = {
+public
+options: MermaidAPI.Config = {
   fontFamily: '"trebuchet ms", verdana, arial, sans-serif',
   logLevel: MermaidAPI.LogLevel.Info,
   theme: MermaidAPI.Theme.Dark,
@@ -352,6 +362,7 @@ public options: MermaidAPI.Config = {
 ```
 
 ```html
+
 <markdown
   mermaid
   [mermaidOptions]="options"
@@ -388,6 +399,7 @@ If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angu
 Using `markdown` component and/or directive, you will be able to use the `clipboard` property to activate [Clipboard](https://clipboardjs.com/) plugin that enable copy-to-clipboard for code block from a single click.
 
 ```html
+
 <markdown
   clipboard
   [src]="path/to/file.md">
@@ -458,6 +470,7 @@ export class ExampleComponent {
 ```
 
 ```html
+
 <markdown
   clipboard
   [clipboardButtonComponent]="clipboardButton">
@@ -469,6 +482,7 @@ export class ExampleComponent {
 Alternatively, the `clipboard` directive can be used in conjonction with `ng-template` to provide a custom button implementation via the `clipboardButtonTemplate` input property on the `markdown` component.
 
 ```html
+
 <ng-template #buttonTemplate>
   <button (click)="onCopyToClipboard()">...</button>
 </ng-template>
@@ -908,10 +922,14 @@ To do so, inject the `MarkdownService` and call the `reload()` function as shown
 ```typescript
 import {MarkdownService} from 'ngx-markdown';
 
-constructor(private markdownService: MarkdownService){
+constructor(private
+markdownService: MarkdownService
+)
+{
 }
 
-update(){
+update()
+{
   this.markdownService.reload();
 }
 ```
@@ -941,6 +959,7 @@ When using remote URL ngx-markdown will use the file extension to automatically 
 When using variable binding you can optionally use `language` pipe to specify the language of the variable content (default value is markdown when pipe is not used).
 
 ```html
+
 <markdown [data]="markdown | language : 'typescript'"></markdown>
 ```
 
@@ -950,10 +969,12 @@ A demo is available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai
 
 The following commands will clone the repository, install npm dependencies and serve the application @ [http://localhost:4200](http://localhost:4200)
 
+It is recommended to use `yarn` as the package manager to handle the large number of dependencies as it is faster than `npm` and it will mostly not cause any issues.
+
 ```bash
 git clone https://github.com/fsegurai/ngx-markdown.git
-npm install
-npm start
+yarn install
+yarn start
 ```
 
 ## License

@@ -46,6 +46,24 @@ Prism.languages.typescript = Prism.languages.extend('typescript', {
     // - `Baz` in `export class Foo implements Bar, Baz`
     // - `void` in `func: (foo: string) => void = (foo) => {};`
     // - `Foo` in `Foo.bar()` when Foo is a class
+
+    // `Baz` in `export class Foo implements Bar, Baz`
+    {
+      pattern: /(implements\s)([A-Za-z0-9_,\s]+)/,
+      lookbehind: true,
+    },
+
+    // `void` in `func: (foo: string) => void = (foo) => {};`
+    {
+      pattern: /(=>\s)([A-Za-z0-9_,\s]+)/,
+      lookbehind: true,
+    },
+
+    // `Foo` in `Foo.bar()` when Foo is a class
+    {
+      pattern: /([A-Za-z0-9_]+)(\.)/,
+      lookbehind: true,
+    },
   ],
 
   function: [
