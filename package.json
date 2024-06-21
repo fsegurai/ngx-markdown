@@ -42,7 +42,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci_cd": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
-    "gh-pages:build": "yarn build:demo --aot --base-href=https://fsegurai.github.io/ngx-markdown/",
+    "gh-pages:build": "yarn build:demo --aot --base-href=./",
     "gh-pages:copy404": "cpy ./dist/demo/browser/index.html ./dist/demo/browser/ --rename=404.html",
     "gh-pages:postbuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser",
     "gh-pages:deploy": "angular-cli-ghpages --dir=\"dist/demo/browser\" --no-silent",
