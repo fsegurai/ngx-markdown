@@ -1,7 +1,7 @@
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, SecurityContext } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
 import { gfmHeadingId } from 'marked-gfm-heading-id';
 import { CLIPBOARD_OPTIONS, MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { appRoutes } from '@app/app-routes';
@@ -19,6 +19,7 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: 'enabled',
         scrollPositionRestoration: 'enabled',
       }),
+      withHashLocation(),
     ),
     provideMarkdown({
       loader: HttpClient,
