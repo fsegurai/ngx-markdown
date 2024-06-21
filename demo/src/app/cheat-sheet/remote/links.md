@@ -26,7 +26,7 @@ Some text to show that the reference links can follow later.
 
 [I'm an Angular routerLink to another view with section](/routerLink:/syntax-highlight#language-pipe)
 
-[I'm an Angular routerLink to another view](/routerLink:/syntax-highlight)
+[I'm an Angular routerLink to another view](/routerLink:syntax-highlight)
 
 [I'm an Angular routerLink to a section on the same view](/routerLink:#headers)
 
