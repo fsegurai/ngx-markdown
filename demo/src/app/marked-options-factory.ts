@@ -1,5 +1,5 @@
-import {MarkedOptions, MarkedRenderer} from 'ngx-markdown';
-import {AnchorService} from '@shared/anchor';
+import { MarkedOptions, MarkedRenderer } from 'ngx-markdown';
+import { AnchorService } from '@shared/anchor';
 
 export function markedOptionsFactory(anchorService: AnchorService): MarkedOptions {
   const renderer = new MarkedRenderer();
@@ -9,5 +9,5 @@ export function markedOptionsFactory(anchorService: AnchorService): MarkedOption
     return MarkedRenderer.prototype.link.call(renderer, anchorService.normalizeExternalUrl(href), title, text);
   };
 
-  return {renderer};
+  return { renderer };
 }
