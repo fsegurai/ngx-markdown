@@ -41,7 +41,7 @@ Demo available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.gith
 To add ngx-markdown along with the required marked library to your `package.json` use the following commands.
 
 ```bash
-npm install ngx-markdown marked@^12.0.0 --save
+npm install ngx-markdown marked@^12.0.2 --save
 ```
 
 ### Syntax highlight
@@ -51,7 +51,7 @@ npm install ngx-markdown marked@^12.0.0 --save
 To add [Prism.js](http://prismjs.com/) library to your `package.json` use the following command.
 
 ```bash
-npm install prismjs@^1.28.0 --save
+npm install prismjs@^1.29.0 --save
 ```
 
 To activate [Prism.js](http://prismjs.com/) syntax highlight you will need to include...
@@ -248,7 +248,7 @@ Using `markdown` component and/or directive, you will be able to use the `emoji`
 To add [KaTeX](https://katex.org/) library to your `package.json` use the following command.
 
 ```bash
-npm install katex@^0.16.0 --save
+npm install katex@^0.16.10 --save
 ```
 
 To activate [KaTeX](https://katex.org/) math rendering you will need to include...
@@ -312,7 +312,7 @@ public options: KatexOptions = {
 To add [Mermaid](https://mermaid-js.github.io/) library to your `package.json` use the following command.
 
 ```bash
-npm install mermaid@^10.6.0 --save
+npm install mermaid@^10.9.1 --save
 ```
 
 To activate [Mermaid](https://mermaid-js.github.io/) diagramming and charting tool you will need to include...
@@ -567,7 +567,7 @@ imports: [
 
 #### Sanitization
 
-As of ngx-markdown v9.0.0 **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
+As of ngx-markdown v17.0.0 **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
 
 ##### Using the `provideMarkdown` function
 
