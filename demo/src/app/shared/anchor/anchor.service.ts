@@ -1,6 +1,6 @@
-import {LocationStrategy, ViewportScroller} from '@angular/common';
-import {Injectable} from '@angular/core';
-import {ActivatedRoute, Router, UrlTree} from '@angular/router';
+import { LocationStrategy, ViewportScroller } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 
 /**
  * Service to handle links generated through markdown parsing.
@@ -31,7 +31,7 @@ import {ActivatedRoute, Router, UrlTree} from '@angular/router';
  * }
  * ```
  */
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AnchorService {
 
   constructor(
@@ -68,7 +68,7 @@ export class AnchorService {
   navigate(url: string, replaceUrl = false): void {
     const urlTree = this.getUrlTree(url);
     this.router.navigated = false;
-    void this.router.navigateByUrl(urlTree, {replaceUrl});
+    void this.router.navigateByUrl(urlTree, { replaceUrl });
   }
 
   /**
@@ -107,7 +107,7 @@ export class AnchorService {
   private getUrlTree(url: string): UrlTree {
     const urlPath = this.stripFragment(url) || this.stripFragment(this.router.url);
     const urlFragment = this.router.parseUrl(url).fragment || undefined;
-    return this.router.createUrlTree([urlPath], {relativeTo: this.route, fragment: urlFragment});
+    return this.router.createUrlTree([urlPath], { relativeTo: this.route, fragment: urlFragment });
   }
 
   private isExternalUrl(url: string): boolean {
