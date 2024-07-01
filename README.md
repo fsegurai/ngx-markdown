@@ -1,11 +1,3 @@
-# Support Development
-
-Main project is maintained by [jfcere](https://github.com/jfcere), please consider supporting the development by giving him a star and consider a donation to support its maintenance and future development.
-
-[jfcere/ngx-markdown](https://github.com/jfcere/ngx-markdown) [![GitHub stars](https://img.shields.io/github/stars/jfcere/ngx-markdown.svg?style=social&label=Star)]
-
----
-
 # @fsegurai/ngx-markdown
 
 **This is just a side project to provide additional features that fulfill my needs.**
