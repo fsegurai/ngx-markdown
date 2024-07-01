@@ -166,7 +166,7 @@ export class MarkdownService {
     this.options.renderer = value;
   }
 
-  async parse(markdown: string, parseOptions: ParseOptions = this.DEFAULT_PARSE_OPTIONS): Promise<string> {
+  parse(markdown: string, parseOptions: ParseOptions = this.DEFAULT_PARSE_OPTIONS): string | Promise<string> {
     const {
       decodeHtml,
       inline,
