@@ -1,0 +1,32 @@
+<app-scrollspy-nav-layout [headings]="headings">
+  <h1>Playground</h1>
+
+  <section>
+    <h2>Markdown</h2>
+
+    <div class="playground">
+      <mat-form-field class="editor">
+        <mat-label>Textarea</mat-label>
+        <textarea matInput [(ngModel)]="markdownContent"></textarea>
+      </mat-form-field>
+
+      <markdown
+        class="markdown"
+        [disableSanitizer]="true"
+        lineNumbers
+        [start]="1"
+        emoji
+        katex
+        [katexOptions]="katexOptions"
+        mermaid
+        [mermaidOptions]="mermaidOptions"
+        clipboard
+        [clipboardLanguageButton]="true"
+        [data]="markdownRendering"
+        [routerLinkOptions]="{
+          internalBrowserHandler: true,
+          externalBrowserHandler: true,
+        }"/>
+    </div>
+  </section>
+</app-scrollspy-nav-layout>
