@@ -1,0 +1,1 @@
+import{a as e}from"./chunk-QOSXMQP6.js";var r=function(t){return t.Light="light",t.Dark="dark",t}(r||{});function o(t){return t!=null&&typeof t=="string"&&Object.values(r).includes(t)}var m=r.Light,p="ngx-markdown:theme",c=e.Theme.Dark;export{r as a,o as b,m as c,p as d,c as e};
