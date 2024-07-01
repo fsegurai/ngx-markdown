@@ -1,15 +1,15 @@
-import {DOCUMENT, NgFor} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, OnInit, ViewChild,} from '@angular/core';
-import {FlexModule} from '@angular/flex-layout/flex';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {Route, Router, RouterLink, RouterLinkActive, RouterOutlet,} from '@angular/router';
-import {AnchorService} from '@shared/anchor';
-import {ROUTE_ANIMATION} from './app.animation';
-import {DEFAULT_THEME, LOCAL_STORAGE_THEME_KEY} from './app.constant';
-import {isTheme, Theme} from './app.models';
+import { DOCUMENT, NgFor } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Route, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AnchorService } from '@shared/anchor';
+import { ROUTE_ANIMATION } from './app.animation';
+import { DEFAULT_THEME, LOCAL_STORAGE_THEME_KEY } from './app.constant';
+import { isTheme, Theme } from './app.models';
 
 @Component({
   animations: [ROUTE_ANIMATION],
@@ -33,17 +33,17 @@ import {isTheme, Theme} from './app.models';
 export class AppComponent implements OnInit {
   routes: Route[];
   theme = DEFAULT_THEME;
-  @ViewChild('tabHeader', {read: ElementRef, static: true})
+  @ViewChild('tabHeader', { read: ElementRef, static: true })
   tabHeader: ElementRef<HTMLElement> | undefined;
   private readonly stickyClassName = 'mat-mdc-tab-nav-bar--sticky';
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private anchorService: AnchorService,
-    private router: Router
+    private router: Router,
   ) {
     this.routes = this.router.config.filter(
-      (route) => route.data && route.data['label']
+      (route) => route.data && route.data['label'],
     );
   }
 
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
     }
     const tabHeader = this.tabHeader.nativeElement;
     const tabHeaderOffset = Math.ceil(tabHeader.offsetTop);
-    const windowOffset = Math.ceil(window.pageYOffset);
+    const windowOffset = Math.ceil(window.scrollY);
     const hasStickyClass = tabHeader.classList.contains(this.stickyClassName);
     if (!hasStickyClass && windowOffset >= tabHeaderOffset) {
       tabHeader.classList.add(this.stickyClassName);
