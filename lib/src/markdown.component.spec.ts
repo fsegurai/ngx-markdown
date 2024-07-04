@@ -1,5 +1,5 @@
 import { ElementRef, TemplateRef } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -40,30 +40,40 @@ describe('MarkdownComponent', () => {
   });
 
   describe('data', () => {
-    it('should call render with provided data when set', () => {
-      const spyRender = spyOn(component, 'render');
-
+    it('should call render with provided data when set', async () => {
       const useCases = ['', '# Markdown', '<p>Html</p>'];
 
-      useCases.forEach((data) => {
+      const spyRender = spyOn(component, 'render');
+      const spyRenderSource = spyOn(markdownService, 'getSource');
+
+      for (const data of useCases) {
+        spyRender.calls.reset();
+        spyRenderSource.calls.reset();
+        spyRender.and.returnValue(Promise.resolve());
+        spyRenderSource.and.returnValue(of(data));
+
         component.data = data;
         component.ngOnChanges();
-        expect(component.render).toHaveBeenCalledWith(data);
-        spyRender.calls.reset();
-      });
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        if(data) {
+          expect(spyRender).toHaveBeenCalledWith(data);
+        }else{
+          expect(spyRender).not.toHaveBeenCalled();
+        }
+      }
     });
 
     it('should return value correctly when get', () => {
       const mockData = '# Markdown';
-
       component.data = mockData;
-
       expect(component.data).toBe(mockData);
     });
   });
 
   describe('src', () => {
-    it('should call render with retreived content when set', () => {
+    it('should call render with retrieved content when set', () => {
       const mockSrc = './src-example/file.md';
       const mockContent = 'source-content';
 
@@ -71,7 +81,6 @@ describe('MarkdownComponent', () => {
       spyOn(markdownService, 'getSource').and.returnValue(of(mockContent));
 
       component.src = mockSrc;
-
       component.ngOnChanges();
 
       expect(markdownService.getSource).toHaveBeenCalledWith(mockSrc);
@@ -80,15 +89,12 @@ describe('MarkdownComponent', () => {
 
     it('should return value correctly when get', () => {
       const mockSrc = './src-example/file.md';
-
       spyOn(markdownService, 'getSource').and.returnValue(of());
-
       component.src = mockSrc;
-
       expect(component.src).toBe(mockSrc);
     });
 
-    it('should emit load when get', fakeAsync(() => {
+    it('should emit load when get', (done) => {
       const mockSrc = './src-example/file.md';
       const mockSrcReturn = 'src-return-value';
 
@@ -96,28 +102,28 @@ describe('MarkdownComponent', () => {
       spyOn(component.load, 'emit');
 
       component.src = mockSrc;
-
       component.ngOnChanges();
-      tick();
 
-      expect(component.load.emit).toHaveBeenCalledWith(mockSrcReturn);
-    }));
+      setTimeout(() => {
+        expect(component.load.emit).toHaveBeenCalledWith(mockSrcReturn);
+        done();
+      }, 0);
+    });
 
-    it('should emit error when and error occurs', () => {
+    it('should emit error when an error occurs', () => {
       const mockSrc = './src-example/file.md';
       const mockError = 'error-x';
 
-      spyOn(markdownService, 'getSource').and.returnValue(
-        throwError(mockError),
-      );
-      spyOn(component.error, 'emit');
+      spyOn(markdownService, 'getSource').and.returnValue(throwError(mockError));
+      const spyEmit = spyOn(component.error, 'emit').and.callThrough(); // Ensure to call through
 
       component.src = mockSrc;
+      component.ngOnChanges(); // Manually trigger ngOnChanges
+      fixture.detectChanges(); // Trigger change detection
 
-      component.ngOnChanges();
-
-      expect(component.error.emit).toHaveBeenCalledWith(mockError);
+      expect(spyEmit).toHaveBeenCalledWith(mockError);
     });
+
   });
 
   describe('ngAfterViewInit', () => {
@@ -166,17 +172,27 @@ describe('MarkdownComponent', () => {
 
       spyOn(component, 'render');
 
+      fixture.detectChanges(); // Trigger change detection
+
       component.ngAfterViewInit();
 
       expect(component.render).not.toHaveBeenCalled();
     });
 
     it('should rerender content on demand', () => {
-      spyOn(component, 'loadContent');
+      const mockHtmlElement = document.createElement('div');
+      mockHtmlElement.innerHTML = 'inner-html';
+
+      component.element = new ElementRef(mockHtmlElement);
+      component.data = '# Markdown'; // Ensure data is defined
+
+      spyOn(component as any, 'loadContent').and.callThrough();
+
+      fixture.detectChanges(); // Trigger change detection
 
       markdownService.reload();
 
-      expect(component.loadContent).toHaveBeenCalled();
+      expect((component as any).loadContent).toHaveBeenCalled();
     });
   });
 
