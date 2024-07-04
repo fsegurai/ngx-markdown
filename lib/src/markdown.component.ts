@@ -45,15 +45,6 @@ export interface MarkdownRouterLinkOptions {
   standalone: true,
 })
 export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
-
-  protected static ngAcceptInputType_clipboard: boolean | '';
-  protected static ngAcceptInputType_emoji: boolean | '';
-  protected static ngAcceptInputType_katex: boolean | '';
-  protected static ngAcceptInputType_mermaid: boolean | '';
-  protected static ngAcceptInputType_lineHighlight: boolean | '';
-  protected static ngAcceptInputType_lineNumbers: boolean | '';
-  protected static ngAcceptInputType_commandLine: boolean | '';
-
   @Input() data: string | null | undefined;
   @Input() src: string | null | undefined;
   @Input() disableRouterLinkHandler: boolean | undefined = false;
@@ -76,7 +67,6 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     this._inline = this.coerceBooleanProperty(value);
   }
 
-  // Plugin - clipboard
   @Input()
   get clipboard(): boolean {
     return this._clipboard;
@@ -92,7 +82,6 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() clipboardButtonTextCopied: string | undefined;
   @Input() clipboardLanguageButton: boolean | undefined;
 
-  // Plugin - emoji
   @Input()
   get emoji(): boolean {
     return this._emoji;
@@ -102,7 +91,6 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     this._emoji = this.coerceBooleanProperty(value);
   }
 
-  // Plugin - katex
   @Input()
   get katex(): boolean {
     return this._katex;
@@ -114,7 +102,6 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @Input() katexOptions: KatexOptions | undefined;
 
-  // Plugin - mermaid
   @Input()
   get mermaid(): boolean {
     return this._mermaid;
@@ -126,7 +113,6 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @Input() mermaidOptions: MermaidAPI.Config | undefined;
 
-  // Plugin - lineHighlight
   @Input()
   get lineHighlight(): boolean {
     return this._lineHighlight;
@@ -139,7 +125,6 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() line: string | string[] | undefined;
   @Input() lineOffset: number | undefined;
 
-  // Plugin - lineNumbers
   @Input()
   get lineNumbers(): boolean {
     return this._lineNumbers;
@@ -151,7 +136,6 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @Input() start: number | undefined;
 
-  // Plugin - commandLine
   @Input()
   get commandLine(): boolean {
     return this._commandLine;
@@ -168,28 +152,9 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() user: string | undefined;
   @Input() routerLinkOptions: MarkdownRouterLinkOptions | undefined;
 
-  // Event emitters
   @Output() error = new EventEmitter<string | Error>();
   @Output() load = new EventEmitter<string>();
   @Output() ready = new EventEmitter<void>();
-
-  private changed = new Subject<void>();
-
-  protected changed$ = merge(this.ready, this.changed).pipe(
-    map(() => this.element.nativeElement.querySelectorAll('a')),
-    switchMap(links => from(links)),
-    filter(link => link.getAttribute('href')?.includes('/routerLink:') === true),
-    tap(link => link.setAttribute('data-routerLink', link.getAttribute('href')!.replace('/routerLink:', ''))),
-    tap(link => link.setAttribute('href', link.getAttribute('href')!.replace('/routerLink:', ''))),
-  );
-
-  @HostListener('click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    // If the component is used in browser mode, intercept the click event
-    if (this.disableRouterLinkHandler) return;
-
-    this.markdownLinkService.interceptClick(event, this.routerLinkOptions);
-  }
 
   private _clipboard = false;
   private _commandLine = false;
@@ -203,6 +168,22 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private readonly destroyed$ = new Subject<void>();
 
+  private changed = new Subject<void>();
+
+  protected changed$ = merge(this.ready, this.changed).pipe(
+    map(() => this.element.nativeElement.querySelectorAll('a')),
+    switchMap(links => from(links)),
+    filter(link => link.getAttribute('href')?.includes('/routerLink:') === true),
+    tap(link => link.setAttribute('data-routerLink', link.getAttribute('href')!.replace('/routerLink:', ''))),
+    tap(link => link.setAttribute('href', link.getAttribute('href')!.replace('/routerLink:', ''))),
+  );
+
+  @HostListener('click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.disableRouterLinkHandler) return;
+    this.markdownLinkService.interceptClick(event, this.routerLinkOptions);
+  }
+
   constructor(
     public markdownService: MarkdownService,
     private markdownLinkService: MarkdownLinkService,
@@ -215,17 +196,6 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   ngOnChanges(): void {
     this.loadContent();
     this.changed.next();
-  }
-
-  loadContent(): void {
-    if (this.data != null) {
-      this.handleData();
-      return;
-    }
-    if (this.src != null) {
-      this.handleSrc();
-      return;
-    }
   }
 
   ngAfterViewInit(): void {
@@ -268,11 +238,9 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     };
 
     const parsed = await this.markdownService.parse(markdown, parsedOptions);
-
     this.element.nativeElement.innerHTML = parsed;
 
     this.handlePlugins();
-
     this.markdownService.render(this.element.nativeElement, renderOptions, this.viewContainerRef);
 
     this.ready.emit();
@@ -325,39 +293,36 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private setPluginClass(element: HTMLElement, plugin: string | string[]): void {
     const preElements = element.querySelectorAll('pre');
-    for (let i = 0; i < preElements.length; i++) {
-      const classes = plugin instanceof Array ? plugin : [plugin];
-      preElements.item(i).classList.add(...classes);
-    }
+    preElements.forEach(preElement => {
+      const classes = Array.isArray(plugin) ? plugin : [plugin];
+      preElement.classList.add(...classes);
+    });
   }
 
   private setPluginOptions(element: HTMLElement, options: {
     [key: string]: number | string | string[] | undefined
   }): void {
     const preElements = element.querySelectorAll('pre');
-    for (let i = 0; i < preElements.length; i++) {
+    preElements.forEach(preElement => {
       Object.keys(options).forEach(option => {
         const attributeValue = options[option];
         if (attributeValue) {
           const attributeName = this.toLispCase(option);
-          preElements.item(i).setAttribute(attributeName, attributeValue.toString());
+          preElement.setAttribute(attributeName, attributeValue.toString());
         }
       });
-    }
+    });
   }
 
   private toLispCase(value: string): string {
-    const upperChars = value.match(/([A-Z])/g);
-    if (!upperChars) {
-      return value;
+    return value.replace(/([A-Z])/g, '-$1').toLowerCase();
+  }
+
+  private loadContent(): void {
+    if (this.data) {
+      this.handleData();
+    } else if (this.src) {
+      this.handleSrc();
     }
-    let str = value.toString();
-    for (let i = 0, n = upperChars.length; i < n; i++) {
-      str = str.replace(new RegExp(upperChars[i]), '-' + upperChars[i].toLowerCase());
-    }
-    if (str.slice(0, 1) === '-') {
-      str = str.slice(1);
-    }
-    return str;
   }
 }

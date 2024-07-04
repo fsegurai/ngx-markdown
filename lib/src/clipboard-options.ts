@@ -1,4 +1,4 @@
-import {InjectionToken, TemplateRef, Type} from '@angular/core';
+import { InjectionToken, TemplateRef, Type } from '@angular/core';
 
 export interface ClipboardOptions {
   buttonComponent?: Type<unknown>;
@@ -12,5 +12,5 @@ export interface ClipboardRenderOptions extends ClipboardOptions {
 }
 
 export const CLIPBOARD_OPTIONS = new InjectionToken<ClipboardOptions>(
-  'CLIPBOARD_OPTIONS'
+  'CLIPBOARD_OPTIONS',
 );

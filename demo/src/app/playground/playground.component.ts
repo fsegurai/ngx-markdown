@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout/flex';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -74,8 +68,6 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.setHeadings();
-
     this.updateMarkdownRendering();
   }
 
@@ -83,12 +75,26 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
     this.headings = undefined;
   }
 
+  onLoad(): void {
+    this.stripContent();
+    this.setHeadings();
+  }
+
   private setHeadings(): void {
     const headings: Element[] = [];
     this.elementRef.nativeElement
       .querySelectorAll('h2')
-      .forEach(x => headings.push(x));
+      .forEach((x) => headings.push(x));
     this.headings = headings;
+  }
+
+  private stripContent(): void {
+    this.elementRef.nativeElement
+      .querySelector('markdown')!
+      .querySelectorAll(
+        'markdown > p:nth-child(-n + 2), #ngx-markdown, #table-of-contents + ul, #table-of-contents',
+      )
+      .forEach((x) => x.remove());
   }
 
   private updateMarkdownRendering(): void {

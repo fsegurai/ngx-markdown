@@ -2,8 +2,6 @@
   <h1>Playground</h1>
 
   <section>
-    <h2>Markdown</h2>
-
     <div class="playground">
       <mat-form-field class="editor">
         <mat-label>Textarea</mat-label>
@@ -11,16 +9,17 @@
       </mat-form-field>
 
       <markdown
+        (ready)="onLoad()"
         class="markdown"
         [disableSanitizer]="true"
-        lineNumbers
+        [lineNumbers]="true"
         [start]="1"
-        emoji
-        katex
+        [emoji]="true"
+        [katex]="true"
         [katexOptions]="katexOptions"
-        mermaid
+        [mermaid]="true"
         [mermaidOptions]="mermaidOptions"
-        clipboard
+        [clipboard]="true"
         [clipboardLanguageButton]="true"
         [data]="markdownRendering"
         [routerLinkOptions]="{

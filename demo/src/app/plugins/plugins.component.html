@@ -39,10 +39,10 @@
         <textarea [(ngModel)]="emojiMarkdown" matInput></textarea>
       </mat-form-field>
 
-      <markdown [data]="emojiMarkdown" emoji fxFlex.gt-sm="calc(50% - 8px)"></markdown>
+      <markdown [data]="emojiMarkdown" [emoji]="true" fxFlex.gt-sm="calc(50% - 8px)"></markdown>
     </div>
 
-    <markdown emoji>
+    <markdown [emoji]="true">
       > :blue_book: You can refer to this [Emoji Cheat
       Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md) for a complete list of _shortnames_.
     </markdown>
@@ -79,7 +79,7 @@
       The example below uses `lineNumbers` directive which uses default line offset of 1.
     </markdown>
 
-    <markdown lineNumbers ngPreserveWhitespaces>
+    <markdown [lineNumbers]="true" ngPreserveWhitespaces>
       ```javascript
       var result = square(2);
 
@@ -97,7 +97,7 @@
       In the example below line offset is set to 5 using `start` input property.
     </markdown>
 
-    <markdown [start]="5" lineNumbers ngPreserveWhitespaces>
+    <markdown [start]="5" [lineNumbers]="true" ngPreserveWhitespaces>
       ```javascript
       var result = root(2);
 
@@ -149,7 +149,7 @@
       In the example below `line` 6 and 10 to 16 are highlight using a `lineOffset` of 5.
     </markdown>
 
-    <markdown [lineOffset]="5" [line]="'6, 10-16'" lineHighlight ngPreserveWhitespaces>
+    <markdown [lineOffset]="5" [line]="'6, 10-16'" [lineHighlight]="true" ngPreserveWhitespaces>
       ```javascript
       var result = root(2);
 
@@ -172,7 +172,7 @@
   <section>
     <h2 id="command-line">Command Line plugin</h2>
 
-    <markdown emoji="" ngPreserveWhitespaces>
+    <markdown [emoji]="true" ngPreserveWhitespaces>
       #### Prism file(s) to include
       ```javascript
       node_modules/prismjs/plugins/command-line/prism-command-line.css
@@ -209,7 +209,7 @@
       [host]="'localhost'"
       [src]="'app/plugins/remote/root-user-without-output.bash'"
       [user]="'root'"
-      commandLine>
+      [commandLine]="true">
     </markdown>
 
     <markdown ngPreserveWhitespaces>
@@ -230,7 +230,7 @@
               [output]="'2, 4-8'"
               [src]="'app/plugins/remote/non-root-user-with-output.bash'"
               [user]="'chris'"
-              commandLine>
+              [commandLine]="true">
     </markdown>
 
     <markdown ngPreserveWhitespaces>
@@ -250,7 +250,7 @@
       [output]="'2-19'"
       [prompt]="'PS C:\Users\Chris>'"
       [src]="'app/plugins/remote/windows-powershell-with-output.powershell'"
-      commandLine>
+      [commandLine]="true">
     </markdown>
 
     <markdown ngPreserveWhitespaces>
@@ -275,7 +275,7 @@
       [filterOutput]="'(out)'"
       [prompt]="'PS C:\Users\Chris>'"
       [src]="'app/plugins/remote/windows-powershell-with-filter-output.powershell'"
-      commandLine>
+      [commandLine]="true">
     </markdown>
   </section>
 
@@ -316,7 +316,7 @@
         <textarea [(ngModel)]="katexMarkdown" matInput></textarea>
       </mat-form-field>
 
-      <markdown [data]="katexMarkdown" fxFlex.gt-sm="calc(50% - 8px)" katex></markdown>
+      <markdown [data]="katexMarkdown" fxFlex.gt-sm="calc(50% - 8px)" [katex]="true"></markdown>
     </div>
 
     <markdown ngPreserveWhitespaces>
@@ -379,7 +379,7 @@
       </mat-form-field>
 
       <markdown [data]="mermaidMarkdown" [mermaidOptions]="mermaidOptions" fxFlex.gt-sm="calc(50% - 8px)"
-                mermaid></markdown>
+                [mermaid]="true"></markdown>
     </div>
 
     <markdown ngPreserveWhitespaces>
@@ -404,7 +404,7 @@
 
     <markdown [src]="'app/plugins/remote/mermaid-options.html'"></markdown>
 
-    <markdown emoji>
+    <markdown [emoji]="true">
       > :blue_book: You can refer to this [Mermaid](https://mermaid-js.github.io/) documentation for complete usage
       syntax.
     </markdown>
@@ -439,7 +439,7 @@
       ### Example
     </markdown>
 
-    <markdown clipboard ngPreserveWhitespaces>
+    <markdown [clipboard]="true" ngPreserveWhitespaces>
       #### Default button
 
       The `clipboard` plugin provide an unstyled default button with a default behavior out of the box if no alternative
@@ -450,7 +450,7 @@
       ```
     </markdown>
 
-    <markdown class="btn-clipboard-toolbar" clipboard ngPreserveWhitespaces>
+    <markdown class="btn-clipboard-toolbar" [clipboard]="true" ngPreserveWhitespaces>
       #### Customize toolbar
 
       The clipboard button is placed inside a wrapper element that can be customize using the `.markdown-clipboard-toolbar` CSS selector in your global `styles.css/scss` file.
@@ -471,7 +471,7 @@
       ```
     </markdown>
 
-    <markdown class="btn-clipboard-default" clipboard ngPreserveWhitespaces>
+    <markdown class="btn-clipboard-default" [clipboard]="true" ngPreserveWhitespaces>
       #### Customize default button
 
       The default button can be customized using the `.markdown-clipboard-button` CSS selector in your global `styles.css/scss` file. You can also customized the "copied" state happening after the button is clicked using the `.copied` CSS selector.
@@ -504,7 +504,7 @@
       ```
     </markdown>
 
-    <markdown class="btn-clipboard-default" clipboard clipboardButtonTextCopy="Copy me!"
+    <markdown class="btn-clipboard-default" [clipboard]="true" clipboardButtonTextCopy="Copy me!"
               clipboardButtonTextCopied="Copied!" ngPreserveWhitespaces>
       #### Customize button text copy and button text copied
 
@@ -515,7 +515,7 @@
       ```
     </markdown>
 
-    <markdown class="btn-clipboard-default" clipboard clipboardButtonTextCopy="Copy code!"
+    <markdown class="btn-clipboard-default" [clipboard]="true" clipboardButtonTextCopy="Copy code!"
               clipboardButtonTextCopied="Code copied!" ngPreserveWhitespaces>
       ```cpp
       #include &#60;iostream&#62;
@@ -527,7 +527,7 @@
       ```
     </markdown>
 
-    <markdown class="btn-clipboard-default" clipboard [clipboardLanguageButton]="true" emoji ngPreserveWhitespaces>
+    <markdown class="btn-clipboard-default" [clipboard]="true" [clipboardLanguageButton]="true" [emoji]="true" ngPreserveWhitespaces>
       #### Language button
 
       To enable language button, use the `[clipboardLanguageButton]="true"` input property on the `markdown` component,
@@ -564,7 +564,7 @@
       ```
     </markdown>
 
-    <markdown [clipboardButtonComponent]="clipboardButton" clipboard ngPreserveWhitespaces>
+    <markdown [clipboardButtonComponent]="clipboardButton" [clipboard]="true" ngPreserveWhitespaces>
       #### Using global configuration
 
       You can provide a custom component to use globaly across your application with the `clipboardOptions` in the
@@ -594,7 +594,7 @@
       ```
     </markdown>
 
-    <markdown [clipboardButtonComponent]="clipboardButton" clipboard ngNonBindable ngPreserveWhitespaces>
+    <markdown [clipboardButtonComponent]="clipboardButton" [clipboard]="true" ngNonBindable ngPreserveWhitespaces>
       #### Using a component
 
       You can also provide your custom component using the `clipboardButtonComponent` input property when using the
@@ -638,7 +638,7 @@
       </button>
     </ng-template>
 
-    <markdown [clipboardButtonTemplate]="buttonTemplate" clipboard ngPreserveWhitespaces>
+    <markdown [clipboardButtonTemplate]="buttonTemplate" [clipboard]="true" ngPreserveWhitespaces>
       #### Using ng-template
 
       Alternatively, the `clipboard` directive can be used in conjonction with `ng-template` to provide a custom button
