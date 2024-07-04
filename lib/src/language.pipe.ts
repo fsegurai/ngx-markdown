@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'language',
@@ -14,13 +14,13 @@ export class LanguagePipe implements PipeTransform {
     }
     if (typeof value !== 'string') {
       console.error(
-        `LanguagePipe has been invoked with an invalid value type [${typeof value}]`
+        `LanguagePipe has been invoked with an invalid value type [${typeof value}]`,
       );
       return value;
     }
     if (typeof language !== 'string') {
       console.error(
-        `LanguagePipe has been invoked with an invalid parameter [${typeof language}]`
+        `LanguagePipe has been invoked with an invalid parameter [${typeof language}]`,
       );
       return value;
     }
