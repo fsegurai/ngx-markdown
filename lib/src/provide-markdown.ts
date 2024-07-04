@@ -1,7 +1,7 @@
-import {Provider, SecurityContext} from '@angular/core';
-import {MarkdownModuleConfig} from './markdown.module';
-import {MarkdownService, SECURITY_CONTEXT} from './markdown.service';
-import {MARKED_EXTENSIONS} from './marked-extensions';
+import { Provider, SecurityContext } from '@angular/core';
+import { MarkdownModuleConfig } from './markdown.module';
+import { MarkdownService, SECURITY_CONTEXT } from './markdown.service';
+import { MARKED_EXTENSIONS } from './marked-extensions';
 
 export function provideMarkdown(markdownModuleConfig?: MarkdownModuleConfig): Provider[] {
   return [
