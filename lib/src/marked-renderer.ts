@@ -1,1 +1,1 @@
-export {Renderer as MarkedRenderer} from 'marked';
+export { Renderer as MarkedRenderer } from 'marked';
