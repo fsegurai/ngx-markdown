@@ -269,9 +269,9 @@ export class MarkdownService {
     if (!isPlatformBrowser(this.platform)) return markdown;
 
     if (typeof joypixels === 'undefined' || typeof joypixels.shortnameToUnicode === 'undefined') {
-      console.error(errorJoyPixelsNotLoaded);
-      return markdown;
+      throw new Error(errorJoyPixelsNotLoaded);
     }
+
     return joypixels.shortnameToUnicode(markdown);
   }
 
@@ -383,6 +383,11 @@ export class MarkdownService {
     buttonTextCopy?: string,
     buttonTextCopied?: string,
   ): void {
+    if (!instance) {
+      console.error('ClipboardButtonComponent instance is undefined.');
+      return;
+    }
+
     const language = languageButton ? preElement.querySelector('code')?.className.replace('language-', '') || 'Copy' : 'Copy';
     instance.buttonTextCopy = buttonTextCopy || language;
     instance.buttonTextCopied = buttonTextCopied || 'Copied!';
@@ -400,13 +405,12 @@ export class MarkdownService {
   }
 
   private renderKatex(element: HTMLElement, options?: KatexOptions): void {
-    if (!isPlatformBrowser(this.platform)) {
-      return;
-    }
+    if (!isPlatformBrowser(this.platform)) return;
+
     if (typeof katex === 'undefined' || typeof renderMathInElement === 'undefined') {
-      console.error(errorKatexNotLoaded);
-      return;
+      throw new Error(errorKatexNotLoaded);
     }
+
     renderMathInElement(element, options);
   }
 
@@ -414,9 +418,9 @@ export class MarkdownService {
     if (!isPlatformBrowser(this.platform)) {
       return;
     }
+
     if (typeof mermaid === 'undefined' || typeof mermaid.initialize === 'undefined') {
-      console.error(errorMermaidNotLoaded);
-      return;
+      throw new Error(errorMermaidNotLoaded);
     }
 
     const mermaidElements = element.querySelectorAll('.mermaid');
@@ -430,6 +434,9 @@ export class MarkdownService {
   }
 
   private trimIndentation(markdown: string): string {
+    // Return early if markdown is null, undefined, or empty
+    if (!markdown) return '';
+
     const indentSize = markdown.match(/^[^\S\r\n]*(?=\S)/gm)?.reduce((min, line) => Math.min(min, line.length), Number.POSITIVE_INFINITY) ?? 0;
     return indentSize > 0 ? markdown.replace(new RegExp(`^[^S\r\n]{${indentSize}}`, 'gm'), '') : markdown;
   }
