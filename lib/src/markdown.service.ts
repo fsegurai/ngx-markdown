@@ -8,6 +8,8 @@ import {
   Optional,
   PLATFORM_ID,
   SecurityContext,
+  TemplateRef,
+  Type,
   ViewContainerRef,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -25,10 +27,9 @@ import { MermaidAPI } from './mermaid-options';
 
 // clipboard
 declare let ClipboardJS: {
-  new(
-    selector: string | Element | NodeListOf<Element>,
-    options?: { text?: (elem: Element) => string },
-  ): typeof ClipboardJS;
+  new(selector: string | Element | NodeListOf<Element>, options?: {
+    text?: (elem: Element) => string
+  }): typeof ClipboardJS;
   destroy(): void;
 };
 
@@ -54,12 +55,12 @@ declare let Prism: {
 };
 
 /* eslint-disable max-len */
-export const errorJoyPixelsNotLoaded = '[ngx-markdown] When using the `emoji` attribute you *have to* include Emoji-Toolkit files to `angular.json` or use imports. See README for more information';
-export const errorKatexNotLoaded = '[ngx-markdown] When using the `katex` attribute you *have to* include KaTeX files to `angular.json` or use imports. See README for more information';
-export const errorMermaidNotLoaded = '[ngx-markdown] When using the `mermaid` attribute you *have to* include Mermaid files to `angular.json` or use imports. See README for more information';
-export const errorClipboardNotLoaded = '[ngx-markdown] When using the `clipboard` attribute you *have to* include Clipboard files to `angular.json` or use imports. See README for more information';
-export const errorClipboardViewContainerRequired = '[ngx-markdown] When using the `clipboard` attribute you *have to* provide the `viewContainerRef` parameter to `MarkdownService.render()` function';
-export const errorSrcWithoutHttpClient = '[ngx-markdown] When using the `src` attribute you *have to* pass the `HttpClient` as a parameter of the `forRoot` method. See README for more information';
+export const errorJoyPixelsNotLoaded = '[ngx-markdown] Emoji-Toolkit files required. See README for more information';
+export const errorKatexNotLoaded = '[ngx-markdown] KaTeX files required. See README for more information';
+export const errorMermaidNotLoaded = '[ngx-markdown] Mermaid files required. See README for more information';
+export const errorClipboardNotLoaded = '[ngx-markdown] Clipboard files required. See README for more information';
+export const errorClipboardViewContainerRequired = '[ngx-markdown] viewContainerRef parameter required for clipboard';
+export const errorSrcWithoutHttpClient = '[ngx-markdown] HttpClient required for src attribute. See README for more information';
 /* eslint-enable max-len */
 
 export const SECURITY_CONTEXT = new InjectionToken<SecurityContext>('SECURITY_CONTEXT');
@@ -89,11 +90,7 @@ export class ExtendedRenderer extends Renderer {
 
 @Injectable()
 export class MarkdownService {
-
-  private readonly DEFAULT_MARKED_OPTIONS: MarkedOptions = {
-    renderer: new MarkedRenderer(),
-  };
-
+  private readonly DEFAULT_MARKED_OPTIONS: MarkedOptions = { renderer: new MarkedRenderer() };
   private readonly DEFAULT_KATEX_OPTIONS: KatexOptions = {
     delimiters: [
       { left: '$$', right: '$$', display: true },
@@ -107,15 +104,8 @@ export class MarkdownService {
       { left: '\\[', right: '\\]', display: true },
     ],
   };
-
-  private readonly DEFAULT_MERMAID_OPTIONS: MermaidAPI.Config = {
-    startOnLoad: false,
-  };
-
-  private readonly DEFAULT_CLIPBOARD_OPTIONS: ClipboardOptions = {
-    buttonComponent: undefined,
-  };
-
+  private readonly DEFAULT_MERMAID_OPTIONS: MermaidAPI.Config = { startOnLoad: false };
+  private readonly DEFAULT_CLIPBOARD_OPTIONS: ClipboardOptions = { buttonComponent: undefined };
   private readonly DEFAULT_PARSE_OPTIONS: ParseOptions = {
     decodeHtml: false,
     inline: false,
@@ -124,7 +114,6 @@ export class MarkdownService {
     markedOptions: undefined,
     disableSanitizer: false,
   };
-
   private readonly DEFAULT_RENDER_OPTIONS: RenderOptions = {
     clipboard: false,
     clipboardOptions: undefined,
@@ -133,8 +122,11 @@ export class MarkdownService {
     mermaid: false,
     mermaidOptions: undefined,
   };
+
   private readonly _reload$ = new Subject<void>();
   readonly reload$ = this._reload$.asObservable();
+
+  private _options: MarkedOptions = this.DEFAULT_MARKED_OPTIONS;
 
   constructor(
     @Inject(CLIPBOARD_OPTIONS) @Optional() private clipboardOptions: ClipboardOptions,
@@ -145,16 +137,14 @@ export class MarkdownService {
     @Optional() private http: HttpClient,
     private sanitizer: DomSanitizer,
   ) {
-    this.options = options;
+    this.options = { ...this.DEFAULT_MARKED_OPTIONS, ...options };
   }
-
-  private _options: MarkedOptions | undefined;
 
   get options(): MarkedOptions {
-    return this._options!;
+    return this._options;
   }
 
-  set options(value: MarkedOptions | undefined) {
+  set options(value: MarkedOptions) {
     this._options = { ...this.DEFAULT_MARKED_OPTIONS, ...value };
   }
 
@@ -173,28 +163,20 @@ export class MarkdownService {
       emoji,
       mermaid,
       disableSanitizer,
+      markedOptions: userMarkedOptions,
     } = parseOptions;
 
-    const markedOptions = {
-      ...this.options,
-      ...parseOptions.markedOptions,
-    };
+    const markedOptions = { ...this.options, ...userMarkedOptions };
+    const renderer = markedOptions.renderer || this.renderer;
 
-    const renderer = markedOptions.renderer || this.renderer || new Renderer();
-
-    if (this.extensions) {
-      this.renderer = this.extendsRendererForExtensions(renderer);
-    }
-
-    if (mermaid) {
-      this.renderer = this.extendsRendererForMermaid(renderer);
-    }
+    if (this.extensions) this.renderer = this.extendRenderer(renderer, 'extensions');
+    if (mermaid) this.renderer = this.extendRenderer(renderer, 'mermaid');
 
     const trimmed = this.trimIndentation(markdown);
     const decoded = decodeHtml ? this.decodeHtml(trimmed) : trimmed;
     const emojified = emoji ? this.parseEmoji(decoded) : decoded;
-    const marked = this.parseMarked(emojified, markedOptions, inline);
-    const sanitized = disableSanitizer ? marked : this.sanitizer.sanitize(this.securityContext, marked);
+    const markedOutput = this.parseMarked(emojified, markedOptions, inline);
+    const sanitized = disableSanitizer ? markedOutput : this.sanitizer.sanitize(this.securityContext, markedOutput);
 
     return sanitized || '';
   }
@@ -209,25 +191,9 @@ export class MarkdownService {
       mermaidOptions,
     } = options;
 
-    if (katex) {
-      this.renderKatex(element, {
-        ...this.DEFAULT_KATEX_OPTIONS,
-        ...katexOptions,
-      });
-    }
-    if (mermaid) {
-      this.renderMermaid(element, {
-        ...this.DEFAULT_MERMAID_OPTIONS,
-        ...mermaidOptions,
-      });
-    }
-    if (clipboard) {
-      this.renderClipboard(element, viewContainerRef, {
-        ...this.DEFAULT_CLIPBOARD_OPTIONS,
-        ...this.clipboardOptions,
-        ...clipboardOptions,
-      });
-    }
+    if (katex) this.renderKatex(element, { ...this.DEFAULT_KATEX_OPTIONS, ...katexOptions });
+    if (mermaid) this.renderMermaid(element, { ...this.DEFAULT_MERMAID_OPTIONS, ...mermaidOptions });
+    if (clipboard) this.renderClipboard(element, viewContainerRef, { ...this.DEFAULT_CLIPBOARD_OPTIONS, ...this.clipboardOptions, ...clipboardOptions });
 
     this.highlight(element);
   }
@@ -237,12 +203,9 @@ export class MarkdownService {
   }
 
   getSource(src: string): Observable<string> {
-    if (!this.http) {
-      throw new Error(errorSrcWithoutHttpClient);
-    }
-    return this.http
-      .get(src, { responseType: 'text' })
-      .pipe(map(markdown => this.handleExtension(src, markdown)));
+    if (!this.http) throw new Error(errorSrcWithoutHttpClient);
+
+    return this.http.get(src, { responseType: 'text' }).pipe(map(markdown => this.handleExtension(src, markdown)));
   }
 
   highlight(element?: Element | Document): void {
@@ -261,119 +224,79 @@ export class MarkdownService {
   }
 
   private decodeHtml(html: string): string {
-    if (!isPlatformBrowser(this.platform)) {
-      return html;
-    }
+    if (!isPlatformBrowser(this.platform)) return html;
+
     const textarea = document.createElement('textarea');
     textarea.innerHTML = html;
     return textarea.value;
   }
 
-  private extendsRendererForExtensions(renderer: Renderer): Renderer {
+  private extendRenderer(renderer: Renderer, type: 'extensions' | 'mermaid'): Renderer {
     const extendedRenderer = renderer as ExtendedRenderer;
-    if (extendedRenderer.ɵNgxMarkdownRendererExtendedForExtensions === true) {
-      return renderer;
+    const flag = type === 'extensions' ? 'ɵNgxMarkdownRendererExtendedForExtensions' : 'ɵNgxMarkdownRendererExtendedForMermaid';
+
+    if (extendedRenderer[flag]) return renderer;
+
+    if (type === 'extensions' && this.extensions?.length > 0) marked.use(...this.extensions);
+
+    if (type === 'mermaid') {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const defaultCode = renderer.code;
+      renderer.code = (code: string, language: string | undefined, isEscaped: boolean) => {
+        if (language === 'mermaid') {
+          return `<div class="mermaid">${code}</div>`;
+        } else if (defaultCode) {
+          return defaultCode.call(renderer, code, language, isEscaped);
+        }
+        return '';
+      };
     }
 
-    if (this.extensions?.length > 0) {
-      marked.use(...this.extensions);
-    }
-
-    extendedRenderer.ɵNgxMarkdownRendererExtendedForExtensions = true;
-
-    return renderer;
-  }
-
-  private extendsRendererForMermaid(renderer: Renderer): Renderer {
-    const extendedRenderer = renderer as ExtendedRenderer;
-    if (extendedRenderer.ɵNgxMarkdownRendererExtendedForMermaid === true) {
-      return renderer;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    const defaultCode = renderer.code;
-    renderer.code = function (code: string, language: string | undefined, isEscaped: boolean) {
-      return language === 'mermaid'
-        ? `<div class="mermaid">${code}</div>`
-        : defaultCode.call(this, code, language, isEscaped);
-    };
-
-    extendedRenderer.ɵNgxMarkdownRendererExtendedForMermaid = true;
-
+    extendedRenderer[flag] = true;
     return renderer;
   }
 
   private handleExtension(src: string, markdown: string): string {
-    const urlProtocolIndex = src.lastIndexOf('://');
-    const urlWithoutProtocol = urlProtocolIndex > -1
-      ? src.substring(urlProtocolIndex + 4)
-      : src;
+    const extensionMatch = src.match(/\.([a-zA-Z0-9]+)(?:[?#].*)?$/);
+    const extension = extensionMatch ? extensionMatch[1] : '';
 
-    const lastSlashIndex = urlWithoutProtocol.lastIndexOf('/');
-    const lastUrlSegment = lastSlashIndex > -1
-      ? urlWithoutProtocol.substring(lastSlashIndex + 1).split('?')[0]
-      : '';
-
-    const lastDotIndex = lastUrlSegment.lastIndexOf('.');
-    const extension = lastDotIndex > -1
-      ? lastUrlSegment.substring(lastDotIndex + 1)
-      : '';
-
-    return !!extension && extension !== 'md'
-      ? '```' + extension + '\n' + markdown + '\n```'
+    return extension && extension !== 'md'
+      ? `\`\`\`${extension}\n${markdown}\n\`\`\``
       : markdown;
   }
 
-  private parseMarked(html: string, markedOptions: MarkedOptions, inline = false): string | Promise<string> {
-    if (markedOptions.renderer) {
+  private parseEmoji(markdown: string): string {
+    if (!isPlatformBrowser(this.platform)) return markdown;
+
+    if (typeof joypixels === 'undefined' || typeof joypixels.shortnameToUnicode === 'undefined') {
+      throw new Error(errorJoyPixelsNotLoaded);
+    }
+
+    return joypixels.shortnameToUnicode(markdown);
+  }
+
+  private parseMarked(markdown: string, options: MarkedOptions, inline = false): string | Promise<string> {
+    if (options.renderer) {
       // clone renderer and remove extended flags otherwise
       // marked throws an error thinking it is a renderer prop
-      const renderer = { ...markedOptions.renderer } as Partial<ExtendedRenderer>;
+      const renderer = { ...options.renderer } as Partial<ExtendedRenderer>;
       delete renderer.ɵNgxMarkdownRendererExtendedForExtensions;
       delete renderer.ɵNgxMarkdownRendererExtendedForMermaid;
 
       // remove renderer from markedOptions because if renderer is
       // passed to marked.parse method, it will ignore all extensions
-      delete markedOptions.renderer;
+      delete options.renderer;
 
       marked.use({ renderer });
     }
 
-    return inline
-      ? marked.parseInline(html, markedOptions)
-      : marked.parse(html, markedOptions);
-  }
-
-  private parseEmoji(html: string): string {
-    if (!isPlatformBrowser(this.platform)) {
-      return html;
-    }
-    if (typeof joypixels === 'undefined' || typeof joypixels.shortnameToUnicode === 'undefined') {
-      throw new Error(errorJoyPixelsNotLoaded);
-    }
-    return joypixels.shortnameToUnicode(html);
-  }
-
-  private renderKatex(element: HTMLElement, options: KatexOptions): void {
-    if (!isPlatformBrowser(this.platform)) {
-      return;
-    }
-    if (typeof katex === 'undefined' || typeof renderMathInElement === 'undefined') {
-      throw new Error(errorKatexNotLoaded);
-    }
-    renderMathInElement(element, options);
+    return inline ? marked.parseInline(markdown, options) : marked(markdown, options);
   }
 
   private renderClipboard(element: HTMLElement, viewContainerRef: ViewContainerRef | undefined, options: ClipboardRenderOptions): void {
-    if (!isPlatformBrowser(this.platform)) {
-      return;
-    }
-    if (typeof ClipboardJS === 'undefined') {
-      throw new Error(errorClipboardNotLoaded);
-    }
-    if (!viewContainerRef) {
-      throw new Error(errorClipboardViewContainerRequired);
-    }
+    if (!isPlatformBrowser(this.platform)) return;
+    if (typeof ClipboardJS === 'undefined') throw new Error(errorClipboardNotLoaded);
+    if (!viewContainerRef) throw new Error(errorClipboardViewContainerRequired);
 
     const {
       buttonComponent,
@@ -383,110 +306,138 @@ export class MarkdownService {
       languageButton,
     } = options;
 
-    // target every <pre> elements
+    // Target every <pre> element
     const preElements = element.querySelectorAll('pre');
-    for (let i = 0; i < preElements.length; i++) {
-      const preElement = preElements.item(i);
 
-      // create <pre> wrapper element
-      const preWrapperElement = document.createElement('div');
-      preWrapperElement.style.position = 'relative';
-      preElement.parentNode!.insertBefore(preWrapperElement, preElement);
-      preWrapperElement.appendChild(preElement);
+    preElements.forEach(preElement => {
+      const preWrapperElement = this.createPreWrapper(preElement);
+      const toolbarWrapperElement = this.createToolbar(preWrapperElement);
 
-      // create toolbar element
-      const toolbarWrapperElement = document.createElement('div');
-      toolbarWrapperElement.classList.add('markdown-clipboard-toolbar');
-      toolbarWrapperElement.style.position = 'absolute';
-      toolbarWrapperElement.style.top = '.5em';
-      toolbarWrapperElement.style.right = '.5em';
-      toolbarWrapperElement.style.zIndex = '1';
-      preWrapperElement.insertAdjacentElement('beforeend', toolbarWrapperElement);
+      // Register mouse enter/leave listeners
+      preWrapperElement.addEventListener('mouseenter', () => toolbarWrapperElement.classList.add('hover'));
+      preWrapperElement.addEventListener('mouseleave', () => toolbarWrapperElement.classList.remove('hover'));
 
-      // register listener to show/hide toolbar
-      preWrapperElement.onmouseenter = () => toolbarWrapperElement.classList.add('hover');
-      preWrapperElement.onmouseleave = () => toolbarWrapperElement.classList.remove('hover');
+      // Create button component or template
+      const embeddedViewRef = this.createButton(viewContainerRef, buttonComponent, buttonTemplate, preElement, languageButton, buttonTextCopy, buttonTextCopied);
 
-      // declare embeddedViewRef holding variable
-      let embeddedViewRef: EmbeddedViewRef<unknown>;
+      // Attach clipboard.js to root node
+      this.attachClipboard(embeddedViewRef, toolbarWrapperElement, preElement);
+    });
+  }
 
-      // use provided component via input property
-      // or provided via ClipboardOptions provider
-      if (buttonComponent) {
-        const componentRef = viewContainerRef.createComponent(buttonComponent);
-        embeddedViewRef = componentRef.hostView as EmbeddedViewRef<unknown>;
-        componentRef.changeDetectorRef.markForCheck();
-      }
+  private createPreWrapper(preElement: HTMLElement): HTMLElement {
+    const preWrapperElement = document.createElement('div');
+    preWrapperElement.style.position = 'relative';
+    preElement.parentNode!.insertBefore(preWrapperElement, preElement);
+    preWrapperElement.appendChild(preElement);
+    return preWrapperElement;
+  }
+
+  private createToolbar(preWrapperElement: HTMLElement): HTMLElement {
+    const toolbarWrapperElement = document.createElement('div');
+    toolbarWrapperElement.classList.add('markdown-clipboard-toolbar');
+    toolbarWrapperElement.style.position = 'absolute';
+    toolbarWrapperElement.style.top = '.5em';
+    toolbarWrapperElement.style.right = '.5em';
+    toolbarWrapperElement.style.zIndex = '1';
+    preWrapperElement.appendChild(toolbarWrapperElement);
+    return toolbarWrapperElement;
+  }
+
+  private createButton<T>(
+    viewContainerRef: ViewContainerRef,
+    buttonComponent: Type<T> | undefined,
+    buttonTemplate: TemplateRef<T> | undefined,
+    preElement: HTMLElement,
+    languageButton?: boolean,
+    buttonTextCopy?: string,
+    buttonTextCopied?: string,
+  ): EmbeddedViewRef<T> {
+    // declare embeddedViewRef holding variable
+    let embeddedViewRef: EmbeddedViewRef<T>;
+
+    // use provided component via input property
+    // or provided via ClipboardOptions provider
+    if (buttonComponent) {
+      const componentRef = viewContainerRef.createComponent(buttonComponent);
+      embeddedViewRef = componentRef.hostView as EmbeddedViewRef<T>;
+      componentRef.changeDetectorRef.markForCheck();
       // use provided template via input property
-      else if (buttonTemplate) {
-        embeddedViewRef = viewContainerRef.createEmbeddedView(buttonTemplate);
-      }
+    } else if (buttonTemplate) {
+      embeddedViewRef = viewContainerRef.createEmbeddedView(buttonTemplate);
       // use default component
-      else {
-        const componentRef = viewContainerRef.createComponent(ClipboardButtonComponent);
-        // Insert the language class of the code block into the button, if available. If language is not available, use 'Copy'.
-        if (languageButton) {
-          const language = preElement.querySelector('code')?.className.replace('language-', '') || 'Copy';
-          componentRef.instance.buttonTextCopy = language;
-        }
-
-        if (buttonTextCopy) componentRef.instance.buttonTextCopy = buttonTextCopy;
-
-        if (buttonTextCopied) componentRef.instance.buttonTextCopied = buttonTextCopied;
-
-        embeddedViewRef = componentRef.hostView as EmbeddedViewRef<unknown>;
-        componentRef.changeDetectorRef.markForCheck();
-      }
-
-      // declare clipboard instance variable
-      let clipboardInstance: typeof ClipboardJS;
-
-      // attach clipboard.js to root node
-      embeddedViewRef.rootNodes.forEach((node: HTMLElement) => {
-        toolbarWrapperElement.appendChild(node);
-        clipboardInstance = new ClipboardJS(node, { text: () => preElement.innerText });
-      });
-
-      // destroy clipboard instance when view is destroyed
-      embeddedViewRef.onDestroy(() => clipboardInstance.destroy());
+    } else {
+      const componentRef = viewContainerRef.createComponent(ClipboardButtonComponent);
+      this.setButtonText(componentRef.instance, preElement, languageButton, buttonTextCopy, buttonTextCopied);
+      embeddedViewRef = componentRef.hostView as EmbeddedViewRef<T>;
+      componentRef.changeDetectorRef.markForCheck();
     }
+
+    return embeddedViewRef;
+  }
+
+  private setButtonText(
+    instance: ClipboardButtonComponent,
+    preElement: HTMLElement,
+    languageButton?: boolean,
+    buttonTextCopy?: string,
+    buttonTextCopied?: string,
+  ): void {
+    if (!instance) {
+      console.error('ClipboardButtonComponent instance is undefined.');
+      return;
+    }
+
+    const language = languageButton ? preElement.querySelector('code')?.className.replace('language-', '') || 'Copy' : 'Copy';
+    instance.buttonTextCopy = buttonTextCopy || language;
+    instance.buttonTextCopied = buttonTextCopied || 'Copied!';
+  }
+
+  private attachClipboard(embeddedViewRef: EmbeddedViewRef<unknown>, toolbarWrapperElement: HTMLElement, preElement: HTMLElement): void {
+    let clipboardInstance: typeof ClipboardJS;
+
+    embeddedViewRef.rootNodes.forEach((node: HTMLElement) => {
+      toolbarWrapperElement.appendChild(node);
+      clipboardInstance = new ClipboardJS(node, { text: () => preElement.innerText });
+    });
+
+    embeddedViewRef.onDestroy(() => clipboardInstance.destroy());
+  }
+
+  private renderKatex(element: HTMLElement, options?: KatexOptions): void {
+    if (!isPlatformBrowser(this.platform)) return;
+
+    if (typeof katex === 'undefined' || typeof renderMathInElement === 'undefined') {
+      throw new Error(errorKatexNotLoaded);
+    }
+
+    renderMathInElement(element, options);
   }
 
   private renderMermaid(element: HTMLElement, options: MermaidAPI.Config = this.DEFAULT_MERMAID_OPTIONS): void {
     if (!isPlatformBrowser(this.platform)) {
       return;
     }
+
     if (typeof mermaid === 'undefined' || typeof mermaid.initialize === 'undefined') {
       throw new Error(errorMermaidNotLoaded);
     }
-    const mermaidElements = element.querySelectorAll<HTMLElement>('.mermaid');
-    if (mermaidElements.length === 0) {
-      return;
+
+    const mermaidElements = element.querySelectorAll('.mermaid');
+    if (mermaidElements.length > 0) {
+      mermaid.initialize(options);
+
+      // Convert NodeList to Array
+      const nodes = Array.from(mermaidElements) as HTMLElement[];
+      mermaid.run({ nodes });
     }
-    mermaid.initialize(options);
-    mermaid.run({ nodes: mermaidElements });
   }
 
   private trimIndentation(markdown: string): string {
-    if (!markdown) {
-      return '';
-    }
-    let indentStart: number;
-    return markdown
-      .split('\n')
-      .map(line => {
-        let lineIdentStart = indentStart;
-        if (line.length > 0) {
-          lineIdentStart = isNaN(lineIdentStart)
-            ? line.search(/\S|$/)
-            : Math.min(line.search(/\S|$/), lineIdentStart);
-        }
-        if (isNaN(indentStart)) {
-          indentStart = lineIdentStart;
-        }
-        return lineIdentStart
-          ? line.substring(lineIdentStart)
-          : line;
-      }).join('\n');
+    // Return early if markdown is null, undefined, or empty
+    if (!markdown) return '';
+
+    const indentSize = markdown.match(/^[^\S\r\n]*(?=\S)/gm)?.reduce((min, line) => Math.min(min, line.length), Number.POSITIVE_INFINITY) ?? 0;
+    return indentSize > 0 ? markdown.replace(new RegExp(`^[^S\r\n]{${indentSize}}`, 'gm'), '') : markdown;
   }
 }
