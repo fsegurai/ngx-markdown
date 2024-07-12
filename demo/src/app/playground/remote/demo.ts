@@ -18,7 +18,7 @@ With a reference later in the document defining the URL location:
 
 ## Advertisement:
 
-__Advertisement :smile:\`\`\`
+__Advertisement :smile:
 
 ## Emphasis Section
 
