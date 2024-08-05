@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Component, SecurityContext } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -66,11 +66,9 @@ describe('MarkdownModule', () => {
     it('should provide HttpClient when MarkdownModuleConfig.loader is provided', () => {
 
       TestBed.configureTestingModule({
-        imports: [
-          HttpClientModule,
-          MarkdownModule.forRoot({ loader: HttpClient }),
-        ],
-      });
+    imports: [MarkdownModule.forRoot({ loader: HttpClient })],
+    providers: [provideHttpClient(withInterceptorsFromDi())]
+});
 
       const httpClient = TestBed.inject(HttpClient);
 
@@ -322,17 +320,15 @@ describe('MarkdownModule', () => {
       };
 
       TestBed.configureTestingModule({
-        imports: [
-          HttpClientModule,
-          MarkdownModule.forRoot({
+    imports: [MarkdownModule.forRoot({
             loader: HttpClient,
             clipboardOptions: { provide: CLIPBOARD_OPTIONS, useValue: mockClipboardOptions },
             markedOptions: { provide: MARKED_OPTIONS, useValue: mockMarkedOptions },
             sanitize: SecurityContext.NONE,
-          }),
-          MarkdownModule.forChild(),
-        ],
-      });
+        }),
+        MarkdownModule.forChild()],
+    providers: [provideHttpClient(withInterceptorsFromDi())]
+});
 
       const httpClient = TestBed.inject(HttpClient);
       const clipboardOptions = TestBed.inject(CLIPBOARD_OPTIONS);
