@@ -16,7 +16,7 @@ With a reference later in the document defining the URL location:
 
 ***
 
-## Advertisement:
+## Advertisement
 
 __Advertisement :smile:
 
@@ -37,7 +37,7 @@ __Advertisement :smile:
 ##### h5 Heading
 ###### h6 Heading
 
-## Horizontal Rules:
+## Horizontal Rules
 
 ---
 
