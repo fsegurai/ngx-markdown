@@ -948,6 +948,8 @@ When using variable binding you can optionally use `language` pipe to specify th
 
 A demo is available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.github.io/ngx-markdown) and its source code can be found inside the `demo` directory.
 
+    It's important to mention that for this project I'm using Node.js v18.20.4 and Yarn v1.22.22.
+
 The following commands will clone the repository, install npm dependencies and serve the application @ [http://localhost:4200](http://localhost:4200)
 
 It is recommended to use `yarn` as the package manager to handle the large number of dependencies as it is faster than `npm` and it will mostly not cause any issues.
