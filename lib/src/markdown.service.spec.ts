@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentRef, EmbeddedViewRef, SecurityContext, TemplateRef, ViewContainerRef, ViewRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
@@ -24,6 +24,7 @@ import {
 import { MarkedOptions } from './marked-options';
 import { MarkedRenderer } from './marked-renderer';
 import { MermaidAPI } from './mermaid-options';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 declare let window: any;
 declare let Prism: any;
@@ -91,18 +92,17 @@ describe('MarkdownService', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [
-          BrowserModule,
-          HttpClientTestingModule,
-          MarkdownModule.forRoot({
+    imports: [BrowserModule,
+        MarkdownModule.forRoot({
             markedExtensions: mockExtensions,
             sanitize: SecurityContext.NONE,
-          }),
-        ],
-        providers: [
-          { provide: ViewContainerRef, useValue: viewContainerRefSpy },
-        ],
-      });
+        })],
+    providers: [
+        { provide: ViewContainerRef, useValue: viewContainerRefSpy },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
 
       domSanitizer = TestBed.inject(DomSanitizer);
       http = TestBed.inject(HttpTestingController);
