@@ -7,9 +7,6 @@
   <img alt="GitHub Release" src="https://img.shields.io/github/v/release/fsegurai/ngx-markdown">
   <br>
   <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/fsegurai/ngx-markdown">
-</p>
-
-<p align="center">
   <img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/fsegurai/ngx-markdown">
   <a href="https://opensource.org/licenses/MIT">
     <img alt="GitHub License" src="https://img.shields.io/github/license/fsegurai/ngx-markdown">
@@ -21,8 +18,6 @@
     <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/fsegurai/ngx-markdown/total">
   </a>
 </p>
-
-# @fsegurai/ngx-markdown
 
 **This is just a side project to provide additional features that fulfill my needs.**
 
