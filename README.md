@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Ngx-Markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png">
+  <img alt="@fsegurai/ngx-markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png">
 </p>
 
 <p align="center">
@@ -47,12 +47,12 @@ Demo available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.gith
 
 ## Installation
 
-### ngx-markdown
+### @fsegurai/ngx-markdown
 
-To add ngx-markdown along with the required marked library to your `package.json` use the following commands.
+To add @fsegurai/ngx-markdown along with the required marked library to your `package.json` use the following commands.
 
 ```bash
-npm install ngx-markdown marked@^12.0.2 --save
+npm install @fsegurai/ngx-markdown marked@^12.0.2 --save
 ```
 
 ### Syntax highlight
@@ -246,7 +246,7 @@ Using `markdown` component and/or directive, you will be able to use the `emoji`
 
 ```html
 <markdown emoji>
-  I :heart: ngx-markdown
+  I :heart: @fsegurai/ngx-markdown
 </markdown>
 ```
 
@@ -295,7 +295,7 @@ Using `markdown` component and/or directive, you will be able to use the `katex`
 Optionally, you can use `katexOptions` property to specify both the [KaTeX options](https://katex.org/docs/options.html) and the [KaTeX Auto-Render options](https://katex.org/docs/autorender.html#api).
 
 ```typescript
-import {KatexOptions} from 'ngx-markdown';
+import {KatexOptions} from '@fsegurai/ngx-markdown';
 
 public options: KatexOptions = {
   displayMode: true,
@@ -352,7 +352,7 @@ Using `markdown` component and/or directive, you will be able to use the `mermai
 Optionally, you can specify mermaid [configuration options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) using `mermaidOptions` property.
 
 ```typescript
-import {MermaidAPI} from 'ngx-markdown';
+import {MermaidAPI} from '@fsegurai/ngx-markdown';
 
 public options: MermaidAPI.Config = {
   fontFamily: '"trebuchet ms", verdana, arial, sans-serif',
@@ -498,11 +498,11 @@ Alternatively, the `clipboard` directive can be used in conjonction with `ng-tem
 </markdown>
 ```
 
-> :blue_book: Refer to the ngx-markdown [clipboard plugin demo](https://fsegurai.github.io/ngx-markdown/plugins#clipboard) for live examples.
+> :blue_book: Refer to the @fsegurai/ngx-markdown [clipboard plugin demo](https://fsegurai.github.io/ngx-markdown/plugins#clipboard) for live examples.
 
 ## Configuration
 
-The ngx-markdown library can be used either with the standalone components or with modules configuration. Please follow the configuration section that matches your application.
+The @fsegurai/ngx-markdown library can be used either with the standalone components or with modules configuration. Please follow the configuration section that matches your application.
 
 ### Standalone components
 
@@ -510,7 +510,7 @@ Use the `provideMarkdown` provide-function in your application configuration `Ap
 
 ```diff
 import { NgModule } from '@angular/core';
-+ import { provideMarkdown } from 'ngx-markdown';
++ import { provideMarkdown } from '@fsegurai/ngx-markdown';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -525,7 +525,7 @@ You must import `MarkdownModule` inside your main application module (usually na
 
 ```diff
 import { NgModule } from '@angular/core';
-+ import { MarkdownModule } from 'ngx-markdown';
++ import { MarkdownModule } from '@fsegurai/ngx-markdown';
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -542,7 +542,7 @@ Use `forChild` when importing `MarkdownModule` into other application modules to
 
 ```diff
 import { NgModule } from '@angular/core';
-+ import { MarkdownModule } from 'ngx-markdown';
++ import { MarkdownModule } from '@fsegurai/ngx-markdown';
 import { HomeComponent } from './home.component';
 
 @NgModule({
@@ -578,7 +578,7 @@ imports: [
 
 #### Sanitization
 
-As of ngx-markdown v17.0.0 **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
+As of @fsegurai/ngx-markdown v17.0.0 **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
 
 ##### Using the `provideMarkdown` function
 
@@ -637,7 +637,7 @@ Optionally, markdown parsing can be configured using [MarkedOptions](https://mar
 
 ```typescript
 // imports
-import {MARKED_OPTIONS, provideMarkdown} from 'ngx-markdown';
+import {MARKED_OPTIONS, provideMarkdown} from '@fsegurai/ngx-markdown';
 
 // using default options
 provideMarkdown(),
@@ -659,7 +659,7 @@ provideMarkdown(),
 
 ```typescript
 // imports
-import {MarkdownModule, MARKED_OPTIONS} from 'ngx-markdown';
+import {MarkdownModule, MARKED_OPTIONS} from '@fsegurai/ngx-markdown';
 
 // using default options
 MarkdownModule.forRoot(),
@@ -685,7 +685,7 @@ MarkdownModule.forRoot(),
 The example uses a factory function and override the default blockquote token rendering by adding a CSS class for custom styling when using Bootstrap CSS:
 
 ```typescript
-import {MARKED_OPTIONS, MarkedOptions, MarkedRenderer} from 'ngx-markdown';
+import {MARKED_OPTIONS, MarkedOptions, MarkedRenderer} from '@fsegurai/ngx-markdown';
 
 // function that returns `MarkedOptions` with renderer override
 export function markedOptionsFactory(): MarkedOptions {
@@ -754,7 +754,7 @@ MarkdownModule.forRoot({
 
 ## Usage
 
-`ngx-markdown` provides different approaches to help you parse markdown to your application depending on your needs.
+`@fsegurai/ngx-markdown` provides different approaches to help you parse markdown to your application depending on your needs.
 
 > :bulb: As of Angular 6, the template compiler strips whitespace by default. Use `ngPreserveWhitespaces` directive to preserve whitespaces such as newlines in order for the markdown-formatted content to render as intended.  
 https://angular.io/api/core/Component#preserveWhitespaces
@@ -857,7 +857,7 @@ You can use `MarkdownService` to have access to markdown parsing, rendering and 
 
 ```typescript
 import {Component, OnInit} from '@angular/core';
-import {MarkdownService} from 'ngx-markdown';
+import {MarkdownService} from '@fsegurai/ngx-markdown';
 
 @Component({...})
 export class ExampleComponent implements OnInit {
@@ -882,7 +882,7 @@ Here is an example of overriding the default heading token rendering through `Ma
 
 ```typescript
 import {Component, OnInit} from '@angular/core';
-import {MarkdownService} from 'ngx-markdown';
+import {MarkdownService} from '@fsegurai/ngx-markdown';
 
 @Component({
   selector: 'app-example',
@@ -925,7 +925,7 @@ In some situations, you might need to re-render markdown after making changes. I
 To do so, inject the `MarkdownService` and call the `reload()` function as shown below.
 
 ```typescript
-import {MarkdownService} from 'ngx-markdown';
+import {MarkdownService} from '@fsegurai/ngx-markdown';
 
 constructor(private markdownService: MarkdownService){
 }
@@ -935,7 +935,7 @@ update(){
 }
 ```
 
-> :blue_book: Refer to the ngx-markdown [re-render demo](https://fsegurai.github.io/ngx-markdown/rerender) for a live example.
+> :blue_book: Refer to the @fsegurai/ngx-markdown [re-render demo](https://fsegurai.github.io/ngx-markdown/rerender) for a live example.
 
 ## Syntax highlight
 
@@ -947,7 +947,7 @@ When using static markdown you are responsible to provide the code block with re
     const myProp: string = 'value';
 +  ```
 
-When using remote URL ngx-markdown will use the file extension to automatically resolve the code language.
+When using remote URL @fsegurai/ngx-markdown will use the file extension to automatically resolve the code language.
 
 ```html
 <!-- will use html highlights -->
