@@ -1,8 +1,32 @@
+<p align="center">
+  <img alt="Ngx-Markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png">
+</p>
+
+<p align="center">
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/fsegurai/ngx-markdown/angular-CI_CD.yml">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/fsegurai/ngx-markdown">
+  <br>
+  <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/fsegurai/ngx-markdown">
+</p>
+
+<p align="center">
+  <img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/fsegurai/ngx-markdown">
+  <a href="https://opensource.org/licenses/MIT">
+    <img alt="GitHub License" src="https://img.shields.io/github/license/fsegurai/ngx-markdown">
+  </a>
+  <br>
+  <img alt="Stars" src="https://img.shields.io/github/stars/fsegurai/ngx-markdown?style=square&labelColor=343b41"/> 
+  <img alt="Forks" src="https://img.shields.io/github/forks/fsegurai/ngx-markdown?style=square&labelColor=343b41"/>
+  <a href="https://github.com/fsegurai/ngx-markdown/pkgs/npm/ngx-markdown">
+    <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/fsegurai/ngx-markdown/total">
+  </a>
+</p>
+
 # @fsegurai/ngx-markdown
 
 **This is just a side project to provide additional features that fulfill my needs.**
 
-@fsegurai/ngx-markdown is an [Angular](https://angular.io/) library that combines...
+@fsegurai/ngx-markdown is an [Angular](https://angular.dev/) library that combines...
 
 - [Marked](http://marked.js.org/) to parse markdown to HTML
 - [Prism.js](http://prismjs.com/) for language syntax highlight
@@ -54,7 +78,7 @@ To activate [Prism.js](http://prismjs.com/) syntax highlight you will need to in
 
 _Additional themes can be found by browsing the web such as [Prism-Themes](https://github.com/PrismJS/prism-themes) or [Mokokai](https://github.com/Ahrengot/Monokai-theme-for-Prism.js) for example._
 
-If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angular.json` example below...
+If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `angular.json` example below...
 
 ```diff
 "styles": [
@@ -75,7 +99,7 @@ To use the [line numbers plugin](http://prismjs.com/plugins/line-numbers/) that 
 - CSS styling for line numbers - `prism-line-numbers.css`
 - line numbers plugin script - `prism-line-numbers.js`
 
-If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angular.json` example below...
+If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `angular.json` example below...
 
 ```diff
 "styles": [
@@ -110,7 +134,7 @@ To use the [line highlight plugin](http://prismjs.com/plugins/line-highlight/) t
 - CSS styling for line highlight - `prism-line-highlight.css`
 - line highlight plugin script - `prism-line-highlight.js`
 
-If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angular.json` example below...
+If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `angular.json` example below...
 
 ```diff
 "styles": [
@@ -146,7 +170,7 @@ To use the [command line plugin](https://prismjs.com/plugins/command-line/) that
 - CSS styling for command line - `prism-command-line.css`
 - command line plugin script - `prism-command-line.js`
 
-If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angular.json` example below...
+If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `angular.json` example below...
 
 ```diff
 "styles": [
@@ -213,7 +237,7 @@ To activate [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) for emoj
 
 - Emoji-Toolkit library - `node_modules/emoji-toolkit/lib/js/joypixels.min.js`
 
-If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angular.json` example below...
+If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `angular.json` example below...
 
 ```diff
 "scripts": [
@@ -249,7 +273,7 @@ To activate [KaTeX](https://katex.org/) math rendering you will need to include.
 - KaTex Auto-Render extension - `node_modules/katex/dist/contrib/auto-render.min.js,` file
 - KaTex CSS customization - `node_modules/katex/dist/katex.min.css` file
 
-If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angular.json` example below...
+If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `angular.json` example below...
 
 ```diff
 "styles": [
@@ -311,7 +335,7 @@ To activate [Mermaid](https://mermaid-js.github.io/) diagramming and charting to
 
 - Mermaid JavaScript library - `node_modules/mermaid/dist/mermaid.min.js` file
 
-If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angular.json` example below...
+If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `angular.json` example below...
 
 ```diff
 "scripts": [
@@ -367,7 +391,7 @@ To activate [Clipboard](https://clipboardjs.com/) allowing copy-to-clipboard you
 
 - Clipboard JavaScript library - `node_modules/clipboard/dist/clipboard.min.js` file
 
-If you are using [Angular CLI](https://cli.angular.io/) you can follow the `angular.json` example below...
+If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `angular.json` example below...
 
 ```diff
 "scripts": [
