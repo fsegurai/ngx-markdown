@@ -61,7 +61,7 @@ jobs:
   Test:
     runs-on: ubuntu-latest
     environment: github-pages
-    needs: build
+    needs: Build
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -90,7 +90,7 @@ jobs:
       github.event.repository.fork == false
     runs-on: ubuntu-latest
     environment: github-pages
-    needs: test
+    needs: [ Build, Test ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
