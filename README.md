@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/fsegurai/ngx-markdown/angular-CI_CD.yml">
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/fsegurai/ngx-markdown/npm-publish-setup.yml">
   <img alt="GitHub Release" src="https://img.shields.io/github/v/release/fsegurai/ngx-markdown">
   <br>
   <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/fsegurai/ngx-markdown">
