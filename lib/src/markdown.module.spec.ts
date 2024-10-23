@@ -67,7 +67,7 @@ describe('MarkdownModule', () => {
 
       TestBed.configureTestingModule({
     imports: [MarkdownModule.forRoot({ loader: HttpClient })],
-    providers: [provideHttpClient(withInterceptorsFromDi())]
+    providers: [provideHttpClient(withInterceptorsFromDi())],
 });
 
       const httpClient = TestBed.inject(HttpClient);
@@ -327,7 +327,7 @@ describe('MarkdownModule', () => {
             sanitize: SecurityContext.NONE,
         }),
         MarkdownModule.forChild()],
-    providers: [provideHttpClient(withInterceptorsFromDi())]
+    providers: [provideHttpClient(withInterceptorsFromDi())],
 });
 
       const httpClient = TestBed.inject(HttpClient);

@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, ElementRef} from '@angular/core';
-import {MarkdownComponent} from 'ngx-markdown';
-import {ScrollspyNavLayoutComponent} from '@shared/scrollspy-nav-layout';
+import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
+import { MarkdownComponent } from 'ngx-markdown';
+import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
   selector: 'app-get-started',
@@ -33,7 +33,7 @@ export default class GetStartedComponent {
     this.elementRef.nativeElement
       .querySelector('markdown')!
       .querySelectorAll(
-        'markdown > p:nth-child(-n + 2), #ngx-markdown, #table-of-contents + ul, #table-of-contents'
+        'markdown > p:nth-child(-n + 2), #ngx-markdown, #table-of-contents + ul, #table-of-contents',
       )
       .forEach((x) => x.remove());
   }

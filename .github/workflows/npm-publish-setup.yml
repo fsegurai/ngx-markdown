@@ -1,0 +1,133 @@
+name: NPM Publish Setup
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    environment: FSI_DEP_NodeJs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js - Version ${{ vars.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Create cache directories
+        run: mkdir -p ~/.cache/yarn && mkdir -p ${{ github.workspace }}/.yarn
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/yarn
+            ${{ github.workspace }}/.yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build demo
+        run: |
+          yarn build:lib
+          yarn postBuild:lib
+
+      - name: Upload build artifacts
+        if: |
+          github.ref == 'refs/heads/main' &&
+          github.event.repository.fork == false
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: ${{ vars.DEMO_PATH }}
+          if-no-files-found: error
+
+  Test:
+    runs-on: ubuntu-latest
+    environment: FSI_DEP_NodeJs
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js - Version ${{ vars.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Create cache directories
+        run: mkdir -p ~/.cache/yarn && mkdir -p ${{ github.workspace }}/.yarn
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/yarn
+            ${{ github.workspace }}/.yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Test Lint
+        run: yarn lint:lib
+
+      - name: Test TypeScript
+        run: yarn type-check:lib
+
+  Release:
+    needs: [Build, Test]
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event.repository.fork == false
+    runs-on: ubuntu-latest
+    environment: FSI_DEP_NodeJs
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ vars.NODE_VERSION }} for NPM registry
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: 'yarn'
+          registry-url: "https://registry.npmjs.org/"
+          scope: ${{ vars.NPM_ORG }}
+          always-auth: true
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: ${{ vars.DEMO_PATH }}
+
+      - name: Release to NPM registry 🚀
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm publish --access public || echo "Package already published in NPM, skipping..."
+
+      - name: Set up Node.js ${{ vars.NODE_VERSION }} for GitHub NPM registry
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          registry-url: "https://npm.pkg.github.com/"
+          scope: ${{ vars.NPM_ORG }}
+          always-auth: true
+
+      - name: Release to GitHub NPM registry 🚀
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
+        run: npm publish && npx semantic-release || echo "Package already published in GitHub NPM, skipping..."

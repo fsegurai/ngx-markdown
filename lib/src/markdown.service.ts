@@ -132,7 +132,7 @@ export class MarkdownService {
     @Inject(CLIPBOARD_OPTIONS) @Optional() private clipboardOptions: ClipboardOptions,
     @Inject(MARKED_EXTENSIONS) @Optional() private extensions: MarkedExtension[],
     @Inject(MARKED_OPTIONS) @Optional() options: MarkedOptions,
-    @Inject(PLATFORM_ID) private platform: Object,
+    @Inject(PLATFORM_ID) private platform: object,
     @Inject(SECURITY_CONTEXT) private securityContext: SecurityContext,
     @Optional() private http: HttpClient,
     private sanitizer: DomSanitizer,

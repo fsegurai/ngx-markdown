@@ -10,7 +10,7 @@
       ],
       "parserOptions": {
         "project": [
-          "./tsconfig.lib.json"
+          "lib/tsconfig.lib.json"
         ],
         "createDefaultProgram": true
       },
@@ -50,7 +50,7 @@
       ],
       "parserOptions": {
         "project": [
-          "./tsconfig.spec.json"
+          "lib/tsconfig.spec.json"
         ],
         "createDefaultProgram": true
       },
