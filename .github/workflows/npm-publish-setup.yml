@@ -45,10 +45,11 @@ jobs:
         if: |
           github.ref == 'refs/heads/main' &&
           github.event.repository.fork == false
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: ${{ vars.DEMO_PATH }}
+          if-no-files-found: error
 
   Test:
     runs-on: ubuntu-latest
@@ -106,7 +107,7 @@ jobs:
           always-auth: true
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: ${{ vars.DEMO_PATH }}
