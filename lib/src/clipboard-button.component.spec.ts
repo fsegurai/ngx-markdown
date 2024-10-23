@@ -1,5 +1,5 @@
-import {ComponentFixture, fakeAsync, TestBed, tick,} from '@angular/core/testing';
-import {ClipboardButtonComponent} from './clipboard-button.component';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ClipboardButtonComponent } from './clipboard-button.component';
 
 describe('ClipboardButtonComponent', () => {
   let fixture: ComponentFixture<ClipboardButtonComponent>;
@@ -18,7 +18,7 @@ describe('ClipboardButtonComponent', () => {
   describe('button', () => {
     it('should have class `markdown-clipboard-button`', () => {
       const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
-        '.markdown-clipboard-button'
+        '.markdown-clipboard-button',
       );
 
       expect(buttonElement).toBeDefined();
@@ -26,7 +26,7 @@ describe('ClipboardButtonComponent', () => {
 
     it('should have class `copied` applied for 3 seconds when clicked', fakeAsync(() => {
       const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
-        '.markdown-clipboard-button'
+        '.markdown-clipboard-button',
       );
 
       expect(buttonElement?.classList).not.toContain('copied');
@@ -49,7 +49,7 @@ describe('ClipboardButtonComponent', () => {
 
     it('should display text `copy`', () => {
       const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
-        '.markdown-clipboard-button'
+        '.markdown-clipboard-button',
       );
 
       expect(buttonElement?.innerText).toBe('Copy');
@@ -57,7 +57,7 @@ describe('ClipboardButtonComponent', () => {
 
     it('should display text `copied` for 3 seconds when clicked', fakeAsync(() => {
       const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
-        '.markdown-clipboard-button'
+        '.markdown-clipboard-button',
       );
 
       expect(buttonElement?.innerText).toBe('Copy');

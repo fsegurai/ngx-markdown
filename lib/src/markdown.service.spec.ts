@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentRef, EmbeddedViewRef, SecurityContext, TemplateRef, ViewContainerRef, ViewRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -24,7 +25,6 @@ import {
 import { MarkedOptions } from './marked-options';
 import { MarkedRenderer } from './marked-renderer';
 import { MermaidAPI } from './mermaid-options';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 declare let window: any;
 declare let Prism: any;
@@ -101,7 +101,7 @@ describe('MarkdownService', () => {
         { provide: ViewContainerRef, useValue: viewContainerRefSpy },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
+    ],
 });
 
       domSanitizer = TestBed.inject(DomSanitizer);
@@ -286,6 +286,8 @@ describe('MarkdownService', () => {
         const mockRaw = '&lt;html&gt;';
         const expected = '<p>&lt;html&gt;</p>\n';
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         markdownService['platform'] = 'server';
 
         expect(markdownService.parse(mockRaw, { decodeHtml: true })).toBe(expected);
@@ -359,6 +361,8 @@ describe('MarkdownService', () => {
 
         spyOn(joypixels, 'shortnameToUnicode');
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         markdownService['platform'] = 'server';
 
         expect(() => markdownService.parse(mockRaw, { decodeHtml: false, emoji: true })).not.toThrowError();
@@ -375,6 +379,8 @@ describe('MarkdownService', () => {
         ];
 
         useCases.forEach(platform => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           markdownService['platform'] = platform;
 
           expect(() => markdownService.parse(mockRaw)).not.toThrowError();
@@ -570,6 +576,8 @@ describe('MarkdownService', () => {
 
         spyOn(window, 'renderMathInElement');
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         markdownService['platform'] = 'server';
 
         expect(() => markdownService.render(element, { katex: true })).not.toThrowError();
@@ -728,6 +736,8 @@ describe('MarkdownService', () => {
         spyOn(mermaid, 'initialize');
         spyOn(mermaid, 'run');
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         markdownService['platform'] = 'server';
 
         expect(() => markdownService.render(container, { mermaid: true })).not.toThrowError();
@@ -984,6 +994,8 @@ describe('MarkdownService', () => {
 
         spyOn(window, 'ClipboardJS');
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         markdownService['platform'] = 'server';
 
         expect(() => markdownService.render(container, { clipboard: true })).not.toThrowError();
@@ -1183,6 +1195,8 @@ describe('MarkdownService', () => {
 
         spyOn(Prism, 'highlightAllUnder');
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         markdownService['platform'] = 'server';
 
         expect(() => markdownService.highlight(mockHtmlElement)).not.toThrow();

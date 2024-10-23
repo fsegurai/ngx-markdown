@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import {ElementRef, NgZone, ViewContainerRef} from '@angular/core';
-import {fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {DomSanitizer} from '@angular/platform-browser';
-import {MarkdownModule} from './markdown.module';
-import {MarkdownPipe, MarkdownPipeOptions} from './markdown.pipe';
-import {MarkdownService} from './markdown.service';
+import { ElementRef, NgZone, ViewContainerRef } from '@angular/core';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MarkdownModule } from './markdown.module';
+import { MarkdownPipe, MarkdownPipeOptions } from './markdown.pipe';
+import { MarkdownService } from './markdown.service';
 
 describe('MarkdownPipe', () => {
   let domSanitizer: DomSanitizer;
@@ -15,7 +15,7 @@ describe('MarkdownPipe', () => {
   let viewContainerRef: ViewContainerRef;
   let zone: NgZone;
 
-  const elementRefSpy = jasmine.createSpyObj<ElementRef>([], {nativeElement: document.createElement('div')});
+  const elementRefSpy = jasmine.createSpyObj<ElementRef>([], { nativeElement: document.createElement('div') });
   const viewContainerRefSpy = jasmine.createSpyObj<ViewContainerRef>(['createComponent']);
 
   beforeEach(() => {
@@ -24,8 +24,8 @@ describe('MarkdownPipe', () => {
         MarkdownModule.forRoot(),
       ],
       providers: [
-        {provide: ElementRef, useValue: elementRefSpy},
-        {provide: ViewContainerRef, useValue: viewContainerRefSpy},
+        { provide: ElementRef, useValue: elementRefSpy },
+        { provide: ViewContainerRef, useValue: viewContainerRefSpy },
       ],
     });
 
@@ -65,7 +65,7 @@ describe('MarkdownPipe', () => {
   it('should render element through MarkdownService when zone is stable', fakeAsync(() => {
 
     const markdown = '# Markdown';
-    const mockPipeOptions: MarkdownPipeOptions = {mermaid: true, mermaidOptions: {darkMode: true}};
+    const mockPipeOptions: MarkdownPipeOptions = { mermaid: true, mermaidOptions: { darkMode: true } };
 
     spyOn(markdownService, 'render');
 
@@ -84,7 +84,7 @@ describe('MarkdownPipe', () => {
     const markdown = '# Markdown';
     const mockParsed = 'compiled-x';
     const mockBypassSecurity = 'bypass-x';
-    const mockPipeOptions: MarkdownPipeOptions = {inline: true, emoji: true, disableSanitizer: true};
+    const mockPipeOptions: MarkdownPipeOptions = { inline: true, emoji: true, disableSanitizer: true };
 
     spyOn(markdownService, 'parse').and.returnValue(mockParsed);
     spyOn(domSanitizer, 'bypassSecurityTrustHtml').and.returnValue(mockBypassSecurity);

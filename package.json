@@ -1,6 +1,6 @@
 {
   "name": "@fsegurai/ngx-markdown",
-  "version": "18.0.0-beta.4",
+  "version": "18.0.0-beta.5",
   "description": "Angular library that uses marked to parse markdown to html combined with Prism.js for syntax highlights",
   "homepage": "https://github.com/fsegurai/ngx-markdown",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "start": "yarn link:lib && ng serve",
     "build:demo": "ng build demo --configuration production",
     "build:lib": "ng build lib --configuration production",
-    "postbuild:lib": "cpy ./README.md ./dist/lib && cpy ./LICENSE ./dist/lib",
+    "postBuild:lib": "cpy ./README.md ./dist/lib && cpy ./LICENSE ./dist/lib",
     "link:lib": "rimraf --glob node_modules/ngx-markdown && linklocal",
     "lint": "yarn lint:lib && yarn lint:demo",
     "lint:demo": "ng lint demo",
@@ -44,7 +44,7 @@
     "test:ci_cd": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "gh-pages:build": "yarn build:demo --aot --base-href=./",
     "gh-pages:copy404": "cpy ./dist/demo/browser/index.html . --rename=404.html",
-    "gh-pages:postbuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat",
+    "gh-pages:postBuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat",
     "gh-pages:deploy": "angular-cli-ghpages --dir=\"dist/demo/browser\" --no-silent",
     "publish:lib": "npm publish ./dist/lib",
     "publish:beta": "npm publish ./dist/lib --tag beta"
