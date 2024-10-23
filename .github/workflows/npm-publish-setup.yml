@@ -116,6 +116,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          cd ./dist/lib
           npm publish --access public || echo "Package already published in NPM, skipping..."
 
       - name: Set up Node.js ${{ vars.NODE_VERSION }} for GitHub NPM registry
@@ -130,4 +131,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
-        run: npm publish && npx semantic-release || echo "Package already published in GitHub NPM, skipping..."
+        run: |
+          cd ./dist/lib
+          npm publish && npx semantic-release || echo "Package already published in GitHub NPM, skipping..."
