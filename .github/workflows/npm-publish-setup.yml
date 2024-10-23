@@ -36,7 +36,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build demo
+      - name: Build library
         run: |
           yarn build:lib
           yarn postBuild:lib
