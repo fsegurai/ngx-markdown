@@ -3,6 +3,7 @@
  * @param func - Function to be debounced
  * @param delay - Delay in milliseconds
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export function debounce(func: Function, delay: number) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let debounceTimer: any;
