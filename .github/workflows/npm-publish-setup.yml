@@ -42,6 +42,9 @@ jobs:
           yarn postBuild:lib
 
       - name: Upload build artifacts
+        if: |
+          github.ref == 'refs/heads/main' &&
+          github.event.repository.fork == false
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
