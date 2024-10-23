@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import {LanguagePipe} from './language.pipe';
+import { LanguagePipe } from './language.pipe';
 
 describe('LanguagePipe', () => {
   let pipe: LanguagePipe;
@@ -39,7 +39,7 @@ describe('LanguagePipe', () => {
 
       expect(result).toBe(markdown);
       expect(console.error).toHaveBeenCalledWith(
-        `LanguagePipe has been invoked with an invalid value type [${typeof markdown}]`
+        `LanguagePipe has been invoked with an invalid value type [${typeof markdown}]`,
       );
     });
   });
@@ -55,7 +55,7 @@ describe('LanguagePipe', () => {
 
       expect(result).toBe(markdown);
       expect(console.error).toHaveBeenCalledWith(
-        `LanguagePipe has been invoked with an invalid parameter [${typeof language}]`
+        `LanguagePipe has been invoked with an invalid parameter [${typeof language}]`,
       );
     });
   });
