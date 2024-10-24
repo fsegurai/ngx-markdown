@@ -13,7 +13,6 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-// eslint-disable-next-line import/named
 import { marked, MarkedExtension, Renderer } from 'marked';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -54,14 +53,12 @@ declare let Prism: {
   highlightAllUnder: (element: Element | Document) => void;
 };
 
-/* eslint-disable max-len */
 export const errorJoyPixelsNotLoaded = '[ngx-markdown] Emoji-Toolkit files required. See README for more information';
 export const errorKatexNotLoaded = '[ngx-markdown] KaTeX files required. See README for more information';
 export const errorMermaidNotLoaded = '[ngx-markdown] Mermaid files required. See README for more information';
 export const errorClipboardNotLoaded = '[ngx-markdown] Clipboard files required. See README for more information';
 export const errorClipboardViewContainerRequired = '[ngx-markdown] viewContainerRef parameter required for clipboard';
 export const errorSrcWithoutHttpClient = '[ngx-markdown] HttpClient required for src attribute. See README for more information';
-/* eslint-enable max-len */
 
 export const SECURITY_CONTEXT = new InjectionToken<SecurityContext>('SECURITY_CONTEXT');
 
