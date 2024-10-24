@@ -3,7 +3,6 @@ import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/
 import { Component, SecurityContext } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-// eslint-disable-next-line import/named
 import { MarkedExtension } from 'marked';
 import { of } from 'rxjs';
 import { CLIPBOARD_OPTIONS, ClipboardOptions } from './clipboard-options';
@@ -14,8 +13,7 @@ import { MARKED_EXTENSIONS } from './marked-extensions';
 import { MARKED_OPTIONS, MarkedOptions } from './marked-options';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'host-comp',
+  selector: 'markdown-host-comp',
   template: `
     <div *ngIf="src; else dataTemplate">
       <markdown [src]="src"></markdown>

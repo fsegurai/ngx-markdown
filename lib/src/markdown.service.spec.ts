@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentRef, EmbeddedViewRef, SecurityContext, TemplateRef, ViewContainerRef, ViewRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
-// eslint-disable-next-line import/named
 import { marked, MarkedExtension } from 'marked';
 import { first } from 'rxjs/operators';
 import { ClipboardButtonComponent } from './clipboard-button.component';
@@ -855,6 +852,7 @@ describe('MarkdownService', () => {
 
         markdownService.render(container, { clipboard: true }, viewContainerRef);
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         expect(viewContainerRefSpy.createComponent).toHaveBeenCalledWith(ClipboardButtonComponent as any);
         expect(markForCheckSpy).toHaveBeenCalled();
         expect(clipboardSpy).toHaveBeenCalledWith(rootNode, { text: jasmine.any(Function) });
@@ -888,6 +886,7 @@ describe('MarkdownService', () => {
           viewContainerRef,
         );
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         expect(viewContainerRefSpy.createComponent).toHaveBeenCalledWith(MockButtonComponent as any);
         expect(markForCheckSpy).toHaveBeenCalled();
         expect(clipboardSpy).toHaveBeenCalledWith(rootNode, { text: jasmine.any(Function) });
