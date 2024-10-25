@@ -124,6 +124,7 @@ jobs:
             echo "TAG=next" >> $GITHUB_OUTPUT
           else
             echo "TAG=latest" >> $GITHUB_OUTPUT
+          fi
 
       - name: Release to NPM registry 🚀
         env:
