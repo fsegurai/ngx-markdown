@@ -108,15 +108,15 @@ jobs:
 
       - name: Get package version
         id: get_version
-        run: echo "::set-output name=VERSION::$(jq -r .version < ./dist/lib/package.json)"
+        run: echo "VERSION=$(jq -r .version < ./dist/lib/package.json)" >> $GITHUB_OUTPUT
 
       - name: Determine tag
         id: determine_tag
         run: |
           if [[ "${{ steps.get_version.outputs.VERSION }}" == *"-beta"* ]]; then
-            echo "::set-output name=TAG::beta"
+            echo "TAG=beta" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=TAG::latest"
+            echo "TAG=latest" >> $GITHUB_OUTPUT
           fi
 
       - name: Release to NPM registry 🚀
