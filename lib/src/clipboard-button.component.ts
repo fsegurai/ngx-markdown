@@ -18,8 +18,8 @@ import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rx
   imports: [AsyncPipe],
 })
 export class ClipboardButtonComponent {
-  @Input() buttonTextCopy: string = 'Copy';
-  @Input() buttonTextCopied: string = 'Copied';
+  @Input() buttonTextCopy = 'Copy';
+  @Input() buttonTextCopied = 'Copied';
 
   private _buttonClick$ = new Subject<void>();
 

@@ -25,7 +25,7 @@ import { PrismPlugin } from './prism-plugin';
 
 export interface MarkdownRouterLinkOptions {
   global?: NavigationExtras;
-  paths?: { [path: string]: NavigationExtras | undefined };
+  paths?: Record<string, NavigationExtras | undefined>;
   internalBrowserHandler?: boolean;
   internalDesktopHandler?: boolean;
   externalBrowserHandler?: boolean;
@@ -299,9 +299,7 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     });
   }
 
-  private setPluginOptions(element: HTMLElement, options: {
-    [key: string]: number | string | string[] | undefined
-  }): void {
+  private setPluginOptions(element: HTMLElement, options: Record<string, number | string | string[] | undefined>): void {
     const preElements = element.querySelectorAll('pre');
     preElements.forEach(preElement => {
       Object.keys(options).forEach(option => {

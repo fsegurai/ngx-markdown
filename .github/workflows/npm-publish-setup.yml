@@ -20,9 +20,6 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
           cache: 'yarn'
 
-      - name: Create cache directories
-        run: mkdir -p ~/.cache/yarn && mkdir -p ${{ github.workspace }}/.yarn
-
       - name: Cache Yarn dependencies
         uses: actions/cache@v4
         with:
@@ -64,9 +61,6 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
           cache: 'yarn'
 
-      - name: Create cache directories
-        run: mkdir -p ~/.cache/yarn && mkdir -p ${{ github.workspace }}/.yarn
-
       - name: Cache Yarn dependencies
         uses: actions/cache@v4
         with:
@@ -87,7 +81,7 @@ jobs:
         run: yarn type-check:lib
 
   Release:
-    needs: [Build, Test]
+    needs: [ Build, Test ]
     if: |
       github.ref == 'refs/heads/main' &&
       github.event.repository.fork == false
@@ -112,12 +106,25 @@ jobs:
           name: build-artifacts
           path: ${{ vars.DEMO_PATH }}
 
+      - name: Get package version
+        id: get_version
+        run: echo "::set-output name=VERSION::$(jq -r .version < ./dist/lib/package.json)"
+
+      - name: Determine tag
+        id: determine_tag
+        run: |
+          if [[ "${{ steps.get_version.outputs.VERSION }}" == *"-beta"* ]]; then
+            echo "::set-output name=TAG::beta"
+          else
+            echo "::set-output name=TAG::latest"
+          fi
+
       - name: Release to NPM registry 🚀
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd ./dist/lib
-          npm publish --access public || echo "Package already published in NPM, skipping..."
+          npm publish --tag ${{ steps.determine_tag.outputs.TAG }} --access public || echo "Package already published in NPM, skipping..."
 
       - name: Set up Node.js ${{ vars.NODE_VERSION }} for GitHub NPM registry
         uses: actions/setup-node@v4
@@ -133,4 +140,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
         run: |
           cd ./dist/lib
-          npm publish && npx semantic-release || echo "Package already published in GitHub NPM, skipping..."
+          npm publish --tag ${{ steps.determine_tag.outputs.TAG }} && npx semantic-release || echo "Package already published in GitHub NPM, skipping..."

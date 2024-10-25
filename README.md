@@ -225,7 +225,7 @@ Optionally, to automatically present some lines as output without providing the 
 To add [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) library to your `package.json` use the following command.
 
 ```bash
-npm install emoji-toolkit@^8.0.0 --save
+npm install emoji-toolkit@^9.0.1 --save
 ```
 
 To activate [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) for emoji suppport you will need to include...
@@ -259,7 +259,7 @@ Using `markdown` component and/or directive, you will be able to use the `emoji`
 To add [KaTeX](https://katex.org/) library to your `package.json` use the following command.
 
 ```bash
-npm install katex@^0.16.10 --save
+npm install katex@^0.16.11 --save
 ```
 
 To activate [KaTeX](https://katex.org/) math rendering you will need to include...
@@ -323,7 +323,7 @@ public options: KatexOptions = {
 To add [Mermaid](https://mermaid-js.github.io/) library to your `package.json` use the following command.
 
 ```bash
-npm install mermaid@^10.9.1 --save
+npm install mermaid@^11.3.0 --save
 ```
 
 To activate [Mermaid](https://mermaid-js.github.io/) diagramming and charting tool you will need to include...
