@@ -113,11 +113,17 @@ jobs:
       - name: Determine tag
         id: determine_tag
         run: |
-          if [[ "${{ steps.get_version.outputs.VERSION }}" == *"-beta"* ]]; then
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          if [[ "$VERSION" == *"-beta"* ]]; then
             echo "TAG=beta" >> $GITHUB_OUTPUT
+          elif [[ "$VERSION" == *"-alpha"* ]]; then
+            echo "TAG=alpha" >> $GITHUB_OUTPUT
+          elif [[ "$VERSION" == *"-rc"* ]]; then
+            echo "TAG=rc" >> $GITHUB_OUTPUT
+          elif [[ "$VERSION" == *"-next"* ]]; then
+            echo "TAG=next" >> $GITHUB_OUTPUT
           else
             echo "TAG=latest" >> $GITHUB_OUTPUT
-          fi
 
       - name: Release to NPM registry 🚀
         env:
