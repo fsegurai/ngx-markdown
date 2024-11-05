@@ -7403,17 +7403,17 @@ map-limit@0.0.1:
   dependencies:
     once "~1.3.0"
 
-marked-gfm-heading-id@^3.1.3:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/marked-gfm-heading-id/-/marked-gfm-heading-id-3.2.0.tgz#d0344f786b4ab55415048260aad147f4e8e904b6"
-  integrity sha512-Xfxpr5lXLDLY10XqzSCA9l2dDaiabQUgtYM9hw8yunyVsB/xYBRpiic6BOiY/EAJw1ik1eWr1ET1HKOAPZBhXg==
+marked-gfm-heading-id@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/marked-gfm-heading-id/-/marked-gfm-heading-id-4.1.0.tgz#bde4e36c7c493c946f03aa8f52a5d26076f1afb5"
+  integrity sha512-xRvV65Fnpq1krNspnyGsBvP0Y6h7/FrJ6U6y4e6zCWffiC1KxFFxFUKVu8ufMHop2xdvpwyWj5jPeA5W5x/6Zw==
   dependencies:
     github-slugger "^2.0.0"
 
-marked@12.0.2:
-  version "12.0.2"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-12.0.2.tgz#b31578fe608b599944c69807b00f18edab84647e"
-  integrity sha512-qXUm7e/YKFoqFPYPa3Ukg9xlI5cyAtGmyEIzMfW//m6kXwCy2Ps9DYf5ioijFKQ8qyuscrHoY04iJGctu2Kg0Q==
+marked@14.1.3:
+  version "14.1.3"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-14.1.3.tgz#42372cffd22e76e0f1d7f3627ebc116d291abbed"
+  integrity sha512-ZibJqTULGlt9g5k4VMARAktMAjXoVnnr+Y3aCqW1oDftcV4BA3UmrBifzXoZyenHRk75csiPu9iwsTj4VNBT0g==
 
 marked@^13.0.2:
   version "13.0.3"
@@ -7796,7 +7796,7 @@ ng-packagr@^18.0.0:
     rollup "^4.18.0"
 
 "ngx-markdown@file:lib":
-  version "18.0.0-beta.9"
+  version "18.0.1"
   dependencies:
     tslib "^2.8.0"
   optionalDependencies:

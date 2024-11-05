@@ -3,7 +3,7 @@ import { FlexModule } from '@angular/flex-layout/flex';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { KatexOptions, MarkdownComponent, MarkdownService, MermaidAPI } from 'ngx-markdown';
+import { KatexOptions, MarkdownComponent, MarkdownService, MermaidAPI, MarkedToken } from 'ngx-markdown';
 import { MERMAID_THEME } from '@app/app.constant';
 import { playgroundDemo } from '@app/playground/remote/demo';
 import { debounce } from '@shared/debounce/debounce';
@@ -100,10 +100,15 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
   private updateMarkdownRendering(): void {
     this.markdownRendering = this.markdownContent;
 
-    this.markdownService.renderer.heading = (text: string, level: number) => {
-      const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
-      return `<h${level} id="${escapedText}">${text}</h${level}>`;
-    };
+    this.markdownService.renderer.heading = ({text, depth}: MarkedToken.Heading) => {
+      const parsedText = this.markdownService.parseInline(text); // Parse inline Markdown text to HTML
+      const escapedText = text
+        .toLowerCase()
+        .split(/\W+/)
+        .filter(Boolean)
+        .join('-'); // Remove special characters and join words with hyphens. e.g. "Hello, World!" -> "hello-world"
+      return `<h${depth} id="${escapedText}">${parsedText}</h${depth}>`;
+    }
 
     this.changeDetector.detectChanges(); // Manually trigger change detection
   }
