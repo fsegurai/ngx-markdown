@@ -1,27 +1,25 @@
-<p align="center">
-  <img alt="@fsegurai/ngx-markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png">
-</p>
+<div style="text-align: center;">
 
-<p align="center">
-  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/fsegurai/ngx-markdown/npm-publish-setup.yml">
-  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/fsegurai/ngx-markdown">
+  ![@fsegurai/ngx-markdown Logo](https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png)
+</div>
+
+<div style="text-align: center;">
+
+  ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/fsegurai/ngx-markdown/npm-publish-setup.yml)
+  ![GitHub Release](https://img.shields.io/github/v/release/fsegurai/ngx-markdown)
   <br>
-  <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/fsegurai/ngx-markdown">
-  <img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/fsegurai/ngx-markdown">
-  <a href="https://opensource.org/licenses/MIT">
-    <img alt="GitHub License" src="https://img.shields.io/github/license/fsegurai/ngx-markdown">
-  </a>
+  ![GitHub contributors](https://img.shields.io/github/contributors/fsegurai/ngx-markdown)
+  ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/fsegurai/ngx-markdown)
+  [![GitHub License](https://img.shields.io/github/license/fsegurai/ngx-markdown)](https://opensource.org/licenses/MIT)
   <br>
-  <img alt="Stars" src="https://img.shields.io/github/stars/fsegurai/ngx-markdown?style=square&labelColor=343b41"/> 
-  <img alt="Forks" src="https://img.shields.io/github/forks/fsegurai/ngx-markdown?style=square&labelColor=343b41"/>
-  <a href="https://github.com/fsegurai/ngx-markdown/pkgs/npm/ngx-markdown">
-    <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/fsegurai/ngx-markdown/total">
-  </a>
-</p>
+  ![Stars](https://img.shields.io/github/stars/fsegurai/ngx-markdown?style=square&labelColor=343b41)
+  ![Forks](https://img.shields.io/github/forks/fsegurai/ngx-markdown?style=square&labelColor=343b41)
+  ![NPM Downloads](https://img.shields.io/npm/dt/@fsegurai/ngx-markdown)
+</div>
 
 **This is just a side project to provide additional features that fulfill my needs.**
 
-@fsegurai/ngx-markdown is an [Angular](https://angular.dev/) library that combines...
+`@fsegurai/ngx-markdown` is an [Angular](https://angular.dev/) library that combines...
 
 - [Marked](http://marked.js.org/) to parse markdown to HTML
 - [Prism.js](http://prismjs.com/) for language syntax highlight
@@ -49,10 +47,10 @@ Demo available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.gith
 
 ### @fsegurai/ngx-markdown
 
-To add @fsegurai/ngx-markdown along with the required marked library to your `package.json` use the following commands.
+To add `@fsegurai/ngx-markdown` along with the required marked library to your `package.json` use the following commands.
 
 ```bash
-npm install @fsegurai/ngx-markdown marked@^12.0.2 --save
+npm install @fsegurai/ngx-markdown marked@^14.1.3 --save
 ```
 
 ### Syntax highlight
@@ -498,11 +496,11 @@ Alternatively, the `clipboard` directive can be used in conjonction with `ng-tem
 </markdown>
 ```
 
-> :blue_book: Refer to the @fsegurai/ngx-markdown [clipboard plugin demo](https://fsegurai.github.io/ngx-markdown/plugins#clipboard) for live examples.
+> :blue_book: Refer to the `@fsegurai/ngx-markdown` [clipboard plugin demo](https://fsegurai.github.io/ngx-markdown/plugins#clipboard) for live examples.
 
 ## Configuration
 
-The @fsegurai/ngx-markdown library can be used either with the standalone components or with modules configuration. Please follow the configuration section that matches your application.
+The `@fsegurai/ngx-markdown` library can be used either with the standalone components or with modules configuration. Please follow the configuration section that matches your application.
 
 ### Standalone components
 
@@ -578,7 +576,7 @@ imports: [
 
 #### Sanitization
 
-As of @fsegurai/ngx-markdown v17.0.0 **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
+As of `@fsegurai/ngx-markdown@v17.0.0` **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
 
 ##### Using the `provideMarkdown` function
 
@@ -935,7 +933,7 @@ update(){
 }
 ```
 
-> :blue_book: Refer to the @fsegurai/ngx-markdown [re-render demo](https://fsegurai.github.io/ngx-markdown/rerender) for a live example.
+> :blue_book: Refer to the `@fsegurai/ngx-markdown` [re-render demo](https://fsegurai.github.io/ngx-markdown/rerender) for a live example.
 
 ## Syntax highlight
 
@@ -947,7 +945,7 @@ When using static markdown you are responsible to provide the code block with re
     const myProp: string = 'value';
 +  ```
 
-When using remote URL @fsegurai/ngx-markdown will use the file extension to automatically resolve the code language.
+When using remote URL `@fsegurai/ngx-markdown` will use the file extension to automatically resolve the code language.
 
 ```html
 <!-- will use html highlights -->

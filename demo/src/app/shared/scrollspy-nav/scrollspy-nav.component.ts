@@ -37,22 +37,36 @@ export class ScrollspyNavComponent implements OnChanges, OnDestroy {
   ) {
   }
 
+  /**
+   * Handle changes to the `headings` input.
+   * @param changes - The changes to the input properties.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['headings']?.currentValue) {
       this.setScrollSpy();
     }
   }
 
+  /**
+   * Destroy the scroll spy instance when the component is destroyed.
+   */
   ngOnDestroy(): void {
     this.destroyScrollSpy();
   }
 
+  /**
+   * Destroy the current scroll spy instance.
+   */
   destroyScrollSpy(): void {
     if (this.scrollSpy) {
       this.scrollSpy.destroy();
     }
   }
 
+  /**
+   * Set up the scroll spy for the current component.
+   * This method should be called after the headings have been initialized.
+   */
   setScrollSpy(): void {
     if (this.scrollSpy) {
       this.scrollSpy.setup();
@@ -65,5 +79,13 @@ export class ScrollspyNavComponent implements OnChanges, OnDestroy {
         const linkSelector = `${hostElement.tagName}.${hostElement.className} a`;
         this.scrollSpy = new Gumshoe(linkSelector, { offset: 64, reflow: true });
       });
+  }
+
+  /**
+   * Sanitize HTML content by removing all HTML tags (any content starting and ending with <>) and returning only text content.
+   * @param html - HTML content to sanitize.
+   */
+  sanitizeInnerHTML(html: string): string {
+    return html.replace(/<[^>]+>/g, '');
   }
 }

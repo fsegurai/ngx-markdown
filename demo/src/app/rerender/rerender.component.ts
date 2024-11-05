@@ -3,7 +3,7 @@ import { FlexModule } from '@angular/flex-layout/flex';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
+import { MarkdownComponent, MarkdownService, MarkedToken } from 'ngx-markdown';
 import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
@@ -86,11 +86,14 @@ const language = 'typescript';
   private overrideRenderer(styleAttribute: string): void {
     this.overrideEnabled = true;
 
-    this.markdownService.renderer.heading = (text: string, level: number): string => {
-      return this.overrideEnabled
-        ? `<h${level}${styleAttribute}>${text}</h${level}>`
-        : false as unknown as string;
-    };
+    this.markdownService.renderer.heading = ({text, depth}: MarkedToken.Heading): string => {
+      if(this.overrideEnabled) {
+        const parsedText = this.markdownService.parseInline(text); // Parse inline Markdown text to HTML
+        return `<h${depth}${styleAttribute}>${parsedText}</h${depth}>`;
+      }
+
+      return false as unknown as string;
+    }
   }
 
   private resetRenderer(): void {

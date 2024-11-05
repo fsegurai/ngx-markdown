@@ -21,7 +21,7 @@ import { CLIPBOARD_OPTIONS, ClipboardOptions, ClipboardRenderOptions } from './c
 import { KatexOptions } from './katex-options';
 import { MARKED_EXTENSIONS } from './marked-extensions';
 import { MARKED_OPTIONS, MarkedOptions } from './marked-options';
-import { MarkedRenderer } from './marked-renderer';
+import { MarkedRenderer, MarkedToken } from './marked-renderer';
 import { MermaidAPI } from './mermaid-options';
 
 // clipboard
@@ -178,6 +178,10 @@ export class MarkdownService {
     return sanitized || '';
   }
 
+  parseInline(markdown: string, options?: MarkedOptions | undefined | null): string | Promise<string>  {
+    return marked.parseInline(markdown, options);
+  }
+
   render(element: HTMLElement, options: RenderOptions = this.DEFAULT_RENDER_OPTIONS, viewContainerRef?: ViewContainerRef): void {
     const {
       clipboard,
@@ -239,14 +243,21 @@ export class MarkdownService {
     if (type === 'mermaid') {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       const defaultCode = renderer.code;
-      renderer.code = (code: string, language: string | undefined, isEscaped: boolean) => {
-        if (language === 'mermaid') {
-          return `<div class="mermaid">${code}</div>`;
+
+      renderer.code = ({type, raw, text, lang, escaped}: MarkedToken.Code) => {
+        if (lang === 'mermaid') {
+          return `<div class="mermaid">${text}</div>`;
         } else if (defaultCode) {
-          return defaultCode.call(renderer, code, language, isEscaped);
+          return defaultCode.call(renderer, {
+            type,
+            raw,
+            text,
+            lang,
+            escaped
+          });
         }
         return '';
-      };
+      }
     }
 
     extendedRenderer[flag] = true;
@@ -280,14 +291,10 @@ export class MarkdownService {
       delete renderer.ɵNgxMarkdownRendererExtendedForExtensions;
       delete renderer.ɵNgxMarkdownRendererExtendedForMermaid;
 
-      // remove renderer from markedOptions because if renderer is
-      // passed to marked.parse method, it will ignore all extensions
-      delete options.renderer;
-
       marked.use({ renderer });
     }
 
-    return inline ? marked.parseInline(markdown, options) : marked(markdown, options);
+    return inline ? this.parseInline(markdown, options) : marked(markdown, options);
   }
 
   private renderClipboard(element: HTMLElement, viewContainerRef: ViewContainerRef | undefined, options: ClipboardRenderOptions): void {
