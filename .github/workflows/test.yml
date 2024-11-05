@@ -3,12 +3,20 @@ name: Test Library & Demo
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "assets/**"
+      - "demo/public/**"
+      - "*.yml"
+      - "*.json"
+      - "*.config"
+      - "*.md"
   pull_request:
     branches: [ "main" ]
   workflow_run:
     workflows: [ "Build" ]
-    types:
-      - completed
+    types: [ completed ]
   workflow_dispatch:
   workflow_call:
 
