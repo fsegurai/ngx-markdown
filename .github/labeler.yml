@@ -18,26 +18,40 @@ ci-cd:
 
 demo:
   - changed-files:
-      - any-glob-to-any-file: 'demo/**'
+      - any-glob-to-any-file: [
+        'demo/**'
+      ]
 
 assets:
   - changed-files:
-      - any-glob-to-any-file: 'demo/public/**'
+      - any-glob-to-any-file: [
+        'demo/public/**'
+      ]
 
 styles:
   - changed-files:
-      - any-glob-to-any-file: '**/*.scss'
+      - any-glob-to-any-file: [
+        '**/*.scss',
+        '**/*.css',
+      ]
 
 library:
   - changed-files:
-      - any-glob-to-any-file: 'lib/**'
+      - any-glob-to-any-file: [
+        'lib/**',
+      ]
 
-tests:
+tests-library:
+  - changed-files:
+      - any-glob-to-any-file: [
+        'lib/**/*.spec.ts',
+        '**/karma.conf.js',
+      ]
+
+tests-demo:
   - changed-files:
       - any-glob-to-any-file: [
         'demo/**/*.spec.ts',
-        'lib/**/*.spec.ts',
-        '**/karma.conf.js',
       ]
 
 docs:
