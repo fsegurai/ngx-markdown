@@ -19,7 +19,7 @@ export namespace MermaidAPI {
 
     /**
      * with this security level all rendering takes place in a sandboxed iframe.
-     * This prevent any javascript running in the context.
+     * This prevents any javascript running in the context.
      * This may hinder interactive functionality of the diagram like scripts,
      * popups in sequence diagram or links to other tabs/targets etc.
      */
@@ -38,7 +38,7 @@ export namespace MermaidAPI {
     Forest = 'forest',
 
     /**
-     * A theme that would go well with other dark colored elements.
+     * A theme that would go well with other dark-colored elements.
      */
     Dark = 'dark',
 
@@ -51,6 +51,46 @@ export namespace MermaidAPI {
      * The theme to be used for black and white printing
      */
     Neutral = 'neutral'
+  }
+
+  export interface ThemeVariables {
+    /**
+     * Default value: #fff4dd
+     * Description: Color to be used as background in nodes, other colors will be derived from this
+     */
+    primaryColor?: string;
+
+    /**
+     * Default value: calculated from darkMode #ddd/#333
+     * Description: Color to be used as text color in nodes using primaryColor
+     */
+    primaryTextColor?: string;
+
+    /**
+     * Default value: calculated from primaryColor
+     * Description: Color to be used as border color in nodes using primaryColor
+     */
+    primaryBorderColor?: string;
+
+    /**
+     * Default value: calculated from background
+     */
+    lineColor?: string;
+
+    /**
+     * Default value: calculated from primaryColor
+     */
+    secondaryColor?: string;
+
+    /**
+     * Default value: calculated from primaryColor
+     */
+    tertiaryColor?: string;
+
+    /**
+     * Allow additional custom properties supported by Mermaid
+     */
+    [key: string]: string | undefined;
   }
 
   export enum LogLevel {
@@ -69,7 +109,7 @@ export namespace MermaidAPI {
     diagramPadding?: number | undefined;
 
     /**
-     * **htmlLabels** - Flag for setting whether or not a html tag should be used for rendering labels
+     * **htmlLabels** - Flag for setting whether a html tag should be used for rendering labels
      * on the edges
      * default: true
      */
@@ -282,7 +322,7 @@ export namespace MermaidAPI {
 
     theme?: Theme | undefined;
 
-    themeVariables?: any; // [todo]
+    themeVariables?: ThemeVariables | undefined;
 
     themeCSS?: string | undefined;
 
@@ -325,28 +365,50 @@ export namespace MermaidAPI {
 
     /**
      * ###  sequenceDiagram
-     * The object containing configurations specific for sequence diagrams
+     * *The object containing configurations specific for sequence diagrams*
      */
     sequence?: SequenceDiagramConfig | undefined;
 
     /**
      * ### gantt
-     * The object containing configurations specific for gantt diagrams*
+     * *The object containing configurations specific for gantt diagrams*
      */
     gantt?: GanttConfig | undefined;
 
-    /** To supress mermaid warning **/
+    /** To suppress mermaid warning **/
 
-    journey?: any; // [todo]
+    journeyUser?: any; // [todo]
 
     class?: any; // [todo]
 
-    git?: any; // [todo]
+    gitGraph?: any; // [todo]
 
     state?: any; // [todo]
 
     pie?: any; // [todo]
 
     requirement?: any; // [todo]
+
+    entityRelationship?: any; // [todo]
+
+    quadrant?: any; // [todo]
+
+    c4?: any; // [todo]
+
+    mindmap?: any; // [todo]
+
+    timeline?: any; // [todo]
+
+    zenUML?: any; // [todo]
+
+    sankey?: any; // [todo]
+
+    xy?: any; // [todo]
+
+    block?: any; // [todo]
+
+    packet?: any; // [todo]
+
+    architecture?: any; // [todo]
   }
 }
