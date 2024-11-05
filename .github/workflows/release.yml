@@ -3,12 +3,18 @@ name: Release Library & Demo
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "assets/**"
+      - "demo/public/**"
+      - "*.yml"
+      - "*.json"
+      - "*.config"
+      - "*.md"
   workflow_run:
     workflows: [ "Build", "Test" ]
-    types:
-      - completed
+    types: [ completed ]
   workflow_dispatch:
   workflow_call:
 
