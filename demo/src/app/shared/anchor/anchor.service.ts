@@ -111,7 +111,9 @@ export class AnchorService {
   }
 
   private isExternalUrl(url: string): boolean {
-    return /^(?!http(s?):\/\/).+$/.exec(url) == null;
+    // Check if the URL starts with any of the following protocols: http, https, ftp, mailto, tel, file, data, www
+    const externalUrlPattern = /^(?!http(s?):\/\/|ftp(s?):\/\/|mailto:|tel:|file:\/\/|data:|www\.)[^#].*$/;
+    return externalUrlPattern.exec(url) == null;
   }
 
   private isRouterLink(element: HTMLAnchorElement): boolean {

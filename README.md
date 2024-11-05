@@ -19,7 +19,7 @@
 
 **This is just a side project to provide additional features that fulfill my needs.**
 
-@fsegurai/ngx-markdown is an [Angular](https://angular.dev/) library that combines...
+`@fsegurai/ngx-markdown` is an [Angular](https://angular.dev/) library that combines...
 
 - [Marked](http://marked.js.org/) to parse markdown to HTML
 - [Prism.js](http://prismjs.com/) for language syntax highlight
@@ -47,10 +47,10 @@ Demo available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.gith
 
 ### @fsegurai/ngx-markdown
 
-To add @fsegurai/ngx-markdown along with the required marked library to your `package.json` use the following commands.
+To add `@fsegurai/ngx-markdown` along with the required marked library to your `package.json` use the following commands.
 
 ```bash
-npm install @fsegurai/ngx-markdown marked@^12.0.2 --save
+npm install @fsegurai/ngx-markdown marked@^14.1.3 --save
 ```
 
 ### Syntax highlight
@@ -496,11 +496,11 @@ Alternatively, the `clipboard` directive can be used in conjonction with `ng-tem
 </markdown>
 ```
 
-> :blue_book: Refer to the @fsegurai/ngx-markdown [clipboard plugin demo](https://fsegurai.github.io/ngx-markdown/plugins#clipboard) for live examples.
+> :blue_book: Refer to the `@fsegurai/ngx-markdown` [clipboard plugin demo](https://fsegurai.github.io/ngx-markdown/plugins#clipboard) for live examples.
 
 ## Configuration
 
-The @fsegurai/ngx-markdown library can be used either with the standalone components or with modules configuration. Please follow the configuration section that matches your application.
+The `@fsegurai/ngx-markdown` library can be used either with the standalone components or with modules configuration. Please follow the configuration section that matches your application.
 
 ### Standalone components
 
@@ -576,7 +576,7 @@ imports: [
 
 #### Sanitization
 
-As of @fsegurai/ngx-markdown v17.0.0 **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
+As of `@fsegurai/ngx-markdown@v17.0.0` **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
 
 ##### Using the `provideMarkdown` function
 
@@ -933,7 +933,7 @@ update(){
 }
 ```
 
-> :blue_book: Refer to the @fsegurai/ngx-markdown [re-render demo](https://fsegurai.github.io/ngx-markdown/rerender) for a live example.
+> :blue_book: Refer to the `@fsegurai/ngx-markdown` [re-render demo](https://fsegurai.github.io/ngx-markdown/rerender) for a live example.
 
 ## Syntax highlight
 
@@ -945,7 +945,7 @@ When using static markdown you are responsible to provide the code block with re
     const myProp: string = 'value';
 +  ```
 
-When using remote URL @fsegurai/ngx-markdown will use the file extension to automatically resolve the code language.
+When using remote URL `@fsegurai/ngx-markdown` will use the file extension to automatically resolve the code language.
 
 ```html
 <!-- will use html highlights -->
