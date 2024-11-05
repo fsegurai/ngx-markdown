@@ -1,0 +1,48 @@
+infra:
+  - changed-files:
+      - any-glob-to-any-file: [
+        '.github/**',
+        'angular.json',
+        'package*.json',
+        'tsconfig*.json',
+        'eslint*.json',
+      ]
+
+ci-cd:
+  - changed-files:
+      - any-glob-to-any-file: [
+        '.github/workflows/**',
+        'Dockerfile',
+        'Jenkinsfile',
+      ]
+
+demo:
+  - changed-files:
+      - any-glob-to-any-file: 'demo/**'
+
+assets:
+  - changed-files:
+      - any-glob-to-any-file: 'demo/public/**'
+
+styles:
+  - changed-files:
+      - any-glob-to-any-file: '**/*.scss'
+
+library:
+  - changed-files:
+      - any-glob-to-any-file: 'lib/**'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: [
+        'demo/**/*.spec.ts',
+        'lib/**/*.spec.ts',
+        '**/karma.conf.js',
+      ]
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file: [
+        'README.md',
+        'docs/**',
+      ]

@@ -1,0 +1,105 @@
+name: Release Library & Demo
+
+on:
+  workflow_run:
+    workflows: [ "Build", "Test" ]
+    types:
+      - completed
+
+permissions:
+  contents: write # Required to publish to GitHub Pages
+  packages: write # Required to publish to GitHub Pages
+  id-token: write # Required to publish to GitHub Pages
+
+jobs:
+  release_to_npm:
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event.repository.fork == false
+    runs-on: ubuntu-latest
+    environment: FSI_DEP_NodeJs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ vars.NODE_VERSION }} for NPM registry
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: 'yarn'
+          registry-url: "https://registry.npmjs.org/"
+          scope: ${{ vars.NPM_ORG }}
+          always-auth: true
+
+      - name: Download build library artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-lib-artifacts
+          path: ${{ vars.DEMO_PATH }}
+
+      - name: Get package version
+        id: get_version
+        run: echo "VERSION=$(jq -r .version < ./${{ vars.DEMO_PATH }}/package.json)" >> $GITHUB_OUTPUT
+
+      - name: Determine tag
+        id: determine_tag
+        run: |
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          if [[ "$VERSION" == *"-beta"* ]]; then
+            echo "TAG=beta" >> $GITHUB_OUTPUT
+          elif [[ "$VERSION" == *"-alpha"* ]]; then
+            echo "TAG=alpha" >> $GITHUB_OUTPUT
+          elif [[ "$VERSION" == *"-rc"* ]]; then
+            echo "TAG=rc" >> $GITHUB_OUTPUT
+          elif [[ "$VERSION" == *"-next"* ]]; then
+            echo "TAG=next" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=latest" >> $GITHUB_OUTPUT
+
+      - name: Release to NPM registry 🚀
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cd ./${{ vars.DEMO_PATH }}
+          npm publish --tag ${{ steps.determine_tag.outputs.TAG }} --access public || echo "Package already published in NPM, skipping..."
+
+      - name: Set up Node.js ${{ vars.NODE_VERSION }} for GitHub NPM registry
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          registry-url: "https://npm.pkg.github.com/"
+          scope: ${{ vars.NPM_ORG }}
+          always-auth: true
+
+      - name: Release to GitHub NPM registry 🚀
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
+        run: |
+          cd ./${{ vars.DEMO_PATH }}
+          npm publish --tag ${{ steps.determine_tag.outputs.TAG }} && npx semantic-release || echo "Package already published in GitHub NPM, skipping..."
+
+  deploy_to_gh_pages:
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event.repository.fork == false
+    runs-on: ubuntu-latest
+    environment: github-pages
+    needs: release_to_npm
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build demo artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-demo-artifacts
+          path: ${{ vars.DEMO_PATH }}
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ vars.DEMO_PATH }}
+          publish_branch: gh-pages
+          force_orphan: true
