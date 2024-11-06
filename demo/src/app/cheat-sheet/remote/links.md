@@ -6,7 +6,7 @@ There are several ways to create links.
 
 [I'm a reference-style link][Arbitrary case-insensitive reference text]
 
-[I'm a relative reference to a repository file](../blob/master/LICENSE)
+[I'm a relative reference to a repository file](favicon.ico)
 
 [You can use numbers for reference-style link definitions][1]
 
