@@ -1,4 +1,5 @@
-name: Release Lib-Demo
+name: Release Library
+# Job will only run on push to the main branch after the test job has passed
 
 on:
   push:
@@ -16,24 +17,55 @@ on:
   workflow_run:
     workflows: [ "Test Lib-Demo" ]
     types: [ completed ]
-  workflow_dispatch:
-    inputs: { }
 
-permissions:
-  contents: write # Required to publish to GitHub Pages
-  packages: write # Required to publish to GitHub Pages
-  id-token: write # Required to publish to GitHub Pages
+env:
+  ARTIFACT_NAME: "build-lib-artifact"
 
 jobs:
-  release_to_npm:
-    if: |
-      github.ref == 'refs/heads/main' &&
-      github.event.repository.fork == false
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
     environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js - Version ${{ vars.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/yarn
+            ${{ github.workspace }}/.yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build library
+        run: |
+          yarn build:lib
+          yarn postBuild:lib
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ vars.DEMO_PATH }}
+          if-no-files-found: error
+
+  release:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    environment: FSI_DEP_NodeJs
+    steps:
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Set up Node.js ${{ vars.NODE_VERSION }} for NPM registry
@@ -45,26 +77,15 @@ jobs:
           scope: ${{ vars.NPM_ORG }}
           always-auth: true
 
-      - name: Download build library artifacts
-        uses: dawidd6/action-download-artifact@v6
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: build.yml
-          workflow_conclusion: success
-          branch: main
-          name: build-lib-artifacts
-          repo: ${{ github.repository }}
-          if_no_artifact_found: fail
-
-      - name: Extract build library artifacts
-        run: unzip build-lib-artifacts.zip
-
-      - name: List directory contents
-        run: ls -R ./dist
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ vars.DEMO_PATH }}
 
       - name: Get package version
         id: get_version
-        run: echo "VERSION=$(jq -r .version < ./${{ vars.DEMO_PATH }}/package.json)" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(jq -r .version < ./dist/lib/package.json)" >> $GITHUB_OUTPUT
 
       - name: Determine tag
         id: determine_tag
@@ -86,7 +107,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          cd ./${{ vars.DEMO_PATH }}
+          cd ./dist/lib
           npm publish --tag ${{ steps.determine_tag.outputs.TAG }} --access public || echo "Package already published in NPM, skipping..."
 
       - name: Set up Node.js ${{ vars.NODE_VERSION }} for GitHub NPM registry
@@ -102,42 +123,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
         run: |
-          cd ./${{ vars.DEMO_PATH }}
+          cd ./dist/lib
           npm publish --tag ${{ steps.determine_tag.outputs.TAG }} && npx semantic-release || echo "Package already published in GitHub NPM, skipping..."
-
-  deploy_to_gh_pages:
-    if: |
-      github.ref == 'refs/heads/main' &&
-      github.event.repository.fork == false
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    environment: github-pages
-    needs: release_to_npm
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build demo artifacts
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: build.yml
-          workflow_conclusion: success
-          branch: main
-          name: build-demo-artifacts
-          repo: ${{ github.repository }}
-          if_no_artifact_found: fail
-
-      - name: Extract build demo artifacts
-        run: unzip build-demo-artifacts.zip
-
-      - name: List directory contents
-        run: ls -R ./dist
-
-      - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ vars.DEMO_PATH }}
-          publish_branch: gh-pages
-          force_orphan: true
