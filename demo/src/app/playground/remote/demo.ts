@@ -157,7 +157,7 @@ Right aligned columns
 
 [smart](https://google.com)
 
-[Internal reference - Code Section](/routerLink:#code-section)
+[Internal reference - Code Section](/routerLink:playground#code-section)
 
 ## Plugins Section
 

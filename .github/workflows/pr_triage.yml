@@ -35,12 +35,18 @@ jobs:
 
             if (!assignees.includes(assignee)) {
               if (assignee.includes('bot')) {
-                assignee = 'fsegurai';
+                await github.rest.pulls.requestReviewers({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  reviewers: ['fsegurai']
+                });
+              } else {
+                await github.rest.issues.addAssignees({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  assignees: [assignee]
+                });
               }
-              await github.rest.issues.addAssignees({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: pr.number,
-                assignees: [assignee]
-              });
             }

@@ -26,9 +26,9 @@ import { PrismPlugin } from './prism-plugin';
 export interface MarkdownRouterLinkOptions {
   global?: NavigationExtras;
   paths?: Record<string, NavigationExtras | undefined>;
-  internalBrowserHandler?: boolean;
-  internalDesktopHandler?: boolean;
-  externalBrowserHandler?: boolean;
+  internalBrowserHandler?: boolean; // Angular SPA navigation
+  internalDesktopHandler?: boolean; // Electron desktop navigation
+  externalBrowserHandler?: boolean; // External browser navigation
 }
 
 @Component({
@@ -174,8 +174,16 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     map(() => this.element.nativeElement.querySelectorAll('a')),
     switchMap(links => from(links)),
     filter(link => link.getAttribute('href')?.includes('/routerLink:') === true),
-    tap(link => link.setAttribute('data-routerLink', link.getAttribute('href')!.replace('/routerLink:', ''))),
-    tap(link => link.setAttribute('href', link.getAttribute('href')!.replace('/routerLink:', ''))),
+    tap(link => {
+      const href = link.getAttribute('href')!;
+      const [path, fragment] = href.split('#');
+      link.setAttribute('data-routerLink', path);
+      link.setAttribute('href', `${path}${fragment ? `#${fragment}` : ''}`);
+      link.setAttribute('routerLink', `${path}${fragment ? `#${fragment}` : ''}`);
+      if (fragment) {
+        link.setAttribute('fragment', fragment);
+      }
+    }),
   );
 
   @HostListener('click', ['$event'])
