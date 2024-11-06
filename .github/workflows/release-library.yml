@@ -24,7 +24,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ vars.TIMEOUT_MINUTES }}
+    timeout-minutes: 2
     environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout code
@@ -64,7 +64,7 @@ jobs:
   release:
     needs: [ build ]
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ vars.TIMEOUT_MINUTES }}
+    timeout-minutes: 2
     environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout Code
