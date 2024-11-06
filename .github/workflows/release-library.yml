@@ -2,21 +2,11 @@ name: Release Library
 # Job will only run on push to the main branch after the test job has passed
 
 on:
-  push:
-    branches: [ "main" ]
-    paths-ignore:
-      - ".github/**"
-      - "docs/**"
-      - "assets/**"
-      - "demo/public/**"
-      - "*.yml"
-      - "*.json"
-      - "*.config"
-      - "*.md"
-      - "!package.json"
   workflow_run:
     workflows: [ "Test Lib-Demo" ]
     types: [ completed ]
+  workflow_dispatch:
+    inputs: { }
 
 env:
   ARTIFACT_NAME: "build-lib-artifact"
