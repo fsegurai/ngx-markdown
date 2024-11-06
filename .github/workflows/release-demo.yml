@@ -30,7 +30,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ env.TIMEOUT_MINUTES }}
+    timeout-minutes: ${{ jobs.build.env.TIMEOUT_MINUTES }}
     environment: github-pages
     steps:
       - name: Checkout code
@@ -73,7 +73,7 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ env.TIMEOUT_MINUTES }}
+    timeout-minutes: ${{ jobs.build.env.TIMEOUT_MINUTES }}
     environment: github-pages
     needs: [ build ]
     steps:
