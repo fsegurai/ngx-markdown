@@ -56,9 +56,6 @@ jobs:
           repo: ${{ github.repository }}
           if_no_artifact_found: fail
 
-      - name: Extract build library artifacts
-        run: unzip build-lib-artifacts.zip
-
       - name: List directory contents
         run: ls -R ./dist
 
