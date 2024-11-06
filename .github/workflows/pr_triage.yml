@@ -30,10 +30,13 @@ jobs:
         with:
           script: |
             const pr = context.payload.pull_request;
-            const creator = pr.user.login;
+            let assignee = pr.user.login;
+            if (assignee.includes('bot')) {
+              assignee = 'fsegurai';
+            }
             await github.rest.issues.addAssignees({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: pr.number,
-              assignees: [creator]
+              assignees: [assignee]
             });
