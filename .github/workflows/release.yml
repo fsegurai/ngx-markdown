@@ -23,6 +23,7 @@ permissions:
   contents: write # Required to publish to GitHub Pages
   packages: write # Required to publish to GitHub Pages
   id-token: write # Required to publish to GitHub Pages
+  actions: read # Required to access and download external artifacts
 
 jobs:
   release_to_npm:
