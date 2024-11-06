@@ -323,7 +323,7 @@ public options: KatexOptions = {
 To add [Mermaid](https://mermaid-js.github.io/) library to your `package.json` use the following command.
 
 ```bash
-npm install mermaid@^11.3.0 --save
+npm install mermaid@^11.4.0 --save
 ```
 
 To activate [Mermaid](https://mermaid-js.github.io/) diagramming and charting tool you will need to include...
@@ -971,7 +971,7 @@ A demo is available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai
 
 The following commands will clone the repository, install npm dependencies and serve the application @ [http://localhost:4200](http://localhost:4200)
 
-It is recommended to use `yarn` as the package manager to handle the large number of dependencies as it is faster than `npm` and it will mostly not cause any issues.
+> It is recommended to use `yarn` as the package manager to handle the large number of dependencies as it is faster than `npm` and it will mostly not cause any issues.
 
 ```bash
 git clone https://github.com/fsegurai/ngx-markdown.git
