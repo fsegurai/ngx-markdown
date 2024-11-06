@@ -178,7 +178,7 @@ export class MarkdownService {
     return sanitized || '';
   }
 
-  parseInline(markdown: string, options?: MarkedOptions | undefined | null): string | Promise<string>  {
+  parseInline(markdown: string, options?: MarkedOptions | null): string | Promise<string>  {
     return marked.parseInline(markdown, options);
   }
 
@@ -244,7 +244,7 @@ export class MarkdownService {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       const defaultCode = renderer.code;
 
-      renderer.code = ({type, raw, text, lang, escaped}: MarkedToken.Code) => {
+      renderer.code = ({ type, raw, text, lang, escaped }: MarkedToken.Code) => {
         if (lang === 'mermaid') {
           return `<div class="mermaid">${text}</div>`;
         } else if (defaultCode) {
@@ -253,11 +253,11 @@ export class MarkdownService {
             raw,
             text,
             lang,
-            escaped
+            escaped,
           });
         }
         return '';
-      }
+      };
     }
 
     extendedRenderer[flag] = true;

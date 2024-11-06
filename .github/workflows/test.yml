@@ -1,14 +1,40 @@
-name: Test Library & Demo
+name: Test Lib-Demo
 
 on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "assets/**"
+      - "demo/public/**"
+      - "*.yml"
+      - "*.json"
+      - "*.config"
+      - "*.md"
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "assets/**"
+      - "demo/public/**"
+      - "*.yml"
+      - "*.json"
+      - "*.config"
+      - "*.md"
   workflow_run:
-    workflows: [ "Build" ]
-    types:
-      - completed
+    workflows: [ "Build Lib-Demo", "Build PR" ]
+    types: [ completed ]
+  workflow_dispatch:
+    inputs: { }
+  workflow_call:
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
+    environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

@@ -8,9 +8,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-
     runs-on: ubuntu-latest
-
     steps:
       # Grab sources to get latest labeler.yml
       - name: Fetch sources
@@ -26,3 +24,16 @@ jobs:
         with:
           sync-labels: true
           dot: true
+
+      - name: Assign PR creator
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const creator = pr.user.login;
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              assignees: [creator]
+            });
