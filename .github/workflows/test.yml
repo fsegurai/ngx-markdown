@@ -24,7 +24,7 @@ on:
       - "*.config"
       - "*.md"
   workflow_run:
-    workflows: [ "Build Lib-Demo", "Build PR" ]
+    workflows: [ "Build Lib-Demo" ]
     types: [ completed ]
   workflow_dispatch:
     inputs: { }
