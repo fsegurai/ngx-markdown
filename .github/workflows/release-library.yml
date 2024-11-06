@@ -20,12 +20,11 @@ on:
 
 env:
   ARTIFACT_NAME: "build-lib-artifact"
-  TIMEOUT_MINUTES: 2
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ jobs.build.env.TIMEOUT_MINUTES }}
+    timeout-minutes: ${{ vars.TIMEOUT_MINUTES }}
     environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout code
@@ -65,7 +64,7 @@ jobs:
   release:
     needs: [ build ]
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ jobs.build.env.TIMEOUT_MINUTES }}
+    timeout-minutes: ${{ vars.TIMEOUT_MINUTES }}
     environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout Code
