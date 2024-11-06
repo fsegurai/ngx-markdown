@@ -3,6 +3,9 @@ name: Build Lib-Demo
 on:
   workflow_call:
 
+env:
+  LIB_ARTIFACT_NAME: "build-lib-artifact"
+
 jobs:
   build_library:
     runs-on: ubuntu-latest
@@ -42,7 +45,7 @@ jobs:
       - name: Upload build library artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-lib-artifacts
+          name: ${{ env.LIB_ARTIFACT_NAME }}
           path: ${{ vars.DEMO_PATH }}
           if-no-files-found: error
 
@@ -81,13 +84,3 @@ jobs:
           yarn gh-pages:build
           yarn gh-pages:copy404
           yarn gh-pages:postBuild
-
-      - name: Upload build demo artifacts
-        if: |
-          github.ref == 'refs/heads/main' &&
-          github.event.repository.fork == false
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-demo-artifacts
-          path: ${{ vars.DEMO_PATH }}
-          if-no-files-found: error

@@ -1,4 +1,5 @@
 name: Build PR
+# Job will only run on pull requests to the main branch
 
 on:
   pull_request:
