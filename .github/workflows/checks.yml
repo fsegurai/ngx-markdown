@@ -6,12 +6,12 @@ on:
     branches: [ "main" ]
     paths:
       - '**'
+      - '.github/workflows/*.yml'
       - "!package.json"
       - '!.github/**'
       - '!*.yml'
       - '!*.config'
       - '!*.md'
-      - '.github/workflows/*.yml'
   workflow_dispatch:
     inputs: { }
 
