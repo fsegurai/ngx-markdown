@@ -49,17 +49,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: build.yml
-          commit: ${{ github.sha }}
-          name: build-lib-artifacts
-          path: ${{ vars.DEMO_PATH }}
-          workflow_search: true
           workflow_conclusion: success
-          repo: fsegurai/ngx-markdown
-          name_is_regexp: false
-          allow_forks: false
-          check_artifacts: true
-          search_artifacts: true
-          skip_unpack: false
+          branch: main
+          name: build-lib-artifacts
+          repo: ${{ github.repository }}
           if_no_artifact_found: fail
 
       - name: Get package version
@@ -121,17 +114,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: build.yml
-          commit: ${{ github.sha }}
-          name: build-demo-artifacts
-          path: ${{ vars.DEMO_PATH }}
-          workflow_search: true
           workflow_conclusion: success
-          repo: fsegurai/ngx-markdown
-          name_is_regexp: false
-          allow_forks: false
-          check_artifacts: true
-          search_artifacts: true
-          skip_unpack: false
+          branch: main
+          name: build-demo-artifacts
+          repo: ${{ github.repository }}
           if_no_artifact_found: fail
 
       - name: Deploy to gh-pages branch
