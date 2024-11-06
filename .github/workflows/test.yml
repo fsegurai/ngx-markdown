@@ -12,12 +12,11 @@ on:
       - "*.json"
       - "*.config"
       - "*.md"
-  pull_request:
-    branches: [ "main" ]
   workflow_run:
     workflows: [ "Build-Library-Demo" ]
     types: [ completed ]
   workflow_dispatch:
+    inputs: { }
   workflow_call:
 
 jobs:
