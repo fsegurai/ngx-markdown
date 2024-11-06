@@ -1,4 +1,4 @@
-name: Release Library & Demo
+name: Release-Library-Demo
 
 on:
   push:
@@ -12,11 +12,8 @@ on:
       - "*.json"
       - "*.config"
       - "*.md"
-  workflow_run:
-    workflows: [ "Build", "Test" ]
-    types: [ completed ]
   workflow_dispatch:
-  workflow_call:
+    inputs: { }
 
 permissions:
   contents: write # Required to publish to GitHub Pages
