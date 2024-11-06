@@ -12,6 +12,17 @@ on:
       - "*.json"
       - "*.config"
       - "*.md"
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "assets/**"
+      - "demo/public/**"
+      - "*.yml"
+      - "*.json"
+      - "*.config"
+      - "*.md"
   workflow_run:
     workflows: [ "Build Lib-Demo" ]
     types: [ completed ]
