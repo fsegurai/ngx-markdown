@@ -56,8 +56,11 @@ jobs:
           repo: ${{ github.repository }}
           if_no_artifact_found: fail
 
+      - name: Extract build library artifacts
+        run: unzip build-lib-artifacts.zip
+
       - name: List directory contents
-        run: ls -R
+        run: ls -R ./dist
 
       - name: Get package version
         id: get_version
@@ -125,8 +128,11 @@ jobs:
           repo: ${{ github.repository }}
           if_no_artifact_found: fail
 
+      - name: Extract build demo artifacts
+        run: unzip build-demo-artifacts.zip
+
       - name: List directory contents
-        run: ls -R
+        run: ls -R ./dist
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
