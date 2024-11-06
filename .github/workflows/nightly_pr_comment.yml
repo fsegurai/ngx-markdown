@@ -2,7 +2,7 @@ name: Comment PR artifacts links
 
 on:
   workflow_run:
-    workflows: [ "Build-Library-Demo" ]
+    workflows: [ "Build Lib-Demo" ]
     types: [ completed ]
 
 permissions:

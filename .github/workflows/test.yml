@@ -1,4 +1,5 @@
 name: Test Lib-Demo
+# Job will only run on push and pull requests to the main branch
 
 on:
   push:
@@ -25,9 +26,6 @@ on:
       - "*.config"
       - "*.md"
       - "!package.json"
-  workflow_run:
-    workflows: [ "Build Lib-Demo", "Build PR" ]
-    types: [ completed ]
   workflow_dispatch:
     inputs: { }
   workflow_call:
