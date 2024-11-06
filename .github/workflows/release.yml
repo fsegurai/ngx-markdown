@@ -12,6 +12,7 @@ on:
       - "*.json"
       - "*.config"
       - "*.md"
+      - "!package.json"
   workflow_run:
     workflows: [ "Test Lib-Demo" ]
     types: [ completed ]
@@ -54,6 +55,9 @@ jobs:
           name: build-lib-artifacts
           repo: ${{ github.repository }}
           if_no_artifact_found: fail
+
+      - name: List directory contents
+        run: ls -R
 
       - name: Get package version
         id: get_version
@@ -120,6 +124,9 @@ jobs:
           name: build-demo-artifacts
           repo: ${{ github.repository }}
           if_no_artifact_found: fail
+
+      - name: List directory contents
+        run: ls -R
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
