@@ -13,7 +13,7 @@ on:
       - "*.config"
       - "*.md"
   workflow_run:
-    workflows: [ "Build Lib-Demo", "Build PR", "Test Lib-Demo" ]
+    workflows: [ "Test Lib-Demo" ]
     types: [ completed ]
   workflow_dispatch:
     inputs: { }
@@ -52,6 +52,15 @@ jobs:
           commit: ${{ github.sha }}
           name: build-lib-artifacts
           path: ${{ vars.DEMO_PATH }}
+          workflow_search: true
+          workflow_conclusion: success
+          repo: fsegurai/ngx-markdown
+          name_is_regexp: false
+          allow_forks: false
+          check_artifacts: true
+          search_artifacts: true
+          skip_unpack: false
+          if_no_artifact_found: fail
 
       - name: Get package version
         id: get_version
@@ -115,6 +124,15 @@ jobs:
           commit: ${{ github.sha }}
           name: build-demo-artifacts
           path: ${{ vars.DEMO_PATH }}
+          workflow_search: true
+          workflow_conclusion: success
+          repo: fsegurai/ngx-markdown
+          name_is_regexp: false
+          allow_forks: false
+          check_artifacts: true
+          search_artifacts: true
+          skip_unpack: false
+          if_no_artifact_found: fail
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
