@@ -1,4 +1,4 @@
-name: Release-Library-Demo
+name: Release Lib-Demo
 
 on:
   push:
