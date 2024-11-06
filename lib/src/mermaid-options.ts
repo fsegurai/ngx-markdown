@@ -409,6 +409,8 @@ export namespace MermaidAPI {
 
     packet?: any; // [todo]
 
+    kanban?: any; // [todo]
+
     architecture?: any; // [todo]
   }
 }
