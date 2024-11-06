@@ -49,15 +49,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-lib-artifacts
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_PAT }}
           repository: '${{ github.repository }}'
           run-id: '${{ github.run_id }}'
-
-      - name: Extract build library artifacts
-        run: unzip build-lib-artifacts.zip
-
-      - name: List directory contents
-        run: ls -R ./dist
 
       - name: Get package version
         id: get_version
@@ -118,15 +112,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-demo-artifacts
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_PAT }}
           repository: '${{ github.repository }}'
           run-id: '${{ github.run_id }}'
-
-      - name: Extract build demo artifacts
-        run: unzip build-demo-artifacts.zip
-
-      - name: List directory contents
-        run: ls -R ./dist
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
