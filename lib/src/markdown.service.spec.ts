@@ -139,8 +139,8 @@ describe('MarkdownService', () => {
 
         const blockquote = ({ text }: MarkedToken.Blockquote) => {
           const parsedText = markdownService.parseInline(text); // Parse inline Markdown text to HTML
-          return `<mock-blockquote>${parsedText}</mock-blockquote>`;
-        }
+          return `<mock-blockquote>${String(parsedText)}</mock-blockquote>`;
+        };
 
         markdownService.renderer.blockquote = blockquote;
 
@@ -201,7 +201,7 @@ describe('MarkdownService', () => {
 
         const parsed = markdownService.parse(mockRaw, { mermaid: false });
 
-        expect(parsed).toBe(`<pre><code class="language-mermaid">graph TD; A--&gt;B;\n</code></pre>\n`);
+        expect(parsed).toBe('<pre><code class="language-mermaid">graph TD; A--&gt;B;\n</code></pre>\n');
       });
 
       it('should not pass extended flags to `marked.use` when parsing', () => {
@@ -219,7 +219,7 @@ describe('MarkdownService', () => {
         expectedMockRenderer.ɵNgxMarkdownRendererExtendedForMermaid = true;
 
         expect(markedUseSpy).toHaveBeenCalledWith(...mockExtensions);
-        expect(markedUseSpy).toHaveBeenCalledWith({ renderer: jasmine.any(expectedMockRenderer.constructor)});
+        expect(markedUseSpy).toHaveBeenCalledWith({ renderer: jasmine.any(expectedMockRenderer.constructor) });
       });
 
       it('should remove leading whitespaces offset while keeping indent', () => {
@@ -435,7 +435,7 @@ describe('MarkdownService', () => {
         const mockRenderer = new MarkedRenderer();
         mockRenderer.blockquote = () => {
           return 'mock-blocquote';
-        }
+        };
         const mockMarkedOptions: MarkedOptions = {
           breaks: true,
           gfm: false,
@@ -452,8 +452,8 @@ describe('MarkdownService', () => {
         expect(markedUseSpy).toHaveBeenCalledWith(...mockExtensions);
         expect(markedUseSpy).toHaveBeenCalledWith(jasmine.objectContaining({
           renderer: jasmine.objectContaining({
-            blockquote: mockRenderer.blockquote
-          })
+            blockquote: mockRenderer.blockquote,
+          }),
         }));
 
       });
