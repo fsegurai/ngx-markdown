@@ -43,9 +43,7 @@
     "test:ci_cd": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "gh-pages:build": "yarn build:demo --aot --base-href=./",
     "gh-pages:copy404": "cpy ./dist/demo/browser/index.html . --rename=404.html",
-    "gh-pages:postBuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat",
-    "publish:lib": "npm publish ./dist/lib",
-    "publish:beta": "npm publish ./dist/lib --tag beta"
+    "gh-pages:postBuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat"
   },
   "dependencies": {
     "@angular/animations": "^18.0.0",
