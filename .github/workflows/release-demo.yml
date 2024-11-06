@@ -20,6 +20,7 @@ on:
 
 env:
   ARTIFACT_NAME: "build-demo-artifact"
+  TIMEOUT_MINUTES: 2
 
 permissions:
   contents: write # Required to publish to GitHub Pages
@@ -29,6 +30,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ env.TIMEOUT_MINUTES }}
     environment: github-pages
     steps:
       - name: Checkout code
@@ -71,6 +73,7 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ env.TIMEOUT_MINUTES }}
     environment: github-pages
     needs: [ build ]
     steps:
