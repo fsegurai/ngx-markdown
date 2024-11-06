@@ -1,15 +1,12 @@
-name: Build Library & Demo
+name: Build Lib-Demo
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   build_library:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout code
@@ -43,9 +40,6 @@ jobs:
           yarn postBuild:lib
 
       - name: Upload build library artifacts
-        if: |
-          github.ref == 'refs/heads/main' &&
-          github.event.repository.fork == false
         uses: actions/upload-artifact@v4
         with:
           name: build-lib-artifacts
@@ -54,6 +48,7 @@ jobs:
 
   build_demo:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     environment: github-pages
     steps:
       - name: Checkout code

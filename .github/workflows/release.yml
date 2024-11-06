@@ -1,10 +1,19 @@
-name: Release Library & Demo
+name: Release Lib-Demo
 
 on:
-  workflow_run:
-    workflows: [ "Build", "Test" ]
-    types:
-      - completed
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "assets/**"
+      - "demo/public/**"
+      - "*.yml"
+      - "*.json"
+      - "*.config"
+      - "*.md"
+  workflow_dispatch:
+    inputs: { }
 
 permissions:
   contents: write # Required to publish to GitHub Pages
@@ -17,6 +26,7 @@ jobs:
       github.ref == 'refs/heads/main' &&
       github.event.repository.fork == false
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout code
@@ -84,6 +94,7 @@ jobs:
       github.ref == 'refs/heads/main' &&
       github.event.repository.fork == false
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     environment: github-pages
     needs: release_to_npm
     steps:

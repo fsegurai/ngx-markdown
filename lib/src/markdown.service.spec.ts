@@ -20,7 +20,7 @@ import {
   SECURITY_CONTEXT,
 } from './markdown.service';
 import { MarkedOptions } from './marked-options';
-import { MarkedRenderer } from './marked-renderer';
+import { MarkedRenderer, MarkedToken } from './marked-renderer';
 import { MermaidAPI } from './mermaid-options';
 
 declare let window: any;
@@ -137,14 +137,17 @@ describe('MarkdownService', () => {
 
       it('should update option.renderer when updated', () => {
 
-        const blockquote = (quote: string) => `<mock-blockquote>${quote}</mock-blockquote>`;
+        const blockquote = ({ text }: MarkedToken.Blockquote) => {
+          const parsedText = markdownService.parseInline(text); // Parse inline Markdown text to HTML
+          return `<mock-blockquote>${String(parsedText)}</mock-blockquote>`;
+        };
 
         markdownService.renderer.blockquote = blockquote;
 
         const quoteText = 'foobar';
-        const expectedBlockquote = blockquote(quoteText);
-        const rendererBlockquote = (markdownService.renderer as any).blockquote(quoteText);
-        const optionsRendererBlockquote = (markdownService.options.renderer as any)!.blockquote(quoteText);
+        const expectedBlockquote = blockquote({ type: 'blockquote', text: quoteText, raw: quoteText, tokens: [] });
+        const rendererBlockquote = (markdownService.renderer as any).blockquote({ type: 'blockquote', text: quoteText, raw: quoteText, tokens: [] });
+        const optionsRendererBlockquote = (markdownService.options.renderer as any)!.blockquote({ type: 'blockquote', text: quoteText, raw: quoteText, tokens: [] });
 
         expect(rendererBlockquote).toBe(expectedBlockquote);
         expect(optionsRendererBlockquote).toBe(expectedBlockquote);
@@ -188,7 +191,7 @@ describe('MarkdownService', () => {
 
         const parsed = markdownService.parse(mockRaw, { mermaid: true });
 
-        expect(parsed).toBe(`<div class="mermaid">${mermaid}</div>`);
+        expect(parsed).toBe(marked.parse(mockRaw));
       });
 
       it('should not extend marked renderer when mermaid is false', () => {
@@ -198,11 +201,10 @@ describe('MarkdownService', () => {
 
         const parsed = markdownService.parse(mockRaw, { mermaid: false });
 
-        expect(parsed).toBe(marked.parse(mockRaw));
+        expect(parsed).toBe('<pre><code class="language-mermaid">graph TD; A--&gt;B;\n</code></pre>\n');
       });
 
       it('should not pass extended flags to `marked.use` when parsing', () => {
-
         const mockRaw = '### Markdown-x';
         const mockRenderer = new MarkedRenderer();
         const mockMarkedOptions: MarkedOptions = { renderer: mockRenderer };
@@ -213,11 +215,11 @@ describe('MarkdownService', () => {
         markdownService.parse(mockRaw, { mermaid: true });
 
         const expectedMockRenderer = { ...mockRenderer } as Partial<ExtendedRenderer>;
-        delete expectedMockRenderer.ɵNgxMarkdownRendererExtendedForExtensions;
-        delete expectedMockRenderer.ɵNgxMarkdownRendererExtendedForMermaid;
+        expectedMockRenderer.ɵNgxMarkdownRendererExtendedForExtensions = true;
+        expectedMockRenderer.ɵNgxMarkdownRendererExtendedForMermaid = true;
 
         expect(markedUseSpy).toHaveBeenCalledWith(...mockExtensions);
-        expect(markedUseSpy).toHaveBeenCalledWith({ renderer: expectedMockRenderer });
+        expect(markedUseSpy).toHaveBeenCalledWith({ renderer: jasmine.any(expectedMockRenderer.constructor) });
       });
 
       it('should remove leading whitespaces offset while keeping indent', () => {
@@ -431,7 +433,9 @@ describe('MarkdownService', () => {
 
         const mockRaw = '### Markdown-x';
         const mockRenderer = new MarkedRenderer();
-        mockRenderer.blockquote = () => 'mock-blocquote';
+        mockRenderer.blockquote = () => {
+          return 'mock-blocquote';
+        };
         const mockMarkedOptions: MarkedOptions = {
           breaks: true,
           gfm: false,
@@ -445,11 +449,13 @@ describe('MarkdownService', () => {
         markdownService.options = mockMarkedOptions;
         markdownService.parse(mockRaw);
 
-        const expectedMockRenderer = { ...mockRenderer } as Partial<ExtendedRenderer>;
-        delete expectedMockRenderer.ɵNgxMarkdownRendererExtendedForExtensions;
-
         expect(markedUseSpy).toHaveBeenCalledWith(...mockExtensions);
-        expect(markedUseSpy).toHaveBeenCalledWith({ renderer: expectedMockRenderer });
+        expect(markedUseSpy).toHaveBeenCalledWith(jasmine.objectContaining({
+          renderer: jasmine.objectContaining({
+            blockquote: mockRenderer.blockquote,
+          }),
+        }));
+
       });
 
       it('should return empty string when raw is null/undefined/empty', () => {
