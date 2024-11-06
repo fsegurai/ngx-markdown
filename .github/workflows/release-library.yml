@@ -23,6 +23,9 @@ env:
 
 jobs:
   build:
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event.repository.fork == false
     runs-on: ubuntu-latest
     timeout-minutes: 2
     environment: FSI_DEP_NodeJs
@@ -62,6 +65,9 @@ jobs:
           if-no-files-found: error
 
   release:
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event.repository.fork == false
     needs: [ build ]
     runs-on: ubuntu-latest
     timeout-minutes: 2

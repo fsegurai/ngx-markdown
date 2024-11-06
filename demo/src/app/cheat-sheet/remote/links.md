@@ -6,7 +6,7 @@ There are several ways to create links.
 
 [I'm a reference-style link][Arbitrary case-insensitive reference text]
 
-[I'm a relative reference to a repository file](favicon.ico)
+[I'm a relative reference to a repository file](/localFile:favicon.ico)
 
 [You can use numbers for reference-style link definitions][1]
 
@@ -24,11 +24,13 @@ Some text to show that the reference links can follow later.
 
 [link text itself]: http://www.reddit.com
 
-[I'm an Angular routerLink to another view with section](/routerLink:/syntax-highlight#language-pipe)
+[Angular routerLink to another view with fragment](/routerLink:syntax-highlight#language-pipe)
 
-[I'm an Angular routerLink to another view](/routerLink:/syntax-highlight)
+[Angular routerLink to another view](/routerLink:syntax-highlight)
 
-[I'm an Angular routerLink to a section on the same view](/routerLink:#headers)
+[Angular routerLink with only fragment](#tables)
+
+[I'm an Angular routerLink to current view with fragment](/routerLink:cheat-sheet#tables)
 
 ```html
 <markdown src="/path/to/markdown.md" 
