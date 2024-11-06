@@ -50,9 +50,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-lib-artifacts
-          github-token: ${{ secrets.GH_PAT }}
+          github-token: ${{ github.token }}
           repository: '${{ github.repository }}'
-          run-id: '${{ github.run_id }}'
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Get package version
         id: get_version
@@ -113,9 +113,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-demo-artifacts
-          github-token: ${{ secrets.GH_PAT }}
+          github-token: ${{ github.token }}
           repository: '${{ github.repository }}'
-          run-id: '${{ github.run_id }}'
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
