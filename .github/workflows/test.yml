@@ -14,6 +14,7 @@ on:
       - "*.config"
       - "*.md"
       - "!package.json"
+      - "!github/workflows/**"
   pull_request:
     branches: [ "main" ]
     paths-ignore:
@@ -26,6 +27,7 @@ on:
       - "*.config"
       - "*.md"
       - "!package.json"
+      - "!github/workflows/**"
   workflow_dispatch:
     inputs: { }
   workflow_call:
