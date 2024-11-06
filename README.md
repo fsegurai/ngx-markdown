@@ -1,21 +1,23 @@
-<div style="text-align: center;">
+<p align="center">
+  <img alt="@fsegurai/ngx-markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png">
+</p>
 
-  ![@fsegurai/ngx-markdown Logo](https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png)
-</div>
-
-<div style="text-align: center;">
-
-  ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/fsegurai/ngx-markdown/npm-publish-setup.yml)
-  ![GitHub Release](https://img.shields.io/github/v/release/fsegurai/ngx-markdown)
+<p align="center">
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/fsegurai/ngx-markdown/release-library.yml">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/fsegurai/ngx-markdown">
   <br>
-  ![GitHub contributors](https://img.shields.io/github/contributors/fsegurai/ngx-markdown)
-  ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/fsegurai/ngx-markdown)
-  [![GitHub License](https://img.shields.io/github/license/fsegurai/ngx-markdown)](https://opensource.org/licenses/MIT)
+  <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/fsegurai/ngx-markdown">
+  <img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/fsegurai/ngx-markdown">
+  <a href="https://opensource.org/licenses/MIT">
+    <img alt="GitHub License" src="https://img.shields.io/github/license/fsegurai/ngx-markdown">
+  </a>
   <br>
-  ![Stars](https://img.shields.io/github/stars/fsegurai/ngx-markdown?style=square&labelColor=343b41)
-  ![Forks](https://img.shields.io/github/forks/fsegurai/ngx-markdown?style=square&labelColor=343b41)
-  ![NPM Downloads](https://img.shields.io/npm/dt/@fsegurai/ngx-markdown)
-</div>
+  <img alt="Stars" src="https://img.shields.io/github/stars/fsegurai/ngx-markdown?style=square&labelColor=343b41"/> 
+  <img alt="Forks" src="https://img.shields.io/github/forks/fsegurai/ngx-markdown?style=square&labelColor=343b41"/>
+  <a href="https://www.npmjs.com/package/@fsegurai/ngx-markdown">
+    <img alt="NPM Downloads" src="https://img.shields.io/npm/dt/@fsegurai/ngx-markdown">
+  </a>
+</p>
 
 **This is just a side project to provide additional features that fulfill my needs.**
 
@@ -321,7 +323,7 @@ public options: KatexOptions = {
 To add [Mermaid](https://mermaid-js.github.io/) library to your `package.json` use the following command.
 
 ```bash
-npm install mermaid@^11.3.0 --save
+npm install mermaid@^11.4.0 --save
 ```
 
 To activate [Mermaid](https://mermaid-js.github.io/) diagramming and charting tool you will need to include...
@@ -969,7 +971,7 @@ A demo is available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai
 
 The following commands will clone the repository, install npm dependencies and serve the application @ [http://localhost:4200](http://localhost:4200)
 
-It is recommended to use `yarn` as the package manager to handle the large number of dependencies as it is faster than `npm` and it will mostly not cause any issues.
+> It is recommended to use `yarn` as the package manager to handle the large number of dependencies as it is faster than `npm` and it will mostly not cause any issues.
 
 ```bash
 git clone https://github.com/fsegurai/ngx-markdown.git

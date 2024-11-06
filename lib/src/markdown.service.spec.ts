@@ -139,7 +139,8 @@ describe('MarkdownService', () => {
 
         const blockquote = ({ text }: MarkedToken.Blockquote) => {
           const parsedText = markdownService.parseInline(text); // Parse inline Markdown text to HTML
-          return `<mock-blockquote>${String(parsedText)}</mock-blockquote>`;
+          const safeParsedText = typeof parsedText === 'string' ? parsedText : JSON.stringify(parsedText);
+          return `<mock-blockquote>${safeParsedText}</mock-blockquote>`;
         };
 
         markdownService.renderer.blockquote = blockquote;
