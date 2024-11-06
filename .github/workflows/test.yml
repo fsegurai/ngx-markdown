@@ -26,6 +26,9 @@ on:
       - "*.config"
       - "*.md"
       - "!package.json"
+  workflow_run:
+    workflows: [ "Build Lib-Demo" ]
+    types: [ completed ]
   workflow_dispatch:
     inputs: { }
   workflow_call:
