@@ -26,6 +26,7 @@ jobs:
       github.ref == 'refs/heads/main' &&
       github.event.repository.fork == false
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout code
@@ -93,6 +94,7 @@ jobs:
       github.ref == 'refs/heads/main' &&
       github.event.repository.fork == false
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     environment: github-pages
     needs: release_to_npm
     steps:
