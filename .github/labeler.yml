@@ -64,6 +64,9 @@ tests-demo:
 documentation:
   - changed-files:
       - any-glob-to-any-file: [
-        'README.md',
         'docs/**',
+        'CHANGELOG.md',
+        'CONTRIBUTING.md',
+        'LICENSE',
+        'README.md',
       ]
