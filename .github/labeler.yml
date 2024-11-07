@@ -8,6 +8,13 @@ infra:
         'eslint*.json',
       ]
 
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file: [
+        'package-lock.json',
+        'yarn.lock',
+      ]
+
 ci-cd:
   - changed-files:
       - any-glob-to-any-file: [
@@ -54,9 +61,12 @@ tests-demo:
         'demo/**/*.spec.ts',
       ]
 
-docs:
+documentation:
   - changed-files:
       - any-glob-to-any-file: [
-        'README.md',
         'docs/**',
+        'CHANGELOG.md',
+        'CONTRIBUTING.md',
+        'LICENSE',
+        'README.md',
       ]
