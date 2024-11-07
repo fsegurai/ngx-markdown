@@ -3,11 +3,17 @@
 </p>
 
 <p align="center">
-  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/fsegurai/ngx-markdown/release-library.yml">
-  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/fsegurai/ngx-markdown">
+  <a href="https://github.com/fsegurai/ngx-markdown/actions/workflows/release-library.yml">
+      <img src="https://github.com/fsegurai/ngx-markdown/actions/workflows/release-library.yml/badge.svg"
+          alt="Build Status">
+  </a>
+  <a href="https://github.com/fsegurai/ngx-markdown/releases/latest">
+      <img src="https://img.shields.io/github/v/release/fsegurai/ngx-markdown"
+          alt="Latest Release">
+  </a>
   <br>
   <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/fsegurai/ngx-markdown">
-  <img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/fsegurai/ngx-markdown">
+  <img alt="Dependency status for repo" src="https://img.shields.io/librariesio/github/fsegurai/ngx-markdown">
   <a href="https://opensource.org/licenses/MIT">
     <img alt="GitHub License" src="https://img.shields.io/github/license/fsegurai/ngx-markdown">
   </a>
