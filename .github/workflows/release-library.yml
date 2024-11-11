@@ -8,6 +8,10 @@ on:
   workflow_dispatch:
     inputs: { }
 
+concurrency:
+  group: 'release-library'
+  cancel-in-progress: true
+
 env:
   ARTIFACT_NAME: "build-lib-artifact"
 

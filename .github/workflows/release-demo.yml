@@ -8,13 +8,17 @@ on:
   workflow_dispatch:
     inputs: { }
 
-env:
-  ARTIFACT_NAME: "build-demo-artifact"
-
 permissions:
   contents: write # Required to publish to GitHub Pages
   packages: write # Required to publish to GitHub Pages
   id-token: write # Required to publish to GitHub Pages
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+env:
+  ARTIFACT_NAME: "build-demo-artifact"
 
 jobs:
   build:
@@ -88,3 +92,15 @@ jobs:
           publish_dir: ${{ vars.DEMO_PATH }}
           publish_branch: gh-pages
           force_orphan: true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ vars.DEMO_PATH }}
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
