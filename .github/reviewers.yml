@@ -1,6 +1,9 @@
 infra:
   - fsegurai
 
+dependencies:
+  - fsegurai
+
 ci-cd:
   - fsegurai
 
@@ -16,10 +19,13 @@ styles:
 library:
   - fsegurai
 
-tests:
+tests-library:
   - fsegurai
 
-docs:
+tests-demo:
+    - fsegurai
+
+documentation:
   - fsegurai
 
 default:
