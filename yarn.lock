@@ -188,10 +188,15 @@
     ora "5.4.1"
     rxjs "7.8.1"
 
-"@angular-eslint/builder@18.4.0", "@angular-eslint/builder@~18.4.0":
+"@angular-eslint/builder@18.4.0":
   version "18.4.0"
   resolved "https://registry.yarnpkg.com/@angular-eslint/builder/-/builder-18.4.0.tgz#e4ce3a68bef10885dcc76898f09510cfddb9ce4b"
   integrity sha512-FOzGHX/nHSV1wSduSsabsx3aqC1nfde0opEpEDSOJhxExDxKCwoS1XPy1aERGyKip4ZVA6phC3dLtoBH3QMkVQ==
+
+"@angular-eslint/builder@~18.4.0":
+  version "18.4.2"
+  resolved "https://registry.yarnpkg.com/@angular-eslint/builder/-/builder-18.4.2.tgz#28a4833919ede3db0a1d905fd903485588282115"
+  integrity sha512-eyI9sreaM9ukA24PCJoSqsjCYOiBf3TZ/Q1WY8PG0SwQWc03qJNqPl5K+/Ptmsc1RtoDCLCU6uaOBFPhb9lDxw==
 
 "@angular-eslint/bundled-angular-compiler@18.4.0":
   version "18.4.0"
@@ -8021,7 +8026,7 @@ ng-packagr@^18.0.0:
     rollup "^4.18.0"
 
 "ngx-markdown@file:lib":
-  version "18.1.0-beta.3"
+  version "18.1.0"
   dependencies:
     tslib "^2.8.1"
   optionalDependencies:
