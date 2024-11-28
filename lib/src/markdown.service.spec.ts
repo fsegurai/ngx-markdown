@@ -647,11 +647,11 @@ describe('MarkdownService', () => {
         container.append(elementOne);
         container.append(elementTwo);
 
-        const defaultOptions: MermaidAPI.Config = { startOnLoad: false };
+        const defaultOptions: MermaidAPI.MermaidConfig = { startOnLoad: false };
         const mermaidElements = container.querySelectorAll<HTMLElement>('.mermaid');
 
         window['mermaid'] = {
-          initialize: (options: MermaidAPI.Config) => {
+          initialize: (options: MermaidAPI.MermaidConfig) => {
           },
           run: (runOptions: MermaidAPI.RunOptions) => {
           },
@@ -675,7 +675,7 @@ describe('MarkdownService', () => {
         const container = document.createElement('div');
         container.append(element);
 
-        const providedOptions: MermaidAPI.Config = {
+        const providedOptions: MermaidAPI.MermaidConfig = {
           startOnLoad: false,
           darkMode: true,
         };
@@ -683,7 +683,7 @@ describe('MarkdownService', () => {
         const mermaidElements = container.querySelectorAll<HTMLElement>('.mermaid');
 
         window['mermaid'] = {
-          initialize: (options: MermaidAPI.Config) => {
+          initialize: (options: MermaidAPI.MermaidConfig) => {
           },
           run: (runOptions: MermaidAPI.RunOptions) => {
           },
@@ -703,7 +703,7 @@ describe('MarkdownService', () => {
         const container = document.createElement('div');
 
         window['mermaid'] = {
-          initialize: (options: MermaidAPI.Config) => {
+          initialize: (options: MermaidAPI.MermaidConfig) => {
           },
           run: (runOptions: MermaidAPI.RunOptions) => {
           },
@@ -731,7 +731,7 @@ describe('MarkdownService', () => {
         const container = document.createElement('div');
 
         window['mermaid'] = {
-          initialize: (options: MermaidAPI.Config) => {
+          initialize: (options: MermaidAPI.MermaidConfig) => {
           },
           run: (runOptions: MermaidAPI.RunOptions) => {
           },
@@ -772,7 +772,7 @@ describe('MarkdownService', () => {
         container.append(element);
 
         window['mermaid'] = {
-          initialize: (options: MermaidAPI.Config) => {
+          initialize: (options: MermaidAPI.MermaidConfig) => {
           },
           run: (runOptions: MermaidAPI.RunOptions) => {
           },
@@ -826,7 +826,7 @@ describe('MarkdownService', () => {
         container.append(mermaidElement);
 
         window['mermaid'] = {
-          initialize: (options: MermaidAPI.Config) => {
+          initialize: (options: MermaidAPI.MermaidConfig) => {
           },
           run: (runOptions: MermaidAPI.RunOptions) => {
           },
