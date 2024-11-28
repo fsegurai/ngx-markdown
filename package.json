@@ -39,8 +39,8 @@
     "type-check:demo": "tsc --project ./demo/tsconfig.app.json --inlineSourceMap --noEmit",
     "type-check:lib": "tsc --project ./lib/tsconfig.lib.json --inlineSourceMap --noEmit",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "test:ci_cd": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
+    "test-local:lib": "ng test",
+    "test-ci_cd:lib": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "gh-pages:build": "yarn build:demo --aot --base-href=./",
     "gh-pages:copy404": "cpy ./dist/demo/browser/index.html . --rename=404.html",
     "gh-pages:postBuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat"
