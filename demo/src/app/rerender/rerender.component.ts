@@ -25,7 +25,7 @@ export default class RerenderComponent implements OnInit, OnDestroy {
   // property to handle override as per marked documentation, if a renderer
   // function returns `false` it will fall back to previous implementation
   headings: Element[] | undefined;
-  markdown = `## Markdown __rules__!
+  markdown = `## Markdown rules!
 ---
 
 ### Syntax highlight

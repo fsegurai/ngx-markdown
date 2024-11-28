@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { KatexOptions, MarkdownComponent, MarkdownService, MermaidAPI, MarkedToken } from 'ngx-markdown';
-import { MERMAID_THEME } from '@app/app.constant';
 import { playgroundDemo } from '@app/playground/remote/demo';
 import { debounce } from '@shared/debounce/debounce';
 import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
@@ -55,8 +54,8 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
       '\\h': '#1h(#2)',
     },
   };
-  protected mermaidOptions: MermaidAPI.Config = {
-    theme: MERMAID_THEME,
+  protected mermaidOptions: MermaidAPI.MermaidConfig = {
+    theme: 'dark',
   };
 
   constructor(
