@@ -10,19 +10,18 @@ import { debounce } from '@shared/debounce/debounce';
 import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
-  selector: 'app-playground',
-  standalone: true,
-  imports: [
-    FlexModule,
-    FormsModule,
-    MarkdownComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    ScrollspyNavLayoutComponent,
-  ],
-  templateUrl: './playground.component.html',
-  styleUrl: './playground.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-playground',
+    imports: [
+        FlexModule,
+        FormsModule,
+        MarkdownComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        ScrollspyNavLayoutComponent,
+    ],
+    templateUrl: './playground.component.html',
+    styleUrl: './playground.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class PlaygroundComponent implements OnInit, OnDestroy {
   // property to handle override as per marked documentation, if a renderer
