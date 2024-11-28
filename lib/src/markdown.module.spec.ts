@@ -79,7 +79,7 @@ describe('MarkdownModule', () => {
           MarkdownModule.forRoot({
             markedOptions: {
               provide: MARKED_OPTIONS,
-              useValue: 'mockMarkedOptions',
+              useValue: {},
             },
           }),
         ],
@@ -207,7 +207,7 @@ describe('MarkdownModule', () => {
           MarkdownModule.forRoot({
             markedOptions: {
               provide: MARKED_OPTIONS,
-              useValue: 'mockMarkedOptions',
+              useValue: {},
             },
           }),
         ],
@@ -251,7 +251,7 @@ describe('MarkdownModule', () => {
           MarkdownModule.forRoot({
             markedOptions: {
               provide: MARKED_OPTIONS,
-              useValue: 'mockMarkedOptions',
+              useValue: {},
             },
           }),
         ],

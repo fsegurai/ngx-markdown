@@ -58,7 +58,7 @@ Demo available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.gith
 To add `@fsegurai/ngx-markdown` along with the required marked library to your `package.json` use the following commands.
 
 ```bash
-npm install @fsegurai/ngx-markdown marked@^14.1.3 --save
+npm install @fsegurai/ngx-markdown marked@^15.0.2 --save
 ```
 
 ### Syntax highlight
@@ -355,15 +355,43 @@ Using `markdown` component and/or directive, you will be able to use the `mermai
 </markdown>
 ```
 
-Optionally, you can specify mermaid [configuration options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) using `mermaidOptions` property.
+#### Global configuration
+You can provide a global configuration for mermaid [configuration options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) to use across your application with the `mermaidOptions` in the `MarkdownModuleConfig` either with `provideMarkdown` provide-function for standalone components or `MarkdownModule.forRoot()` for module configuration.
+##### Using the `provideMarkdown` function
+```typescript
+provideMarkdown({
+  mermaidOptions: {
+    provide: MERMAID_OPTIONS,
+    useValue: {
+      darkMode: true,
+      look: 'handDrawn',
+      ...
+    },
+  },
+}),
+```
+##### Using the `MarkdownModule` import
+```typescript
+MarkdownModule.forRoot({
+  mermaidOptions: {
+    provide: MERMAID_OPTIONS,
+    useValue: {
+      darkMode: true,
+      look: 'handDrawn',
+      ...
+    },
+  },
+}),
+```
+#### Component configuration
+Additionally, you can specify mermaid [configuration options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) on component directly using `mermaidOptions` property.
 
 ```typescript
 import {MermaidAPI} from '@fsegurai/ngx-markdown';
 
-public options: MermaidAPI.Config = {
-  fontFamily: '"trebuchet ms", verdana, arial, sans-serif',
-  logLevel: MermaidAPI.LogLevel.Info,
-  theme: MermaidAPI.Theme.Dark,
+public options: MermaidAPI.MermaidConfig = {
+  darkMode: true,
+  look: 'handDrawn',
   ...
 };
 ```
@@ -584,7 +612,7 @@ imports: [
 
 #### Sanitization
 
-As of `@fsegurai/ngx-markdown@v17.0.0` **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
+As of `@fsegurai/ngx-markdown@v19.0.0` **sanitization is enabled by default** and uses Angular `DomSanitizer` with `SecurityContext.HTML` to avoid XSS vulnerabilities. The `SecurityContext` level can be changed using the `sanitize` property when configuring `MarkdownModule`.
 
 ##### Using the `provideMarkdown` function
 
@@ -851,7 +879,7 @@ export interface MarkdownPipeOptions {
   katex?: boolean;
   katexOptions?: KatexOptions;
   mermaid?: boolean;
-  mermaidOptions?: MermaidAPI.Config;
+  mermaidOptions?: MermaidAPI.MermaidConfig;
   markedOptions?: MarkedOptions;
   disableSanitizer?: boolean;
 }
