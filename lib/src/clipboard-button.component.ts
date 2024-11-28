@@ -4,8 +4,8 @@ import { merge, of, Subject, timer } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'markdown-clipboard',
-  template: `
+    selector: 'markdown-clipboard',
+    template: `
     <button
       class="markdown-clipboard-button"
       [class.copied]="copied$ | async"
@@ -13,9 +13,8 @@ import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rx
       {{ copiedText$ | async }}
     </button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [AsyncPipe],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [AsyncPipe],
 })
 export class ClipboardButtonComponent {
   @Input() buttonTextCopy = 'Copy';

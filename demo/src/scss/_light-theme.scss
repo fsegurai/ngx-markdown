@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@use 'typography' as typography;
 
 $dark-text: map.get(mat.$m2-light-theme-foreground-palette, text);
 $light-text: map.get(mat.$m2-dark-theme-foreground-palette, text);
@@ -48,6 +47,5 @@ $theme: mat.m2-define-light-theme((
     accent: $light-accent,
     warn: $light-warn,
   ),
-  typography: typography.$mat-typography-config,
   density: 0,
 ));

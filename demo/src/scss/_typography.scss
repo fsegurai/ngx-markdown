@@ -7,3 +7,9 @@ $mat-typography-config: mat.m2-define-typography-config(
     $font-family,
     $body-1,
 );
+
+@mixin typography-styles {
+  body {
+    font-family: $font-family;
+  }
+}

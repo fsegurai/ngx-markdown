@@ -2,8 +2,6 @@ const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
 const importPlugin = require("eslint-plugin-import");
-const jsdocPlugin = require("eslint-plugin-jsdoc");
-const preferArrowPlugin = require("eslint-plugin-prefer-arrow");
 
 module.exports = tseslint.config(
   {
@@ -18,8 +16,6 @@ module.exports = tseslint.config(
     processor: angular.processInlineTemplates,
     plugins: {
       import: importPlugin,
-      jsdoc: jsdocPlugin,
-      preferArrow: preferArrowPlugin,
     },
     settings: {
       "import/resolver": {
@@ -37,6 +33,7 @@ module.exports = tseslint.config(
     languageOptions: {
       parserOptions: {
         project: "./tsconfig.json",
+        tsconfigRootDir: __dirname,
         createDefaultProgram: true,
       },
     },
