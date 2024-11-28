@@ -36,9 +36,9 @@ on:
     types: [ completed ]
 
 jobs:
-  test:
+  test_library:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 2
     environment: FSI_DEP_NodeJs
     steps:
       - name: Checkout code
@@ -59,11 +59,28 @@ jobs:
       - name: Test TypeScript (Library)
         run: yarn type-check:lib
 
+      - name: Test library
+        run: yarn test-ci_cd:lib
+
+  test_demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    environment: FSI_DEP_NodeJs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js - Version ${{ vars.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
       - name: Test Lint (Demo)
         run: yarn lint:demo
 
       - name: Test TypeScript (Demo)
         run: yarn type-check:demo
-
-      - name: Test library
-        run: yarn test:ci_cd

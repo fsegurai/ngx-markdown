@@ -10,7 +10,6 @@
   $foreground-text: map.get($foreground-palette, 'text');
 
   ul.scrollspy-nav {
-
     li {
       border-left: 2px solid $accent-color;
       box-shadow: inset 1px 0 0 $accent-color;

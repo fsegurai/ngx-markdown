@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@use 'typography' as typography;
 
 $dark-primary: mat.m2-define-palette(mat.$m2-grey-palette, 900, 300, 700);
 $dark-accent: mat.m2-define-palette(mat.$m2-light-blue-palette);
@@ -11,6 +10,5 @@ $theme: mat.m2-define-dark-theme((
     accent: $dark-accent,
     warn: $dark-warn,
   ),
-  typography: typography.$mat-typography-config,
   density: 0,
 ));

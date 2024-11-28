@@ -32,17 +32,16 @@ export interface MarkdownRouterLinkOptions {
 }
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'markdown, [markdown]',
-  template: `
+    // eslint-disable-next-line @angular-eslint/component-selector
+    selector: 'markdown, [markdown]',
+    template: `
     <ng-content></ng-content>
 
     @if (changed$ | async) {
       <ng-container></ng-container>
     }
   `,
-  imports: [CommonModule],
-  standalone: true,
+    imports: [CommonModule],
 })
 export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() data: string | null | undefined;

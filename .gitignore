@@ -66,6 +66,8 @@ typings/
 .node_repl_history
 .node_modules
 .angular/cache
+.nx/cache
+.nx/workspace-data
 .sass-cache/
 .history/
 
