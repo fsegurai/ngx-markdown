@@ -9,9 +9,10 @@ on:
     inputs: { }
 
 permissions:
-  contents: write # Required to publish to GitHub Pages
-  packages: write # Required to publish to GitHub Pages
-  id-token: write # Required to publish to GitHub Pages
+  #  contents: write # Required to publish to GitHub Pages branch
+  #  packages: write # Required to publish to GitHub Pages branch
+  #  id-token: write # Required to publish to GitHub Pages branch
+  pages: write # Required to publish to GitHub Pages
 
 concurrency:
   group: 'pages'
