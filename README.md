@@ -36,8 +36,6 @@
 - [Mermaid](https://mermaid-js.github.io/) for diagrams and charts visualization
 - [Clipboard.js](https://clipboardjs.com/) to copy code blocks to clipboard
 
-Demo available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.github.io/ngx-markdown) 
-
 ### Table of contents
 
 - [Installation](#installation)
@@ -329,7 +327,7 @@ public options: KatexOptions = {
 To add [Mermaid](https://mermaid-js.github.io/) library to your `package.json` use the following command.
 
 ```bash
-npm install mermaid@^11.4.0 --save
+npm install mermaid@^11.4.1 --save
 ```
 
 To activate [Mermaid](https://mermaid-js.github.io/) diagramming and charting tool you will need to include...
@@ -1001,7 +999,7 @@ When using variable binding you can optionally use `language` pipe to specify th
 
 A demo is available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.github.io/ngx-markdown) and its source code can be found inside the `demo` directory.
 
-    It's important to mention that for this project I'm using Node.js v18.20.4 and Yarn v1.22.22.
+    It's important to mention that for this project I'm using Node.js v20.11.1 and Yarn v1.22.22.
 
 The following commands will clone the repository, install npm dependencies and serve the application @ [http://localhost:4200](http://localhost:4200)
 
