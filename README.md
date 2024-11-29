@@ -36,8 +36,6 @@
 - [Mermaid](https://mermaid-js.github.io/) for diagrams and charts visualization
 - [Clipboard.js](https://clipboardjs.com/) to copy code blocks to clipboard
 
-Demo available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.github.io/ngx-markdown) 
-
 ### Table of contents
 
 - [Installation](#installation)
