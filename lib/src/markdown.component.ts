@@ -33,7 +33,7 @@ export interface MarkdownRouterLinkOptions {
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
-    selector: 'markdown, [markdown]',
+    selector: 'ngx-markdown, markdown, [markdown]',
     template: `
     <ng-content></ng-content>
 
