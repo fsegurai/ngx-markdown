@@ -125,7 +125,7 @@
       "root": "lib",
       "sourceRoot": "lib/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "ngx",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -168,6 +168,7 @@
   },
   "cli": {
     "analytics": false,
+    "packageManager": "bun",
     "schematicCollections": [
       "@angular-eslint/schematics"
     ]
