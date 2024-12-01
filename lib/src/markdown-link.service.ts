@@ -1,6 +1,6 @@
-import {Injectable, inject} from '@angular/core';
-import {NavigationExtras, Router} from '@angular/router';
-import {MarkdownRouterLinkOptions} from './markdown.component';
+import { inject, Injectable } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
+import { MarkdownRouterLinkOptions } from './markdown.component';
 
 @Injectable({
   providedIn: 'root',
@@ -93,7 +93,7 @@ export class MarkdownLinkService {
 
     if (routerLinkOptions?.internalBrowserHandler) {
       if (path.startsWith('#')) {
-        void this._router.navigate([], {fragment: path.slice(1)});
+        void this._router.navigate([], { fragment: path.slice(1) });
         return;
       }
 
@@ -114,7 +114,7 @@ export class MarkdownLinkService {
         const elements = document.querySelectorAll(path);
 
         // Scroll to the first element with the id
-        elements[0].scrollIntoView({behavior: 'smooth'});
+        elements[0].scrollIntoView({ behavior: 'smooth' });
         return;
       } catch (error) {
         console.error(error);
