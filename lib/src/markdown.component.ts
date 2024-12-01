@@ -1,4 +1,4 @@
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -14,16 +14,16 @@ import {
   Output,
   TemplateRef,
   Type,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
-import {NavigationExtras, Router} from '@angular/router';
-import {from, merge, Subject} from 'rxjs';
-import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {KatexOptions} from './katex-options';
-import {MarkdownLinkService} from './markdown-link.service';
-import {MarkdownService, ParseOptions, RenderOptions} from './markdown.service';
-import {MermaidAPI} from './mermaid-options';
-import {PrismPlugin} from './prism-plugin';
+import { NavigationExtras, Router } from '@angular/router';
+import { from, merge, Subject } from 'rxjs';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { KatexOptions } from './katex-options';
+import { MarkdownLinkService } from './markdown-link.service';
+import { MarkdownService, ParseOptions, RenderOptions } from './markdown.service';
+import { MermaidAPI } from './mermaid-options';
+import { PrismPlugin } from './prism-plugin';
 
 export interface MarkdownRouterLinkOptions {
   global?: NavigationExtras;
@@ -49,7 +49,7 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   private markdownLinkService = inject(MarkdownLinkService);
   private element = inject<ElementRef<HTMLElement>>(ElementRef);
   private viewContainerRef = inject(ViewContainerRef);
-  private router? = inject(Router, {optional: true});
+  private router? = inject(Router, { optional: true });
 
   @Input() data: string | null | undefined;
   @Input() src: string | null | undefined;
@@ -299,11 +299,11 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
       });
     }
     if (this.lineHighlight) {
-      this.setPluginOptions(this.element.nativeElement, {dataLine: this.line, dataLineOffset: this.lineOffset});
+      this.setPluginOptions(this.element.nativeElement, { dataLine: this.line, dataLineOffset: this.lineOffset });
     }
     if (this.lineNumbers) {
       this.setPluginClass(this.element.nativeElement, PrismPlugin.LineNumbers);
-      this.setPluginOptions(this.element.nativeElement, {dataStart: this.start});
+      this.setPluginOptions(this.element.nativeElement, { dataStart: this.start });
     }
   }
 

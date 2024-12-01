@@ -1,7 +1,7 @@
-import {ElementRef, NgZone, Pipe, PipeTransform, ViewContainerRef, inject} from '@angular/core';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {first} from 'rxjs/operators';
-import {MarkdownService, ParseOptions, RenderOptions} from './markdown.service';
+import { ElementRef, inject, NgZone, Pipe, PipeTransform, ViewContainerRef } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { first } from 'rxjs/operators';
+import { MarkdownService, ParseOptions, RenderOptions } from './markdown.service';
 
 export type MarkdownPipeOptions = ParseOptions & RenderOptions;
 

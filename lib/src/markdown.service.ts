@@ -1,5 +1,5 @@
-import {isPlatformBrowser} from '@angular/common';
-import {HttpClient} from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import {
   EmbeddedViewRef,
   inject,
@@ -9,19 +9,19 @@ import {
   SecurityContext,
   TemplateRef,
   Type,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {marked, Renderer} from 'marked';
-import {Observable, Subject} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {ClipboardButtonComponent} from './clipboard-button.component';
-import {CLIPBOARD_OPTIONS, ClipboardOptions, ClipboardRenderOptions} from './clipboard-options';
-import {KatexOptions} from './katex-options';
-import {MARKED_EXTENSIONS} from './marked-extensions';
-import {MARKED_OPTIONS, MarkedOptions} from './marked-options';
-import {MarkedRenderer, MarkedToken} from './marked-renderer';
-import {MERMAID_OPTIONS, MermaidAPI} from './mermaid-options';
+import { DomSanitizer } from '@angular/platform-browser';
+import { marked, Renderer } from 'marked';
+import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ClipboardButtonComponent } from './clipboard-button.component';
+import { CLIPBOARD_OPTIONS, ClipboardOptions, ClipboardRenderOptions } from './clipboard-options';
+import { KatexOptions } from './katex-options';
+import { MARKED_EXTENSIONS } from './marked-extensions';
+import { MARKED_OPTIONS, MarkedOptions } from './marked-options';
+import { MarkedRenderer, MarkedToken } from './marked-renderer';
+import { MERMAID_OPTIONS, MermaidAPI } from './mermaid-options';
 
 // clipboard
 declare let ClipboardJS: {
@@ -86,30 +86,30 @@ export class ExtendedRenderer extends Renderer {
 
 @Injectable()
 export class MarkdownService {
-  private clipboardOptions = inject<ClipboardOptions>(CLIPBOARD_OPTIONS, {optional: true});
-  private extensions = inject(MARKED_EXTENSIONS, {optional: true});
-  private mermaidOptions = inject<MermaidAPI.MermaidConfig>(MERMAID_OPTIONS, {optional: true});
+  private clipboardOptions = inject<ClipboardOptions>(CLIPBOARD_OPTIONS, { optional: true });
+  private extensions = inject(MARKED_EXTENSIONS, { optional: true });
+  private mermaidOptions = inject<MermaidAPI.MermaidConfig>(MERMAID_OPTIONS, { optional: true });
   private platform = inject(PLATFORM_ID);
   private securityContext = inject<SecurityContext>(SECURITY_CONTEXT);
-  private http = inject(HttpClient, {optional: true});
+  private http = inject(HttpClient, { optional: true });
   private sanitizer = inject(DomSanitizer);
 
-  private readonly DEFAULT_MARKED_OPTIONS: MarkedOptions = {renderer: new MarkedRenderer()};
+  private readonly DEFAULT_MARKED_OPTIONS: MarkedOptions = { renderer: new MarkedRenderer() };
   private readonly DEFAULT_KATEX_OPTIONS: KatexOptions = {
     delimiters: [
-      {left: '$$', right: '$$', display: true},
-      {left: '$', right: '$', display: false},
-      {left: '\\(', right: '\\)', display: false},
-      {left: '\\begin{equation}', right: '\\end{equation}', display: true},
-      {left: '\\begin{align}', right: '\\end{align}', display: true},
-      {left: '\\begin{alignat}', right: '\\end{alignat}', display: true},
-      {left: '\\begin{gather}', right: '\\end{gather}', display: true},
-      {left: '\\begin{CD}', right: '\\end{CD}', display: true},
-      {left: '\\[', right: '\\]', display: true},
+      { left: '$$', right: '$$', display: true },
+      { left: '$', right: '$', display: false },
+      { left: '\\(', right: '\\)', display: false },
+      { left: '\\begin{equation}', right: '\\end{equation}', display: true },
+      { left: '\\begin{align}', right: '\\end{align}', display: true },
+      { left: '\\begin{alignat}', right: '\\end{alignat}', display: true },
+      { left: '\\begin{gather}', right: '\\end{gather}', display: true },
+      { left: '\\begin{CD}', right: '\\end{CD}', display: true },
+      { left: '\\[', right: '\\]', display: true },
     ],
   };
-  private readonly DEFAULT_MERMAID_OPTIONS: MermaidAPI.MermaidConfig = {startOnLoad: false};
-  private readonly DEFAULT_CLIPBOARD_OPTIONS: ClipboardOptions = {buttonComponent: undefined};
+  private readonly DEFAULT_MERMAID_OPTIONS: MermaidAPI.MermaidConfig = { startOnLoad: false };
+  private readonly DEFAULT_CLIPBOARD_OPTIONS: ClipboardOptions = { buttonComponent: undefined };
   private readonly DEFAULT_PARSE_OPTIONS: ParseOptions = {
     decodeHtml: false,
     inline: false,
@@ -133,9 +133,9 @@ export class MarkdownService {
   private _options: MarkedOptions = this.DEFAULT_MARKED_OPTIONS;
 
   constructor() {
-    const options = inject<MarkedOptions>(MARKED_OPTIONS, {optional: true});
+    const options = inject<MarkedOptions>(MARKED_OPTIONS, { optional: true });
 
-    this.options = {...this.DEFAULT_MARKED_OPTIONS, ...options};
+    this.options = { ...this.DEFAULT_MARKED_OPTIONS, ...options };
   }
 
   get options(): MarkedOptions {
@@ -143,7 +143,7 @@ export class MarkdownService {
   }
 
   set options(value: MarkedOptions) {
-    this._options = {...this.DEFAULT_MARKED_OPTIONS, ...value};
+    this._options = { ...this.DEFAULT_MARKED_OPTIONS, ...value };
   }
 
   get renderer(): MarkedRenderer {
@@ -169,7 +169,7 @@ export class MarkdownService {
       markedOptions: userMarkedOptions,
     } = parseOptions;
 
-    const markedOptions = {...this.options, ...userMarkedOptions};
+    const markedOptions = { ...this.options, ...userMarkedOptions };
     const renderer = markedOptions.renderer || this.renderer;
 
     if (this.extensions) this.renderer = this.extendRenderer(renderer, 'extensions');
@@ -209,9 +209,9 @@ export class MarkdownService {
       mermaidOptions,
     } = options;
 
-    if (katex) this.renderKatex(element, {...this.DEFAULT_KATEX_OPTIONS, ...katexOptions});
-    if (mermaid) this.renderMermaid(element, {...this.DEFAULT_MERMAID_OPTIONS, ...this.mermaidOptions, ...mermaidOptions});
-    if (clipboard) this.renderClipboard(element, viewContainerRef, {...this.DEFAULT_CLIPBOARD_OPTIONS, ...this.clipboardOptions, ...clipboardOptions});
+    if (katex) this.renderKatex(element, { ...this.DEFAULT_KATEX_OPTIONS, ...katexOptions });
+    if (mermaid) this.renderMermaid(element, { ...this.DEFAULT_MERMAID_OPTIONS, ...this.mermaidOptions, ...mermaidOptions });
+    if (clipboard) this.renderClipboard(element, viewContainerRef, { ...this.DEFAULT_CLIPBOARD_OPTIONS, ...this.clipboardOptions, ...clipboardOptions });
 
     this.highlight(element);
   }
@@ -230,7 +230,7 @@ export class MarkdownService {
   getSource(src: string): Observable<string> {
     if (!this.http) throw new Error(errorSrcWithoutHttpClient);
 
-    return this.http.get(src, {responseType: 'text'}).pipe(map(markdown => this.handleExtension(src, markdown)));
+    return this.http.get(src, { responseType: 'text' }).pipe(map(markdown => this.handleExtension(src, markdown)));
   }
 
   /**
@@ -283,7 +283,7 @@ export class MarkdownService {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       const defaultCode = renderer.code;
 
-      renderer.code = ({type, raw, text, lang, escaped}: MarkedToken.Code) => {
+      renderer.code = ({ type, raw, text, lang, escaped }: MarkedToken.Code) => {
         if (lang === 'mermaid') {
           return `<div class="mermaid">${text}</div>`;
         } else if (defaultCode) {
@@ -344,11 +344,11 @@ export class MarkdownService {
     if (options.renderer) {
       // clone renderer and remove extended flags otherwise
       // marked throws an error thinking it is a renderer prop
-      const renderer = {...options.renderer} as Partial<ExtendedRenderer>;
+      const renderer = { ...options.renderer } as Partial<ExtendedRenderer>;
       delete renderer.ɵNgxMarkdownRendererExtendedForExtensions;
       delete renderer.ɵNgxMarkdownRendererExtendedForMermaid;
 
-      marked.use({renderer});
+      marked.use({ renderer });
     }
 
     return inline ? this.parseInline(markdown, options) : marked(markdown, options);
@@ -504,7 +504,7 @@ export class MarkdownService {
 
     embeddedViewRef.rootNodes.forEach((node: HTMLElement) => {
       toolbarWrapperElement.appendChild(node);
-      clipboardInstance = new ClipboardJS(node, {text: () => preElement.innerText});
+      clipboardInstance = new ClipboardJS(node, { text: () => preElement.innerText });
     });
 
     embeddedViewRef.onDestroy(() => clipboardInstance.destroy());
@@ -547,7 +547,7 @@ export class MarkdownService {
 
       // Convert NodeList to Array
       const nodes = Array.from(mermaidElements) as HTMLElement[];
-      mermaid.run({nodes});
+      mermaid.run({ nodes });
     }
   }
 
