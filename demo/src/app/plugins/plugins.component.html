@@ -84,7 +84,7 @@
       var result = square(2);
 
       function square(number) &#123;
-      return number * number;
+        return number * number;
       &#125;
       ```
     </markdown>
@@ -102,15 +102,18 @@
       var result = root(2);
 
       function root(x, n) &#123;
-      try &#123;
-      var negate = n % 2 == 1 && x < 0;
-      if (negate)
-      x = -x;
-      var possible = Math.pow(x, 1 / n);
-      n = Math.pow(possible, n);
-      if (Math.abs(x - n) < 1 && (x > 0 == n > 0))
-      return negate ? -possible : possible;
-      &#125; catch (e) &#123; &#125;
+        try &#123;
+          var negate = n % 2 == 1 && x < 0;
+
+          if (negate) x = -x;
+
+          var possible = Math.pow(x, 1 / n);
+          n = Math.pow(possible, n);
+
+          if (Math.abs(x - n) < 1 && (x > 0 == n > 0)) &#123;
+            return negate ? -possible : possible;
+          &#125;
+        &#125; catch (e) &#123; &#125;
       &#125;
       ```
     </markdown>
@@ -149,20 +152,23 @@
       In the example below `line` 6 and 10 to 16 are highlight using a `lineOffset` of 5.
     </markdown>
 
-    <markdown [lineOffset]="5" [line]="'6, 10-16'" [lineHighlight]="true" ngPreserveWhitespaces>
+    <markdown [lineOffset]="5" [line]="'6, 10-19'" [lineHighlight]="true" ngPreserveWhitespaces>
       ```javascript
       var result = root(2);
 
       function root(x, n) &#123;
-      try &#123;
-      var negate = n % 2 == 1 && x < 0;
-      if (negate)
-      x = -x;
-      var possible = Math.pow(x, 1 / n);
-      n = Math.pow(possible, n);
-      if (Math.abs(x - n) < 1 && (x > 0 == n > 0))
-      return negate ? -possible : possible;
-      &#125; catch (e) &#123; &#125;
+        try &#123;
+          var negate = n % 2 == 1 && x < 0;
+
+          if (negate) x = -x;
+
+          var possible = Math.pow(x, 1 / n);
+          n = Math.pow(possible, n);
+
+          if (Math.abs(x - n) < 1 && (x > 0 == n > 0)) &#123;
+            return negate ? -possible : possible;
+          &#125;
+        &#125; catch (e) &#123; &#125;
       &#125;
       ```
     </markdown>
@@ -197,10 +203,10 @@
 
       ```html
       &lt;markdown
-      commandLine
-      [user]="'root'"
-      [host]="'localhost'"
-      [src]="'path/to/file.bash'">
+        commandLine
+        [user]="'root'"
+        [host]="'localhost'"
+        [src]="'path/to/file.bash'">
       &lt;/markdown>
       ```
     </markdown>
@@ -217,11 +223,11 @@
 
       ```html
       &lt;markdown
-      commandLine
-      [user]="'chris'"
-      [host]="'remotehost'"
-      [output]="'2, 4-8'"
-      [src]="'path/to/file.bash'">
+        commandLine
+        [user]="'chris'"
+        [host]="'remotehost'"
+        [output]="'2, 4-8'"
+        [src]="'path/to/file.bash'">
       &lt;/markdown>
       ```
     </markdown>
@@ -238,10 +244,10 @@
 
       ```html
       &lt;markdown
-      commandLine
-      [prompt]="'PS C:\Users\Chris>'"
-      [output]="'2-19'"
-      [src]="'path/to/file.bash'">
+        commandLine
+        [prompt]="'PS C:\Users\Chris>'"
+        [output]="'2-19'"
+        [src]="'path/to/file.bash'">
       &lt;/markdown>
       ```
     </markdown>
@@ -258,15 +264,15 @@
 
       ```html
       &lt;markdown
-      commandLine
-      [prompt]="'PS C:\Users\Chris>'"
-      [filterOutput]="'(out)'">
-      ```powershell
-      Get-Date
-      (out)
-      (out)Sunday, November 7, 2021 8:19:21 PM
-      (out)
-      `​``
+        commandLine
+        [prompt]="'PS C:\Users\Chris>'"
+        [filterOutput]="'(out)'">
+        ```powershell
+        Get-Date
+        (out)
+        (out)Sunday, November 7, 2021 8:19:21 PM
+        (out)
+        `​``
       &lt;/markdown>
       ```
     </markdown>
@@ -328,11 +334,11 @@
       import &#123; KatexOptions &#125; from 'ngx-markdown';
 
       public options: KatexOptions = &#123;
-      displayMode: true,
-      throwOnError: false,
-      errorColor: '#cc0000',
-      delimiters: [...],
-      ...
+        displayMode: true,
+        throwOnError: false,
+        errorColor: '#cc0000',
+        delimiters: [...],
+        ...
       &#125;;
       ```
 
@@ -393,26 +399,26 @@
       ```typescript
       // using the `provideMarkdown` function
       provideMarkdown(&#123;
-      mermaidOptions: &#123;
-      provide: MERMAID_OPTIONS,
-      useValue: &#123;
-      darkMode: true,
-      look: 'handDrawn',
-      ...
-      &#125;,
-      &#125;,
+        mermaidOptions: &#123;
+          provide: MERMAID_OPTIONS,
+          useValue: &#123;
+            darkMode: true,
+            look: 'handDrawn',
+            ...
+          &#125;,
+        &#125;,
       &#125;),
 
       // using the `MarkdownModule` import
       MarkdownModule.forRoot(&#123;
-      mermaidOptions: &#123;
-      provide: MERMAID_OPTIONS,
-      useValue: &#123;
-      darkMode: true,
-      look: 'handDrawn',
-      ...
-      &#125;,
-      &#125;,
+        mermaidOptions: &#123;
+          provide: MERMAID_OPTIONS,
+          useValue: &#123;
+            darkMode: true,
+            look: 'handDrawn',
+            ...
+          &#125;,
+        &#125;,
       &#125;),
       ```
 
@@ -427,9 +433,9 @@
       import &#123; MermaidAPI &#125; from 'ngx-markdown';
 
       public options: MermaidAPI.MermaidConfig = &#123;
-      darkMode: true,
-      look: 'handDrawn',
-      ...
+        darkMode: true,
+        look: 'handDrawn',
+        ...
       &#125;;
       ```
 
@@ -496,14 +502,14 @@
 
       ```css
       .markdown-clipboard-toolbar &#123;
-      top: 16px;
-      right: 16px;
-      opacity: 0;
-      transition: opacity 250ms ease-out;
+        top: 16px;
+        right: 16px;
+        opacity: 0;
+        transition: opacity 250ms ease-out;
       &#125;
 
       .markdown-clipboard-toolbar.hover &#123;
-      opacity: 1;
+        opacity: 1;
       &#125;
       ```
     </markdown>
@@ -517,28 +523,28 @@
 
       ```css
       .markdown-clipboard-button &#123;
-      background-color: rgba(255, 255, 255, 0.07);
-      border: none;
-      border-radius: 4px;
-      color: #ffffff;
-      cursor: pointer;
-      font-size: 11px;
-      padding: 4px 0;
-      width: 50px;
-      transition: all 250ms ease-out;
+        background-color: rgba(255, 255, 255, 0.07);
+        border: none;
+        border-radius: 4px;
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 11px;
+        padding: 4px 0;
+        width: 50px;
+        transition: all 250ms ease-out;
       &#125;
 
       .markdown-clipboard-button:hover &#123;
-      background-color: rgba(255, 255, 255, 0.14);
+        background-color: rgba(255, 255, 255, 0.14);
       &#125;
 
       .markdown-clipboard-button:active &#123;
-      transform: scale(0.95);
+        transform: scale(0.95);
       &#125;
 
       .markdown-clipboard-button.copied &#123;
-      background-color: rgba(0, 255, 0, 0.1);
-      color: #00ff00;
+        background-color: rgba(0, 255, 0, 0.1);
+        color: #00ff00;
       &#125;
       ```
     </markdown>
@@ -561,8 +567,8 @@
       #include &#60;iostream&#62;
 
       int main() &#123;
-      std::cout << "Hello, World!";
-      return 0;
+        std::cout << "Hello, World!";
+        return 0;
       &#125;
       ```
     </markdown>
@@ -586,16 +592,17 @@
       const regexp = /foo/g;
 
       function findSequence(goal) &#123;
-      function find(start, history) &#123;
-      if (start == goal)
-      return history;
-      else if (start > goal)
-      return null;
-      else
-      return find(start + 5, "(" + history + " + 5)") ||
-      find(start * 3, "(" + history + " * 3)");
-      &#125;
-      return find(1, "1");
+        function find(start, history) &#123;
+          if (start == goal) &#123;
+            return history;
+          &#125; else if (start > goal) &#123;
+            return null;
+          &#125; else &#123;
+            return find(start + 5, "(" + history + " + 5)") ||
+            find(start * 3, "(" + history + " * 3)");
+          &#125;
+        &#125;
+        return find(1, "1");
       &#125;
       ```
 
@@ -608,29 +615,29 @@
     <markdown [clipboardButtonComponent]="clipboardButton" [clipboard]="true" ngPreserveWhitespaces>
       #### Using global configuration
 
-      You can provide a custom component to use globaly across your application with the `clipboardOptions` in the
+      You can provide a custom component to use globally across your application with the `clipboardOptions` in the
       `MarkdownModuleConfig` either with `provideMarkdown` provide-function for standalone components or
       `MarkdownModule.forRoot()` for module configuration.
 
       ```typescript
       // using the `provideMarkdown` function
       provideMarkdown(&#123;
-      clipboardOptions: &#123;
-      provide: CLIPBOARD_OPTIONS,
-      useValue: &#123;
-      buttonComponent: ClipboardButtonComponent,
-      &#125;,
-      &#125;,
+        clipboardOptions: &#123;
+          provide: CLIPBOARD_OPTIONS,
+          useValue: &#123;
+            buttonComponent: ClipboardButtonComponent,
+          &#125;,
+        &#125;,
       &#125;)
 
       // using `MarkdownModule` import
       MarkdownModule.forRoot(&#123;
-      clipboardOptions: &#123;
-      provide: CLIPBOARD_OPTIONS,
-      useValue: &#123;
-      buttonComponent: ClipboardButtonComponent,
-      &#125;,
-      &#125;,
+        clipboardOptions: &#123;
+          provide: CLIPBOARD_OPTIONS,
+          useValue: &#123;
+            buttonComponent: ClipboardButtonComponent,
+          &#125;,
+        &#125;,
       &#125;),
       ```
     </markdown>
@@ -645,13 +652,13 @@
       import &#123; Component &#125; from '&#64;angular/core';
 
       &#64;Component(&#123;
-      selector: 'app-clipboard-button',
-      template: `&lt;button (click)="onClick()">Copy&lt;/button>`,
+        selector: 'app-clipboard-button',
+        template: `&lt;button (click)="onClick()">Copy&lt;/button>`,
       &#125;)
       export class ClipboardButtonComponent &#123;
-      onClick() &#123;
-      alert('Copied to clipboard!');
-      &#125;
+        onClick() &#123;
+          alert('Copied to clipboard!');
+        &#125;
       &#125;
       ```
 
@@ -660,7 +667,7 @@
 
       &#64;Component(&#123; ... &#125;)
       export class ExampleComponent &#123;
-      readonly clipboardButton = ClipboardButtonComponent;
+        readonly clipboardButton = ClipboardButtonComponent;
       &#125;
       ```
 
