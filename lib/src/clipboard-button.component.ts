@@ -18,7 +18,7 @@ import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rx
 })
 export class ClipboardButtonComponent {
   @Input() buttonTextCopy = 'Copy';
-  @Input() buttonTextCopied = 'Copied';
+  @Input() buttonTextCopied = 'Copied!';
 
   private _buttonClick$ = new Subject<void>();
 

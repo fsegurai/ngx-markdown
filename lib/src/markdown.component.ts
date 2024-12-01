@@ -5,10 +5,12 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
+  input,
   Input,
   OnChanges,
   OnDestroy,
   Optional,
+  output,
   Output,
   TemplateRef,
   Type,
@@ -32,7 +34,6 @@ export interface MarkdownRouterLinkOptions {
 }
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'ngx-markdown, markdown, [markdown]',
     template: `
     <ng-content></ng-content>
@@ -46,7 +47,7 @@ export interface MarkdownRouterLinkOptions {
 export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() data: string | null | undefined;
   @Input() src: string | null | undefined;
-  @Input() disableRouterLinkHandler: boolean | undefined = false;
+  readonly disableRouterLinkHandler = input<boolean | undefined>(false);
 
   @Input()
   get disableSanitizer(): boolean {
@@ -149,10 +150,10 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() prompt: string | undefined;
   @Input() output: string | undefined;
   @Input() user: string | undefined;
-  @Input() routerLinkOptions: MarkdownRouterLinkOptions | undefined;
+  readonly routerLinkOptions = input<MarkdownRouterLinkOptions>();
 
-  @Output() error = new EventEmitter<string | Error>();
-  @Output() load = new EventEmitter<string>();
+  readonly error = output<string | Error>();
+  readonly load = output<string>();
   @Output() ready = new EventEmitter<void>();
 
   private _clipboard = false;
@@ -187,8 +188,8 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @HostListener('click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    if (this.disableRouterLinkHandler) return;
-    this.markdownLinkService.interceptClick(event, this.routerLinkOptions);
+    if (this.disableRouterLinkHandler()) return;
+    this.markdownLinkService.interceptClick(event, this.routerLinkOptions());
   }
 
   constructor(
