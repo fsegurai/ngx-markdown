@@ -3,11 +3,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
   NgZone,
   OnChanges,
   OnDestroy,
   SimpleChanges,
+  input
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import Gumshoe from 'gumshoejs';
@@ -25,8 +25,7 @@ import { first } from 'rxjs/operators';
 })
 export class ScrollspyNavComponent implements OnChanges, OnDestroy {
 
-  @Input()
-  headings: Element[] | undefined;
+  readonly headings = input<Element[]>();
 
   private scrollSpy: Gumshoe | undefined;
 

@@ -1,5 +1,5 @@
 import { DOCUMENT, NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, OnInit, viewChild } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout/flex';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,8 +32,7 @@ import { isTheme, Theme } from './app.models';
 export class AppComponent implements OnInit {
   routes: Route[];
   theme = DEFAULT_THEME;
-  @ViewChild('tabHeader', { read: ElementRef, static: true })
-  tabHeader: ElementRef<HTMLElement> | undefined;
+  readonly tabHeader = viewChild('tabHeader', { read: ElementRef });
   private readonly stickyClassName = 'mat-mdc-tab-nav-bar--sticky';
 
   constructor(
@@ -53,10 +52,11 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:scroll')
   onWindowScroll(): void {
-    if (this.tabHeader == null) {
+    const tabHeaderValue = this.tabHeader();
+    if (tabHeaderValue == null) {
       return;
     }
-    const tabHeader = this.tabHeader.nativeElement;
+    const tabHeader = tabHeaderValue.nativeElement;
     const tabHeaderOffset = Math.ceil(tabHeader.offsetTop);
     const windowOffset = Math.ceil(window.scrollY);
     const hasStickyClass = tabHeader.classList.contains(this.stickyClassName);

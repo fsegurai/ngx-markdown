@@ -393,8 +393,10 @@ export class MarkdownService {
       return;
     }
 
-    const language = languageButton ? preElement.querySelector('code')?.className.replace('language-', '') || 'Copy' : 'Copy';
-    instance.buttonTextCopy = buttonTextCopy || language;
+    const codeElement = preElement.querySelector('code');
+    const detectedLanguage = languageButton && codeElement ? codeElement.className.replace('language-', '') : 'Copy';
+
+    instance.buttonTextCopy = buttonTextCopy || detectedLanguage;
     instance.buttonTextCopied = buttonTextCopied || 'Copied!';
   }
 
