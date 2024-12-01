@@ -1,39 +1,36 @@
-import { NgFor } from '@angular/common';
+import {NgFor} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  inject,
+  input,
   NgZone,
   OnChanges,
   OnDestroy,
-  SimpleChanges,
-  input
+  SimpleChanges
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {RouterLink} from '@angular/router';
 import Gumshoe from 'gumshoejs';
-import { first } from 'rxjs/operators';
+import {first} from 'rxjs/operators';
 
 @Component({
-    selector: 'app-scrollspy-nav',
-    templateUrl: './scrollspy-nav.component.html',
-    styleUrls: ['./scrollspy-nav.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        NgFor,
-        RouterLink,
-    ]
+  selector: 'app-scrollspy-nav',
+  templateUrl: './scrollspy-nav.component.html',
+  styleUrls: ['./scrollspy-nav.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    NgFor,
+    RouterLink,
+  ]
 })
 export class ScrollspyNavComponent implements OnChanges, OnDestroy {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private zone = inject(NgZone);
 
   readonly headings = input<Element[]>();
 
   private scrollSpy: Gumshoe | undefined;
-
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private zone: NgZone,
-  ) {
-  }
 
   /**
    * Handle changes to the `headings` input.
@@ -75,7 +72,7 @@ export class ScrollspyNavComponent implements OnChanges, OnDestroy {
       .subscribe(() => {
         const hostElement = this.elementRef.nativeElement;
         const linkSelector = `${hostElement.tagName}.${hostElement.className} a`;
-        this.scrollSpy = new Gumshoe(linkSelector, { offset: 64, reflow: true });
+        this.scrollSpy = new Gumshoe(linkSelector, {offset: 64, reflow: true});
       });
   }
 

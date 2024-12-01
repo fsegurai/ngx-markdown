@@ -1,35 +1,47 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { FlexModule } from '@angular/flex-layout/flex';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { KatexOptions, MarkdownComponent, MarkdownService, MermaidAPI, MarkedToken } from 'ngx-markdown';
-import { playgroundDemo } from '@app/playground/remote/demo';
-import { debounce } from '@shared/debounce/debounce';
-import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  inject
+} from '@angular/core';
+import {FlexModule} from '@angular/flex-layout/flex';
+import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {KatexOptions, MarkdownComponent, MarkdownService, MermaidAPI, MarkedToken} from 'ngx-markdown';
+import {playgroundDemo} from '@app/playground/remote/demo';
+import {debounce} from '@shared/debounce/debounce';
+import {ScrollspyNavLayoutComponent} from '@shared/scrollspy-nav-layout';
 
 @Component({
-    selector: 'app-playground',
-    imports: [
-        FlexModule,
-        FormsModule,
-        MarkdownComponent,
-        MatFormFieldModule,
-        MatInputModule,
-        ScrollspyNavLayoutComponent,
-    ],
-    templateUrl: './playground.component.html',
-    styleUrl: './playground.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-playground',
+  imports: [
+    FlexModule,
+    FormsModule,
+    MarkdownComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    ScrollspyNavLayoutComponent,
+  ],
+  templateUrl: './playground.component.html',
+  styleUrl: './playground.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class PlaygroundComponent implements OnInit, OnDestroy {
+  private markdownService = inject(MarkdownService);
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private changeDetector = inject(ChangeDetectorRef);
+
   // property to handle override as per marked documentation, if a renderer
   // function returns `false` it will fall back to previous implementation
-  headings: Element[] | undefined;
+  protected headings: Element[] | undefined;
+  protected markdownRendering: string | undefined;
 
   private debounceRendering = debounce(() => this.updateMarkdownRendering(), 1000);
   private _markdownContent = playgroundDemo;
-  markdownRendering: string | undefined;
 
   get markdownContent() {
     return this._markdownContent;
@@ -58,13 +70,6 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
     theme: 'dark',
   };
 
-  constructor(
-    private markdownService: MarkdownService,
-    private elementRef: ElementRef<HTMLElement>,
-    private changeDetector: ChangeDetectorRef, // Inject ChangeDetectorRef
-  ) {
-  }
-
   ngOnInit(): void {
     this.updateMarkdownRendering();
   }
@@ -78,6 +83,10 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
     this.setHeadings();
   }
 
+  /**
+   * Set the headings for the scrollspy
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private setHeadings(): void {
     const headings: Element[] = [];
     this.elementRef.nativeElement
@@ -86,6 +95,10 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
     this.headings = headings;
   }
 
+  /**
+   * Strip the content of the Markdown component to only show the content of the Markdown file
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private stripContent(): void {
     this.elementRef.nativeElement
       .querySelector('markdown')!
@@ -95,6 +108,10 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
       .forEach((x) => x.remove());
   }
 
+  /**
+   * Update the Markdown rendering with the current Markdown content and apply custom rendering
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private updateMarkdownRendering(): void {
     this.markdownRendering = this.markdownContent;
 
