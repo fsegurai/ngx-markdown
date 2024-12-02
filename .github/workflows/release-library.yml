@@ -112,9 +112,9 @@ jobs:
       - name: Release to GitHub NPM registry 🚀 - ${{ steps.get_version.outputs.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
-          BUN_AUTH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
+          NPM_GH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
+          NPM_ORG: ${{ vars.NPM_ORG }}
 
         run: |
           cd ./${{ vars.DEMO_PATH }}
-          bun publish --tag ${{ steps.determine_tag.outputs.TAG }} && bunx semantic-release || echo "Package already published in GitHub NPM, skipping..."
+          bun publish --tag ${{ steps.determine_tag.outputs.TAG }} --config=../../bunfig.toml && bunx semantic-release || echo "Package already published in GitHub NPM, skipping..."
