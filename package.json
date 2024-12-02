@@ -24,7 +24,8 @@
     "katex",
     "emoji",
     "clipboard",
-    "clipboard.js"
+    "clipboard.js",
+    "ngx-markdown"
   ],
   "engines": {
     "bun": ">= 1.0.0 < 2.0.0",

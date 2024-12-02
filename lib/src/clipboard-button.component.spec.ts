@@ -65,12 +65,12 @@ describe('ClipboardButtonComponent', () => {
       buttonElement?.click();
       fixture.detectChanges();
 
-      expect(buttonElement?.innerText).toBe('Copied');
+      expect(buttonElement?.innerText).toBe('Copied!');
 
       tick(2999);
       fixture.detectChanges();
 
-      expect(buttonElement?.innerText).toBe('Copied');
+      expect(buttonElement?.innerText).toBe('Copied!');
 
       tick(1);
       fixture.detectChanges();

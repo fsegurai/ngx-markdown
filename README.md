@@ -56,7 +56,7 @@
 To add `@fsegurai/ngx-markdown` along with the required marked library to your `package.json` use the following commands.
 
 ```bash
-npm install @fsegurai/ngx-markdown marked@^15.0.2 --save
+npm install @fsegurai/ngx-markdown marked@^15.0.3 --save
 ```
 
 ### Syntax highlight
@@ -999,11 +999,12 @@ When using variable binding you can optionally use `language` pipe to specify th
 
 A demo is available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.github.io/ngx-markdown) and its source code can be found inside the `demo` directory.
 
-    It's important to mention that for this project I'm using Node.js v20.11.1 and Yarn v1.22.22.
+    It's important to mention that for this project I'm using:
+    Node.js v20.11.1 and Bun v1.1.32 (or later).
 
 The following commands will clone the repository, install npm dependencies and serve the application @ [http://localhost:4200](http://localhost:4200)
 
-> It is recommended to use `yarn` as the package manager to handle the large number of dependencies as it is faster than `npm` and it will mostly not cause any issues.
+> It is advisable to use `bun` as the package manager for managing numerous dependencies, as it is faster than `npm` and generally more reliable.
 
 ```bash
 git clone https://github.com/fsegurai/ngx-markdown.git

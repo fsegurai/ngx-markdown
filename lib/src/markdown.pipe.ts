@@ -25,9 +25,13 @@ export class MarkdownPipe implements PipeTransform {
 
     const markdown = await this.markdownService.parse(value, options);
 
-    this.zone.onStable
-      .pipe(first())
-      .subscribe(() => this.markdownService.render(this.elementRef.nativeElement, options, this.viewContainerRef));
+    if (this.zone) {
+      this.zone.onStable
+        .pipe(first())
+        .subscribe(() => this.markdownService.render(this.elementRef.nativeElement, options, this.viewContainerRef));
+    } else {
+      this.markdownService.render(this.elementRef.nativeElement, options, this.viewContainerRef);
+    }
 
     return this.domSanitizer.bypassSecurityTrustHtml(markdown);
   }
