@@ -182,20 +182,6 @@ For more details regarding **Marked** extension, visit the [official documentati
   <mark>Marked Text</mark>
 </p>
 
-### [Footnotes](https://github.com/markdown-it/markdown-it-footnote)
-
-Footnote 1 link[^first].
-
-Footnote 2 link[^second].
-
-Inline footnote[^Text of inline footnote] definition.
-
-Duplicated footnote reference[^second].
-
-[^first]: Footnote **can have markup**
-[^second]: Footnote text.
-[^Text of inline footnote]: [Text](https://google.com)
-
 ### [Abbreviations](https://github.com/markdown-it/markdown-it-abbr)
 
 This is <abbr title="Title test">HTML</abbr> abbreviation example.

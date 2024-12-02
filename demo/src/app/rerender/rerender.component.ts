@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout/flex';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,25 +7,27 @@ import { MarkdownComponent, MarkdownService, MarkedToken } from 'ngx-markdown';
 import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
-    selector: 'app-rerender',
-    templateUrl: './rerender.component.html',
-    styleUrls: ['./rerender.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        FlexModule,
-        FormsModule,
-        MarkdownComponent,
-        MatFormFieldModule,
-        MatInputModule,
-        ScrollspyNavLayoutComponent,
-    ]
+  selector: 'app-rerender',
+  templateUrl: './rerender.component.html',
+  styleUrls: ['./rerender.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    FlexModule,
+    FormsModule,
+    MarkdownComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    ScrollspyNavLayoutComponent,
+  ]
 })
 export default class RerenderComponent implements OnInit, OnDestroy {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private markdownService = inject(MarkdownService);
 
   // property to handle override as per marked documentation, if a renderer
   // function returns `false` it will fall back to previous implementation
-  headings: Element[] | undefined;
-  markdown = `## Markdown rules!
+  protected headings: Element[] | undefined;
+  protected markdown = `## Markdown rules!
 ---
 
 ### Syntax highlight
@@ -43,12 +45,6 @@ const language = 'typescript';
 > Blockquote to the max`;
   // https://marked.js.org/using_pro#renderer
   private overrideEnabled = false;
-
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private markdownService: MarkdownService,
-  ) {
-  }
 
   private _accentColor = '';
 
@@ -72,6 +68,10 @@ const language = 'typescript';
     this.resetRenderer();
   }
 
+  /**
+   * Set the color of the headings in the markdown
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private changeAccentColor(): void {
     const styleAttribute = this.accentColor
       ? ` style="color: ${this.accentColor}"`
@@ -82,11 +82,16 @@ const language = 'typescript';
     this.markdownService.reload();
   }
 
+  /**
+   * Override the renderer to add a style attribute to the headings
+   * @param styleAttribute - The style attribute to add to the headings
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private overrideRenderer(styleAttribute: string): void {
     this.overrideEnabled = true;
 
     this.markdownService.renderer.heading = ({text, depth}: MarkedToken.Heading): string => {
-      if(this.overrideEnabled) {
+      if (this.overrideEnabled) {
         const parsedText = this.markdownService.parseInline(text); // Parse inline Markdown text to HTML
         return `<h${depth}${styleAttribute}>${parsedText}</h${depth}>`;
       }
@@ -95,10 +100,18 @@ const language = 'typescript';
     }
   }
 
+  /**
+   * Reset the renderer to the default implementation
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private resetRenderer(): void {
     this.overrideEnabled = false;
   }
 
+  /**
+   * Set the headings for the scrollspy
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private setHeadings(): void {
     const headings: Element[] = [];
     this.elementRef.nativeElement

@@ -2,10 +2,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
   EmbeddedViewRef,
-  Inject,
+  inject,
   Injectable,
   InjectionToken,
-  Optional,
   PLATFORM_ID,
   SecurityContext,
   TemplateRef,
@@ -13,7 +12,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { marked, MarkedExtension, Renderer } from 'marked';
+import { marked, Renderer } from 'marked';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ClipboardButtonComponent } from './clipboard-button.component';
@@ -87,6 +86,14 @@ export class ExtendedRenderer extends Renderer {
 
 @Injectable()
 export class MarkdownService {
+  private clipboardOptions = inject<ClipboardOptions>(CLIPBOARD_OPTIONS, { optional: true });
+  private extensions = inject(MARKED_EXTENSIONS, { optional: true });
+  private mermaidOptions = inject<MermaidAPI.MermaidConfig>(MERMAID_OPTIONS, { optional: true });
+  private platform = inject(PLATFORM_ID);
+  private securityContext = inject<SecurityContext>(SECURITY_CONTEXT);
+  private http = inject(HttpClient, { optional: true });
+  private sanitizer = inject(DomSanitizer);
+
   private readonly DEFAULT_MARKED_OPTIONS: MarkedOptions = { renderer: new MarkedRenderer() };
   private readonly DEFAULT_KATEX_OPTIONS: KatexOptions = {
     delimiters: [
@@ -125,16 +132,9 @@ export class MarkdownService {
 
   private _options: MarkedOptions = this.DEFAULT_MARKED_OPTIONS;
 
-  constructor(
-    @Inject(CLIPBOARD_OPTIONS) @Optional() private clipboardOptions: ClipboardOptions,
-    @Inject(MARKED_EXTENSIONS) @Optional() private extensions: MarkedExtension[],
-    @Inject(MARKED_OPTIONS) @Optional() options: MarkedOptions,
-    @Inject(MERMAID_OPTIONS) @Optional() private mermaidOptions: MermaidAPI.MermaidConfig,
-    @Inject(PLATFORM_ID) private platform: object,
-    @Inject(SECURITY_CONTEXT) private securityContext: SecurityContext,
-    @Optional() private http: HttpClient,
-    private sanitizer: DomSanitizer,
-  ) {
+  constructor() {
+    const options = inject<MarkedOptions>(MARKED_OPTIONS, { optional: true });
+
     this.options = { ...this.DEFAULT_MARKED_OPTIONS, ...options };
   }
 
@@ -154,6 +154,11 @@ export class MarkdownService {
     this.options.renderer = value;
   }
 
+  /**
+   * Parse markdown string to HTML
+   * @param markdown - Markdown string
+   * @param parseOptions - Parse options
+   */
   parse(markdown: string, parseOptions: ParseOptions = this.DEFAULT_PARSE_OPTIONS): string | Promise<string> {
     const {
       decodeHtml,
@@ -179,10 +184,21 @@ export class MarkdownService {
     return sanitized || '';
   }
 
+  /**
+   * Parse inline markdown string to HTML
+   * @param markdown - Markdown string
+   * @param options - Marked options
+   */
   parseInline(markdown: string, options?: MarkedOptions | null): string | Promise<string> {
     return marked.parseInline(markdown, options);
   }
 
+  /**
+   * Render markdown string to HTML
+   * @param element - HTML element
+   * @param options - Render options
+   * @param viewContainerRef - View container reference
+   */
   render(element: HTMLElement, options: RenderOptions = this.DEFAULT_RENDER_OPTIONS, viewContainerRef?: ViewContainerRef): void {
     const {
       clipboard,
@@ -200,16 +216,27 @@ export class MarkdownService {
     this.highlight(element);
   }
 
+  /**
+   * Reload markdown content
+   */
   reload(): void {
     this._reload$.next();
   }
 
+  /**
+   * Get markdown source from URL or file
+   * @param src - Source URL or file
+   */
   getSource(src: string): Observable<string> {
     if (!this.http) throw new Error(errorSrcWithoutHttpClient);
 
     return this.http.get(src, { responseType: 'text' }).pipe(map(markdown => this.handleExtension(src, markdown)));
   }
 
+  /**
+   * Highlight code blocks in markdown
+   * @param element - HTML element
+   */
   highlight(element?: Element | Document): void {
     if (!isPlatformBrowser(this.platform)) {
       return;
@@ -225,6 +252,11 @@ export class MarkdownService {
     Prism.highlightAllUnder(element);
   }
 
+  /**
+   * Decode HTML entities in string
+   * @param html - HTML string
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private decodeHtml(html: string): string {
     if (!isPlatformBrowser(this.platform)) return html;
 
@@ -233,13 +265,19 @@ export class MarkdownService {
     return textarea.value;
   }
 
+  /**
+   * Extend renderer with marked extensions or mermaid options
+   * @param renderer - Marked renderer
+   * @param type - Type of extension
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private extendRenderer(renderer: Renderer, type: 'extensions' | 'mermaid'): Renderer {
     const extendedRenderer = renderer as ExtendedRenderer;
     const flag = type === 'extensions' ? 'ɵNgxMarkdownRendererExtendedForExtensions' : 'ɵNgxMarkdownRendererExtendedForMermaid';
 
     if (extendedRenderer[flag]) return renderer;
 
-    if (type === 'extensions' && this.extensions?.length > 0) marked.use(...this.extensions);
+    if (type === 'extensions' && this.extensions && this.extensions?.length > 0) marked.use(...this.extensions);
 
     if (type === 'mermaid') {
       // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -265,6 +303,12 @@ export class MarkdownService {
     return renderer;
   }
 
+  /**
+   * Handle extension in markdown source
+   * @param src - Source URL
+   * @param markdown - Markdown content
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private handleExtension(src: string, markdown: string): string {
     const extensionMatch = src.match(/\.([a-zA-Z0-9]+)(?:[?#].*)?$/);
     const extension = extensionMatch ? extensionMatch[1] : '';
@@ -274,6 +318,11 @@ export class MarkdownService {
       : markdown;
   }
 
+  /**
+   * Parse emoji in markdown string
+   * @param markdown - Markdown string
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private parseEmoji(markdown: string): string {
     if (!isPlatformBrowser(this.platform)) return markdown;
 
@@ -284,6 +333,13 @@ export class MarkdownService {
     return joypixels.shortnameToUnicode(markdown);
   }
 
+  /**
+   * Parse markdown string with marked options
+   * @param markdown - Markdown string
+   * @param options - Marked options
+   * @param inline - Inline markdown
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private parseMarked(markdown: string, options: MarkedOptions, inline = false): string | Promise<string> {
     if (options.renderer) {
       // clone renderer and remove extended flags otherwise
@@ -298,6 +354,13 @@ export class MarkdownService {
     return inline ? this.parseInline(markdown, options) : marked(markdown, options);
   }
 
+  /**
+   * Render clipboard button in Markdown code block
+   * @param element - HTML element
+   * @param viewContainerRef - View container reference
+   * @param options - Clipboard render options
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private renderClipboard(element: HTMLElement, viewContainerRef: ViewContainerRef | undefined, options: ClipboardRenderOptions): void {
     if (!isPlatformBrowser(this.platform)) return;
     if (typeof ClipboardJS === 'undefined') throw new Error(errorClipboardNotLoaded);
@@ -330,6 +393,11 @@ export class MarkdownService {
     });
   }
 
+  /**
+   * Create wrapper for <pre> element and insert it before <pre> element
+   * @param preElement - <pre> element
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private createPreWrapper(preElement: HTMLElement): HTMLElement {
     const preWrapperElement = document.createElement('div');
     preWrapperElement.style.position = 'relative';
@@ -338,6 +406,11 @@ export class MarkdownService {
     return preWrapperElement;
   }
 
+  /**
+   * Create toolbar for clipboard button and insert it before <pre> element
+   * @param preWrapperElement - Wrapper for <pre> element
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private createToolbar(preWrapperElement: HTMLElement): HTMLElement {
     const toolbarWrapperElement = document.createElement('div');
     toolbarWrapperElement.classList.add('markdown-clipboard-toolbar');
@@ -349,6 +422,17 @@ export class MarkdownService {
     return toolbarWrapperElement;
   }
 
+  /**
+   * Create button component or template for clipboard button
+   * @param viewContainerRef - View container reference
+   * @param buttonComponent - Button component
+   * @param buttonTemplate - Button template
+   * @param preElement - (pre) element
+   * @param languageButton - Language button flag
+   * @param buttonTextCopy - Button text for copy
+   * @param buttonTextCopied - Button text for copied
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private createButton<T>(
     viewContainerRef: ViewContainerRef,
     buttonComponent: Type<T> | undefined,
@@ -381,6 +465,15 @@ export class MarkdownService {
     return embeddedViewRef;
   }
 
+  /**
+   * Set button text for clipboard button
+   * @param instance - ClipboardButtonComponent instance
+   * @param preElement - (pre) element
+   * @param languageButton - Language button flag
+   * @param buttonTextCopy - Button text for copy
+   * @param buttonTextCopied - Button text for copied
+   * @private
+   */
   private setButtonText(
     instance: ClipboardButtonComponent,
     preElement: HTMLElement,
@@ -393,11 +486,19 @@ export class MarkdownService {
       return;
     }
 
-    const language = languageButton ? preElement.querySelector('code')?.className.replace('language-', '') || 'Copy' : 'Copy';
-    instance.buttonTextCopy = buttonTextCopy || language;
+    const detectedLanguage = languageButton ? preElement.querySelector('code')?.className.replace('language-', '') || 'Copy' : 'Copy';
+
+    instance.buttonTextCopy = buttonTextCopy || detectedLanguage;
     instance.buttonTextCopied = buttonTextCopied || 'Copied!';
   }
 
+  /**
+   * Attach clipboard.js to root node
+   * @param embeddedViewRef - Embedded view reference
+   * @param toolbarWrapperElement - Toolbar wrapper element
+   * @param preElement - (pre) element
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private attachClipboard(embeddedViewRef: EmbeddedViewRef<unknown>, toolbarWrapperElement: HTMLElement, preElement: HTMLElement): void {
     let clipboardInstance: typeof ClipboardJS;
 
@@ -409,6 +510,12 @@ export class MarkdownService {
     embeddedViewRef.onDestroy(() => clipboardInstance.destroy());
   }
 
+  /**
+   * Render KaTeX in HTML element with options
+   * @param element - HTML element to render KaTeX
+   * @param options - KaTeX options
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private renderKatex(element: HTMLElement, options?: KatexOptions): void {
     if (!isPlatformBrowser(this.platform)) return;
 
@@ -419,6 +526,12 @@ export class MarkdownService {
     renderMathInElement(element, options);
   }
 
+  /**
+   * Render Mermaid in HTML element with options
+   * @param element - HTML element to render Mermaid
+   * @param options - Mermaid options
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private renderMermaid(element: HTMLElement, options: MermaidAPI.MermaidConfig = this.DEFAULT_MERMAID_OPTIONS): void {
     if (!isPlatformBrowser(this.platform)) {
       return;
@@ -438,6 +551,11 @@ export class MarkdownService {
     }
   }
 
+  /**
+   * Trim indentation from markdown string to prevent code block from being indented
+   * @param markdown - Markdown string
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private trimIndentation(markdown: string): string {
     // Return early if markdown is null, undefined, or empty
     if (!markdown) return '';

@@ -1,25 +1,28 @@
-import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject } from '@angular/core';
 import { MarkdownComponent } from 'ngx-markdown';
 import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
-    selector: 'app-get-started',
-    templateUrl: './get-started.component.html',
-    styleUrls: ['./get-started.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MarkdownComponent, ScrollspyNavLayoutComponent]
+  selector: 'app-get-started',
+  templateUrl: './get-started.component.html',
+  styleUrls: ['./get-started.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MarkdownComponent, ScrollspyNavLayoutComponent]
 })
 export default class GetStartedComponent {
-  headings: Element[] | undefined;
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  constructor(private elementRef: ElementRef<HTMLElement>) {
-  }
+  protected headings: Element[] | undefined;
 
   onLoad(): void {
     this.stripContent();
     this.setHeadings();
   }
 
+  /**
+   * Set the headings for the scrollspy
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private setHeadings(): void {
     const headings: Element[] = [];
     this.elementRef.nativeElement
@@ -28,6 +31,10 @@ export default class GetStartedComponent {
     this.headings = headings;
   }
 
+  /**
+   * Strip the content of the markdown
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private stripContent(): void {
     this.elementRef.nativeElement
       .querySelector('markdown')!
