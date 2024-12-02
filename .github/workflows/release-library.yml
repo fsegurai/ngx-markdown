@@ -113,7 +113,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_GH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
-          NPM_ORG: ${{ vars.NPM_ORG }}
 
         run: |
           cd ./${{ vars.DEMO_PATH }}
