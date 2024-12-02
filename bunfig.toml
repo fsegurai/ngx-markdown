@@ -1,2 +1,0 @@
-[install.scopes]
-"@fsegurai" = { token = "$GITHUB_TOKEN", url = "https://npm.pkg.github.com/" }
