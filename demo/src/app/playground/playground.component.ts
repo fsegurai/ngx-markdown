@@ -3,18 +3,18 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  inject,
   OnDestroy,
-  OnInit,
-  inject
+  OnInit
 } from '@angular/core';
-import {FlexModule} from '@angular/flex-layout/flex';
-import {FormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {KatexOptions, MarkdownComponent, MarkdownService, MermaidAPI, MarkedToken} from 'ngx-markdown';
-import {playgroundDemo} from '@app/playground/remote/demo';
-import {debounce} from '@shared/debounce/debounce';
-import {ScrollspyNavLayoutComponent} from '@shared/scrollspy-nav-layout';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { KatexOptions, MarkdownComponent, MarkdownService, MarkedToken, MermaidAPI } from 'ngx-markdown';
+import { playgroundDemo } from '@app/playground/remote/demo';
+import { debounce } from '@shared/debounce/debounce';
+import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
   selector: 'app-playground',

@@ -1,15 +1,15 @@
-import {DOCUMENT, NgFor} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, OnInit, viewChild} from '@angular/core';
-import {FlexModule} from '@angular/flex-layout/flex';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {Route, Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {AnchorService} from '@shared/anchor';
-import {ROUTE_ANIMATION} from './app.animation';
-import {DEFAULT_THEME, LOCAL_STORAGE_THEME_KEY} from './app.constant';
-import {isTheme, Theme} from './app.models';
+import { DOCUMENT, NgFor } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, OnInit, viewChild } from '@angular/core';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Route, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AnchorService } from '@shared/anchor';
+import { ROUTE_ANIMATION } from './app.animation';
+import { DEFAULT_THEME, LOCAL_STORAGE_THEME_KEY } from './app.constant';
+import { isTheme, Theme } from './app.models';
 
 @Component({
   animations: [ROUTE_ANIMATION],

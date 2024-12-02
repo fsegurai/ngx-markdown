@@ -1,12 +1,12 @@
-import {AsyncPipe} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, inject, OnInit} from '@angular/core';
-import {FlexModule} from '@angular/flex-layout/flex';
-import {FormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {LanguagePipe, MarkdownComponent, MarkdownPipe} from 'ngx-markdown';
-import {HttpRawLoaderService} from '@shared/http-raw-loader';
-import {ScrollspyNavLayoutComponent} from '@shared/scrollspy-nav-layout';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit } from '@angular/core';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { LanguagePipe, MarkdownComponent, MarkdownPipe } from 'ngx-markdown';
+import { HttpRawLoaderService } from '@shared/http-raw-loader';
+import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
   selector: 'app-bindings',

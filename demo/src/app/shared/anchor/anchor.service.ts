@@ -1,6 +1,6 @@
-import {LocationStrategy, ViewportScroller} from '@angular/common';
-import {inject, Injectable} from '@angular/core';
-import {ActivatedRoute, Router, UrlTree} from '@angular/router';
+import { LocationStrategy, ViewportScroller } from '@angular/common';
+import { inject, Injectable } from '@angular/core';
+import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 
 /**
  * Service to handle links generated through markdown parsing.

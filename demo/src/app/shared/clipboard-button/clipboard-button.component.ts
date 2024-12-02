@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-clipboard-button',

@@ -6,34 +6,34 @@ import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rx
 @Component({
     selector: 'markdown-clipboard',
     template: `
-    <button
-      class="markdown-clipboard-button"
-      [class.copied]="copied$ | async"
-      (click)="onCopyToClipboardClick()">
-      {{ copiedText$ | async }}
-    </button>
-  `,
+        <button
+            class="markdown-clipboard-button"
+            [class.copied]="copied$ | async"
+            (click)="onCopyToClipboardClick()">
+            {{ copiedText$ | async }}
+        </button>
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AsyncPipe],
 })
 export class ClipboardButtonComponent {
-  @Input() buttonTextCopy = 'Copy';
-  @Input() buttonTextCopied = 'Copied!';
+    @Input() buttonTextCopy = 'Copy';
+    @Input() buttonTextCopied = 'Copied!';
 
-  private _buttonClick$ = new Subject<void>();
+    private _buttonClick$ = new Subject<void>();
 
-  readonly copied$ = this._buttonClick$.pipe(
-    switchMap(() => merge(of(true), timer(3000).pipe(map(() => false)))),
-    distinctUntilChanged(),
-    shareReplay(1),
-  );
+    readonly copied$ = this._buttonClick$.pipe(
+        switchMap(() => merge(of(true), timer(3000).pipe(map(() => false)))),
+        distinctUntilChanged(),
+        shareReplay(1),
+    );
 
-  readonly copiedText$ = this.copied$.pipe(
-    startWith(false),
-    map((copied) => (copied ? this.buttonTextCopied : this.buttonTextCopy)),
-  );
+    readonly copiedText$ = this.copied$.pipe(
+        startWith(false),
+        map((copied) => (copied ? this.buttonTextCopied : this.buttonTextCopy)),
+    );
 
-  onCopyToClipboardClick(): void {
-    this._buttonClick$.next();
-  }
+    onCopyToClipboardClick(): void {
+        this._buttonClick$.next();
+    }
 }
