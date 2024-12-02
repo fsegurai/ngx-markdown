@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, input } from '@angular/core';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { FlexModule } from '@angular/flex-layout/flex';
@@ -20,8 +19,7 @@ import { ZOOM_ANIMATION } from './scrollspy-nav-layout.animation';
     MarkdownComponent,
     MatButtonModule,
     MatDividerModule,
-    NgIf,
-    ScrollspyNavComponent,
+    ScrollspyNavComponent
   ]
 })
 export class ScrollspyNavLayoutComponent {
