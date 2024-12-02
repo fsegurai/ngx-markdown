@@ -1,8 +1,8 @@
-import {AsyncPipe} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, inject, OnInit} from '@angular/core';
-import {MarkdownComponent} from 'ngx-markdown';
-import {HttpRawLoaderService} from '@shared/http-raw-loader';
-import {ScrollspyNavLayoutComponent} from '@shared/scrollspy-nav-layout';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit } from '@angular/core';
+import { MarkdownComponent } from 'ngx-markdown';
+import { HttpRawLoaderService } from '@shared/http-raw-loader';
+import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
   selector: 'app-cheat-sheet',

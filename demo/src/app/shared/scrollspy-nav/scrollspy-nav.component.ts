@@ -1,4 +1,4 @@
-import {NgFor} from '@angular/common';
+import { NgFor } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,9 +10,9 @@ import {
   OnDestroy,
   SimpleChanges
 } from '@angular/core';
-import {RouterLink} from '@angular/router';
+import { RouterLink } from '@angular/router';
 import Gumshoe from 'gumshoejs';
-import {first} from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-scrollspy-nav',

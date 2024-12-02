@@ -184,8 +184,8 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
       const href = link.getAttribute('href')!;
       const [path, fragment] = href.split('#');
       link.setAttribute('data-routerLink', path);
-      link.setAttribute('href', `${path}${fragment ? `#${fragment}` : ''}`);
-      link.setAttribute('routerLink', `${path}${fragment ? `#${fragment}` : ''}`);
+      link.setAttribute('href', `${ path }${ fragment ? `#${ fragment }` : '' }`);
+      link.setAttribute('routerLink', `${ path }${ fragment ? `#${ fragment }` : '' }`);
       if (fragment) {
         link.setAttribute('fragment', fragment);
       }
@@ -259,7 +259,7 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
    * @private - This method is private and should not be accessed outside of this class
    */
   private coerceBooleanProperty(value: boolean | ''): boolean {
-    return value != null && `${String(value)}` !== 'false';
+    return value != null && `${ String(value) }` !== 'false';
   }
 
   private handleData(): void {
