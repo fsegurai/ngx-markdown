@@ -1,5 +1,5 @@
 import { LocationStrategy, ViewportScroller } from '@angular/common';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 
 /**
@@ -31,16 +31,12 @@ import { ActivatedRoute, Router, UrlTree } from '@angular/router';
  * }
  * ```
  */
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AnchorService {
-
-  constructor(
-    private locationStrategy: LocationStrategy,
-    private route: ActivatedRoute,
-    private router: Router,
-    private viewportScroller: ViewportScroller,
-  ) {
-  }
+  private locationStrategy = inject(LocationStrategy);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private viewportScroller = inject(ViewportScroller);
 
   /**
    * Intercept clicks on `HTMLAnchorElement` to use `Router.navigate()`
@@ -49,13 +45,10 @@ export class AnchorService {
    */
   interceptClick(event: Event): void {
     const element = event.target;
-    if (!(element instanceof HTMLAnchorElement)) {
-      return;
-    }
+    if (!(element instanceof HTMLAnchorElement)) return;
+
     const href = element.getAttribute('href') || '';
-    if (this.isExternalUrl(href) || this.isRouterLink(element)) {
-      return;
-    }
+    if (this.isExternalUrl(href) || this.isRouterLink(element)) return;
     this.navigate(href);
     event.preventDefault();
   }
@@ -68,7 +61,7 @@ export class AnchorService {
   navigate(url: string, replaceUrl = false): void {
     const urlTree = this.getUrlTree(url);
     this.router.navigated = false;
-    void this.router.navigateByUrl(urlTree, { replaceUrl });
+    void this.router.navigateByUrl(urlTree, {replaceUrl});
   }
 
   /**
@@ -77,9 +70,8 @@ export class AnchorService {
    * @return Absolute URL based on the current route.
    */
   normalizeExternalUrl(url: string): string {
-    if (this.isExternalUrl(url)) {
-      return url;
-    }
+    if (this.isExternalUrl(url)) return url;
+
     const urlTree = this.getUrlTree(url);
     const serializedUrl = this.router.serializeUrl(urlTree);
     return this.locationStrategy.prepareExternalUrl(serializedUrl);
@@ -90,9 +82,7 @@ export class AnchorService {
    */
   scrollToAnchor(): void {
     const url = this.router.parseUrl(this.router.url);
-    if (url.fragment) {
-      this.navigate(this.router.url, true);
-    }
+    if (url.fragment) this.navigate(this.router.url, true);
   }
 
   /**
@@ -104,12 +94,22 @@ export class AnchorService {
     this.viewportScroller.setOffset(...params);
   }
 
+  /**
+   * Get the top offset used when scrolling to an anchor.
+   * @param url The URL to get the top offset for.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private getUrlTree(url: string): UrlTree {
     const urlPath = this.stripFragment(url) || this.stripFragment(this.router.url);
     const urlFragment = this.router.parseUrl(url).fragment || undefined;
-    return this.router.createUrlTree([urlPath], { relativeTo: this.route, fragment: urlFragment });
+    return this.router.createUrlTree([urlPath], {relativeTo: this.route, fragment: urlFragment});
   }
 
+  /**
+   * Check if the URL is an external URL.
+   * @param url The URL to check.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private isExternalUrl(url: string): boolean {
     // Check if the URL starts with any of the following protocols:
     try {
@@ -120,10 +120,20 @@ export class AnchorService {
     }
   }
 
+  /**
+   * Check if the anchor element is a router link (i.e. has an Angular attribute).
+   * @param element The anchor element to check.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private isRouterLink(element: HTMLAnchorElement): boolean {
     return element.getAttributeNames().some(n => n.startsWith('_ngcontent'));
   }
 
+  /**
+   * Strip the fragment from a URL.
+   * @param url The URL to strip the fragment from.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private stripFragment(url: string): string {
     return /[^#]*/.exec(url)![0];
   }

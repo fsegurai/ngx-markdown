@@ -1,5 +1,4 @@
-import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, input } from '@angular/core';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { FlexModule } from '@angular/flex-layout/flex';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,25 +8,22 @@ import { ScrollspyNavComponent } from '@shared/scrollspy-nav';
 import { ZOOM_ANIMATION } from './scrollspy-nav-layout.animation';
 
 @Component({
-    animations: [ZOOM_ANIMATION],
-    selector: 'app-scrollspy-nav-layout',
-    templateUrl: './scrollspy-nav-layout.component.html',
-    styleUrls: ['./scrollspy-nav-layout.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        ExtendedModule,
-        FlexModule,
-        MarkdownComponent,
-        MatButtonModule,
-        MatDividerModule,
-        NgIf,
-        ScrollspyNavComponent,
-    ]
+  animations: [ZOOM_ANIMATION],
+  selector: 'app-scrollspy-nav-layout',
+  templateUrl: './scrollspy-nav-layout.component.html',
+  styleUrls: ['./scrollspy-nav-layout.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ExtendedModule,
+    FlexModule,
+    MarkdownComponent,
+    MatButtonModule,
+    MatDividerModule,
+    ScrollspyNavComponent
+  ]
 })
 export class ScrollspyNavLayoutComponent {
-
-  @Input()
-  headings: Element[] | undefined;
+  readonly headings = input<Element[]>();
 
   showScrollUpButton = false;
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout/flex';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,29 +9,29 @@ import { ClipboardButtonComponent } from '@shared/clipboard-button';
 import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
-    selector: 'app-plugins',
-    templateUrl: './plugins.component.html',
-    styleUrls: ['./plugins.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        FlexModule,
-        FormsModule,
-        MarkdownComponent,
-        MatFormFieldModule,
-        MatInputModule,
-        ScrollspyNavLayoutComponent,
-    ],
-    providers: [
-        { provide: CLIPBOARD_OPTIONS, useValue: {} },
-    ]
+  selector: 'app-plugins',
+  templateUrl: './plugins.component.html',
+  styleUrls: ['./plugins.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    FlexModule,
+    FormsModule,
+    MarkdownComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    ScrollspyNavLayoutComponent,
+  ],
+  providers: [
+    {provide: CLIPBOARD_OPTIONS, useValue: {}},
+  ]
 })
 export default class PluginsComponent implements OnInit {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private snackbar = inject(MatSnackBar);
 
-  readonly clipboardButton = ClipboardButtonComponent;
-
-  emojiMarkdown = '# I :heart: @fsegurai/ngx-markdown';
-
-  katexMarkdown =
+  protected readonly clipboardButton = ClipboardButtonComponent;
+  protected emojiMarkdown = '# I :heart: @fsegurai/ngx-markdown';
+  protected katexMarkdown =
     `#### \`katex\` directive example
 
 \`\`\`latex
@@ -40,7 +40,7 @@ f(x) = \\int_{-\\infty}^\\infty \\hat f(\\xi) e^{2 \\pi i \\xi x} d\\xi
 
 $f(x) = \\int_{-\\infty}^\\infty \\hat f(\\xi) e^{2 \\pi i \\xi x} d\\xi$`;
 
-  mermaidMarkdown =
+  protected mermaidMarkdown =
     `\`\`\`mermaid
 graph TD;
   A-->B;
@@ -49,18 +49,12 @@ graph TD;
   C-->D;
 \`\`\``;
 
-  mermaidOptions: MermaidAPI.MermaidConfig = {
+  protected mermaidOptions: MermaidAPI.MermaidConfig = {
     fontFamily: 'inherit',
     theme: 'dark',
   };
 
-  headings: Element[] | undefined;
-
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private snackbar: MatSnackBar,
-  ) {
-  }
+  protected headings: Element[] | undefined;
 
   ngOnInit(): void {
     this.setHeadings();
@@ -74,6 +68,10 @@ graph TD;
     });
   }
 
+  /**
+   * Set the headings for the scrollspy
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private setHeadings(): void {
     const headings: Element[] = [];
     this.elementRef.nativeElement

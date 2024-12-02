@@ -1,36 +1,36 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit } from '@angular/core';
 import { LanguagePipe, MarkdownComponent, MarkdownPipe } from 'ngx-markdown';
 import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
 
 @Component({
-    selector: 'app-syntax-highlight',
-    templateUrl: './syntax-highlight.component.html',
-    styleUrls: ['./syntax-highlight.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        AsyncPipe,
-        LanguagePipe,
-        MarkdownComponent,
-        MarkdownPipe,
-        ScrollspyNavLayoutComponent,
-    ]
+  selector: 'app-syntax-highlight',
+  templateUrl: './syntax-highlight.component.html',
+  styleUrls: ['./syntax-highlight.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AsyncPipe,
+    LanguagePipe,
+    MarkdownComponent,
+    MarkdownPipe,
+    ScrollspyNavLayoutComponent,
+  ]
 })
 export default class SyntaxHighlightComponent implements OnInit {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   headings: Element[] | undefined;
 
   myValue = 'print(\'hello-world\')';
 
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-  ) {
-  }
-
   ngOnInit(): void {
     this.setHeadings();
   }
 
+  /**
+   * Set the headings for the scrollspy
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private setHeadings(): void {
     const headings: Element[] = [];
     this.elementRef.nativeElement

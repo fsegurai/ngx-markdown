@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 import { LanguagePipe } from './language.pipe';
 
 describe('LanguagePipe', () => {
@@ -13,7 +11,7 @@ describe('LanguagePipe', () => {
     const markdowns: any[] = [null, undefined];
     const language = 'language';
 
-    markdowns.forEach((markdown) => {
+    markdowns.forEach((markdown: string | null) => {
       const result = pipe.transform(markdown, language);
       expect(result).toBe('```' + language + '\n\n```');
     });
@@ -23,7 +21,7 @@ describe('LanguagePipe', () => {
     const markdown = '# Markdown';
     const languages: any[] = [null, undefined];
 
-    languages.forEach((language) => {
+    languages.forEach((language: string) => {
       const result = pipe.transform(markdown, language);
       expect(result).toBe('```\n' + markdown + '\n```');
     });
@@ -34,7 +32,7 @@ describe('LanguagePipe', () => {
 
     spyOn(console, 'error');
 
-    markdowns.forEach((markdown) => {
+    markdowns.forEach((markdown: string) => {
       const result = pipe.transform(markdown, markdown);
 
       expect(result).toBe(markdown);
@@ -50,7 +48,7 @@ describe('LanguagePipe', () => {
 
     spyOn(console, 'error');
 
-    languages.forEach((language) => {
+    languages.forEach((language: string) => {
       const result = pipe.transform(markdown, language);
 
       expect(result).toBe(markdown);

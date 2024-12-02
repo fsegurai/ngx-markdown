@@ -2,80 +2,80 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { ClipboardButtonComponent } from './clipboard-button.component';
 
 describe('ClipboardButtonComponent', () => {
-  let fixture: ComponentFixture<ClipboardButtonComponent>;
-  let nativeElement: HTMLElement;
+    let fixture: ComponentFixture<ClipboardButtonComponent>;
+    let nativeElement: HTMLElement;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ClipboardButtonComponent],
-    }).compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [ClipboardButtonComponent],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(ClipboardButtonComponent);
-    nativeElement = fixture.nativeElement;
-    fixture.detectChanges();
-  });
-
-  describe('button', () => {
-    it('should have class `markdown-clipboard-button`', () => {
-      const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
-        '.markdown-clipboard-button',
-      );
-
-      expect(buttonElement).toBeDefined();
+        fixture = TestBed.createComponent(ClipboardButtonComponent);
+        nativeElement = fixture.nativeElement;
+        fixture.detectChanges();
     });
 
-    it('should have class `copied` applied for 3 seconds when clicked', fakeAsync(() => {
-      const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
-        '.markdown-clipboard-button',
-      );
+    describe('button', () => {
+        it('should have class `markdown-clipboard-button`', () => {
+            const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
+                '.markdown-clipboard-button',
+            );
 
-      expect(buttonElement?.classList).not.toContain('copied');
+            expect(buttonElement).toBeDefined();
+        });
 
-      buttonElement?.click();
-      fixture.detectChanges();
+        it('should have class `copied` applied for 3 seconds when clicked', fakeAsync(() => {
+            const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
+                '.markdown-clipboard-button',
+            );
 
-      expect(buttonElement?.classList).toContain('copied');
+            expect(buttonElement?.classList).not.toContain('copied');
 
-      tick(2999);
-      fixture.detectChanges();
+            buttonElement?.click();
+            fixture.detectChanges();
 
-      expect(buttonElement?.classList).toContain('copied');
+            expect(buttonElement?.classList).toContain('copied');
 
-      tick(1);
-      fixture.detectChanges();
+            tick(2999);
+            fixture.detectChanges();
 
-      expect(buttonElement?.classList).not.toContain('copied');
-    }));
+            expect(buttonElement?.classList).toContain('copied');
 
-    it('should display text `copy`', () => {
-      const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
-        '.markdown-clipboard-button',
-      );
+            tick(1);
+            fixture.detectChanges();
 
-      expect(buttonElement?.innerText).toBe('Copy');
+            expect(buttonElement?.classList).not.toContain('copied');
+        }));
+
+        it('should display text `copy`', () => {
+            const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
+                '.markdown-clipboard-button',
+            );
+
+            expect(buttonElement?.innerText).toBe('Copy');
+        });
+
+        it('should display text `copied` for 3 seconds when clicked', fakeAsync(() => {
+            const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
+                '.markdown-clipboard-button',
+            );
+
+            expect(buttonElement?.innerText).toBe('Copy');
+
+            buttonElement?.click();
+            fixture.detectChanges();
+
+            expect(buttonElement?.innerText).toBe('Copied!');
+
+            tick(2999);
+            fixture.detectChanges();
+
+            expect(buttonElement?.innerText).toBe('Copied!');
+
+            tick(1);
+            fixture.detectChanges();
+
+            expect(buttonElement?.innerText).toBe('Copy');
+        }));
     });
-
-    it('should display text `copied` for 3 seconds when clicked', fakeAsync(() => {
-      const buttonElement = nativeElement.querySelector<HTMLButtonElement>(
-        '.markdown-clipboard-button',
-      );
-
-      expect(buttonElement?.innerText).toBe('Copy');
-
-      buttonElement?.click();
-      fixture.detectChanges();
-
-      expect(buttonElement?.innerText).toBe('Copied');
-
-      tick(2999);
-      fixture.detectChanges();
-
-      expect(buttonElement?.innerText).toBe('Copied');
-
-      tick(1);
-      fixture.detectChanges();
-
-      expect(buttonElement?.innerText).toBe('Copy');
-    }));
-  });
 });

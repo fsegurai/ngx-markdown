@@ -5,10 +5,12 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
+  inject,
+  input,
   Input,
   OnChanges,
   OnDestroy,
-  Optional,
+  output,
   Output,
   TemplateRef,
   Type,
@@ -32,21 +34,26 @@ export interface MarkdownRouterLinkOptions {
 }
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
-    selector: 'markdown, [markdown]',
-    template: `
+  selector: 'ngx-markdown, markdown, [markdown]',
+  template: `
     <ng-content></ng-content>
 
     @if (changed$ | async) {
       <ng-container></ng-container>
     }
   `,
-    imports: [CommonModule],
+  imports: [CommonModule],
 })
 export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
+  private markdownService = inject(MarkdownService);
+  private markdownLinkService = inject(MarkdownLinkService);
+  private element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private viewContainerRef = inject(ViewContainerRef);
+  private router? = inject(Router, { optional: true });
+
   @Input() data: string | null | undefined;
   @Input() src: string | null | undefined;
-  @Input() disableRouterLinkHandler: boolean | undefined = false;
+  readonly disableRouterLinkHandler = input<boolean | undefined>(false);
 
   @Input()
   get disableSanitizer(): boolean {
@@ -149,10 +156,10 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() prompt: string | undefined;
   @Input() output: string | undefined;
   @Input() user: string | undefined;
-  @Input() routerLinkOptions: MarkdownRouterLinkOptions | undefined;
+  readonly routerLinkOptions = input<MarkdownRouterLinkOptions>();
 
-  @Output() error = new EventEmitter<string | Error>();
-  @Output() load = new EventEmitter<string>();
+  readonly error = output<string | Error>();
+  readonly load = output<string>();
   @Output() ready = new EventEmitter<void>();
 
   private _clipboard = false;
@@ -177,8 +184,8 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
       const href = link.getAttribute('href')!;
       const [path, fragment] = href.split('#');
       link.setAttribute('data-routerLink', path);
-      link.setAttribute('href', `${path}${fragment ? `#${fragment}` : ''}`);
-      link.setAttribute('routerLink', `${path}${fragment ? `#${fragment}` : ''}`);
+      link.setAttribute('href', `${ path }${ fragment ? `#${ fragment }` : '' }`);
+      link.setAttribute('routerLink', `${ path }${ fragment ? `#${ fragment }` : '' }`);
       if (fragment) {
         link.setAttribute('fragment', fragment);
       }
@@ -187,17 +194,8 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @HostListener('click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    if (this.disableRouterLinkHandler) return;
-    this.markdownLinkService.interceptClick(event, this.routerLinkOptions);
-  }
-
-  constructor(
-    public markdownService: MarkdownService,
-    private markdownLinkService: MarkdownLinkService,
-    public element: ElementRef<HTMLElement>,
-    public viewContainerRef: ViewContainerRef,
-    @Optional() public router?: Router,
-  ) {
+    if (this.disableRouterLinkHandler()) return;
+    this.markdownLinkService.interceptClick(event, this.routerLinkOptions());
   }
 
   ngOnChanges(): void {
@@ -206,9 +204,7 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (!this.data && !this.src) {
-      this.handleTransclusion();
-    }
+    if (!this.data && !this.src) this.handleTransclusion();
 
     this.markdownService.reload$
       .pipe(takeUntil(this.destroyed$))
@@ -220,6 +216,11 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     this.destroyed$.complete();
   }
 
+  /**
+   * Renders the markdown content.
+   * @param markdown The markdown content to render.
+   * @param decodeHtml Whether to decode HTML entities.
+   */
   async render(markdown: string, decodeHtml = false): Promise<void> {
     const parsedOptions: ParseOptions = {
       decodeHtml,
@@ -244,8 +245,7 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
       mermaidOptions: this.mermaidOptions,
     };
 
-    const parsed = await this.markdownService.parse(markdown, parsedOptions);
-    this.element.nativeElement.innerHTML = parsed;
+    this.element.nativeElement.innerHTML = await this.markdownService.parse(markdown, parsedOptions);
 
     this.handlePlugins();
     this.markdownService.render(this.element.nativeElement, renderOptions, this.viewContainerRef);
@@ -253,12 +253,17 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     this.ready.emit();
   }
 
+  /**
+   * Coerces a data-bound value (typically a string) to a boolean.
+   * @param value The value to coerce to a boolean.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private coerceBooleanProperty(value: boolean | ''): boolean {
-    return value != null && `${String(value)}` !== 'false';
+    return value != null && `${ String(value) }` !== 'false';
   }
 
   private handleData(): void {
-    this.render(this.data!);
+    void this.render(this.data!);
   }
 
   private handleSrc(): void {
@@ -275,9 +280,13 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private handleTransclusion(): void {
-    this.render(this.element.nativeElement.innerHTML, true);
+    void this.render(this.element.nativeElement.innerHTML, true);
   }
 
+  /**
+   * Handles the initialization of the plugins.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private handlePlugins(): void {
     if (this.commandLine) {
       this.setPluginClass(this.element.nativeElement, PrismPlugin.CommandLine);
@@ -298,6 +307,12 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Sets the plugin class to the element with the specified plugin.
+   * @param element The element to set the plugin class to.
+   * @param plugin The plugin to set.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private setPluginClass(element: HTMLElement, plugin: string | string[]): void {
     const preElements = element.querySelectorAll('pre');
     preElements.forEach(preElement => {
@@ -306,6 +321,12 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     });
   }
 
+  /**
+   * Sets the plugin options to the element with the specified options.
+   * @param element The element to set the plugin options to.
+   * @param options The options to set.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private setPluginOptions(element: HTMLElement, options: Record<string, number | string | string[] | undefined>): void {
     const preElements = element.querySelectorAll('pre');
     preElements.forEach(preElement => {
@@ -319,10 +340,19 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
     });
   }
 
+  /**
+   * Converts the value to lisp-case for the plugin options.
+   * @param value The value to convert to lisp-case.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private toLispCase(value: string): string {
     return value.replace(/([A-Z])/g, '-$1').toLowerCase();
   }
 
+  /**
+   * Loads the content from the data or the src.
+   * @private - This method is private and should not be accessed outside of this class
+   */
   private loadContent(): void {
     if (this.data) {
       this.handleData();
