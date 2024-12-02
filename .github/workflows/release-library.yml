@@ -96,8 +96,7 @@ jobs:
 
       - name: Release to NPM registry 🚀 - ${{ steps.get_version.outputs.VERSION }}
         env:
-          BUN_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd ./${{ vars.DEMO_PATH }}
           bun publish --tag ${{ steps.determine_tag.outputs.TAG }} --access public || echo "Package already published in NPM, skipping..."
@@ -112,8 +111,7 @@ jobs:
       - name: Release to GitHub NPM registry 🚀 - ${{ steps.get_version.outputs.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
-          BUN_AUTH_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_GH_TOKEN }}
         run: |
           cd ./${{ vars.DEMO_PATH }}
           bun publish --tag ${{ steps.determine_tag.outputs.TAG }} && npx semantic-release || echo "Package already published in GitHub NPM, skipping..."
