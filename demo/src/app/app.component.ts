@@ -1,4 +1,4 @@
-import { DOCUMENT, NgFor } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, OnInit, viewChild } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout/flex';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,10 +23,9 @@ import { isTheme, Theme } from './app.models';
     MatIconModule,
     MatTabsModule,
     MatToolbarModule,
-    NgFor,
     RouterLink,
     RouterLinkActive,
-    RouterOutlet,
+    RouterOutlet
   ]
 })
 export class AppComponent implements OnInit {
@@ -37,7 +36,7 @@ export class AppComponent implements OnInit {
   protected routes: Route[];
   protected theme = DEFAULT_THEME;
 
-  private readonly tabHeader = viewChild('tabHeader', {read: ElementRef});
+  private readonly tabHeader = viewChild('tabHeader', { read: ElementRef });
   private readonly stickyClassName = 'mat-mdc-tab-nav-bar--sticky';
 
   constructor() {
@@ -111,7 +110,7 @@ export class AppComponent implements OnInit {
     if (removeClassList) {
       bodyClassList.remove(...removeClassList);
     }
-    bodyClassList.add(`${this.theme}-theme`);
+    bodyClassList.add(`${ this.theme }-theme`);
     localStorage.setItem(LOCAL_STORAGE_THEME_KEY, this.theme);
   }
 }

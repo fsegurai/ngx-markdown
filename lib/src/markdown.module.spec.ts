@@ -13,20 +13,19 @@ import { MARKED_EXTENSIONS } from './marked-extensions';
 import { MARKED_OPTIONS, MarkedOptions } from './marked-options';
 
 @Component({
-    selector: 'markdown-host-comp',
-    template: `
-    <div *ngIf="src; else dataTemplate">
-      <markdown [src]="src"></markdown>
-    </div>
-
-    <ng-template #dataTemplate>
+  selector: 'markdown-host-comp',
+  template: `
+    @if (src) {
+      <div>
+        <markdown [src]="src"></markdown>
+      </div>
+    } @else {
       <markdown [data]="markdown"></markdown>
-    </ng-template>
+    }
   `,
-    imports: [
-        CommonModule,
-        MarkdownComponent,
-    ],
+  imports: [
+    MarkdownComponent,
+  ],
 })
 class HostComponent {
   markdown = '# Markdown Title';
@@ -63,9 +62,9 @@ describe('MarkdownModule', () => {
     it('should provide HttpClient when MarkdownModuleConfig.loader is provided', () => {
 
       TestBed.configureTestingModule({
-    imports: [MarkdownModule.forRoot({ loader: HttpClient })],
-    providers: [provideHttpClient(withInterceptorsFromDi())],
-});
+        imports: [MarkdownModule.forRoot({ loader: HttpClient })],
+        providers: [provideHttpClient(withInterceptorsFromDi())],
+      });
 
       const httpClient = TestBed.inject(HttpClient);
 
@@ -317,15 +316,15 @@ describe('MarkdownModule', () => {
       };
 
       TestBed.configureTestingModule({
-    imports: [MarkdownModule.forRoot({
-            loader: HttpClient,
-            clipboardOptions: { provide: CLIPBOARD_OPTIONS, useValue: mockClipboardOptions },
-            markedOptions: { provide: MARKED_OPTIONS, useValue: mockMarkedOptions },
-            sanitize: SecurityContext.NONE,
+        imports: [MarkdownModule.forRoot({
+          loader: HttpClient,
+          clipboardOptions: { provide: CLIPBOARD_OPTIONS, useValue: mockClipboardOptions },
+          markedOptions: { provide: MARKED_OPTIONS, useValue: mockMarkedOptions },
+          sanitize: SecurityContext.NONE,
         }),
-        MarkdownModule.forChild()],
-    providers: [provideHttpClient(withInterceptorsFromDi())],
-});
+          MarkdownModule.forChild()],
+        providers: [provideHttpClient(withInterceptorsFromDi())],
+      });
 
       const httpClient = TestBed.inject(HttpClient);
       const clipboardOptions = TestBed.inject(CLIPBOARD_OPTIONS);

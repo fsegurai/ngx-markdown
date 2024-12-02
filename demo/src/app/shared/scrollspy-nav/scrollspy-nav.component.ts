@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -20,8 +19,7 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./scrollspy-nav.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgFor,
-    RouterLink,
+    RouterLink
   ]
 })
 export class ScrollspyNavComponent implements OnChanges, OnDestroy {
@@ -71,8 +69,8 @@ export class ScrollspyNavComponent implements OnChanges, OnDestroy {
       .pipe(first())
       .subscribe(() => {
         const hostElement = this.elementRef.nativeElement;
-        const linkSelector = `${hostElement.tagName}.${hostElement.className} a`;
-        this.scrollSpy = new Gumshoe(linkSelector, {offset: 64, reflow: true});
+        const linkSelector = `${ hostElement.tagName }.${ hostElement.className } a`;
+        this.scrollSpy = new Gumshoe(linkSelector, { offset: 64, reflow: true });
       });
   }
 
