@@ -7,9 +7,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Route, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AnchorService } from '@shared/anchor';
-import { ROUTE_ANIMATION } from './app.animation';
+import { ROUTE_ANIMATION } from '@app/app.animation';
 import { DEFAULT_THEME, LOCAL_STORAGE_THEME_KEY } from './app.constant';
-import { isTheme, Theme } from './app.models';
+import { isTheme, Theme } from '@app/app.models';
 
 @Component({
   animations: [ROUTE_ANIMATION],
