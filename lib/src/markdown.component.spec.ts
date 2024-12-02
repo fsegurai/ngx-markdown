@@ -133,7 +133,7 @@ describe('MarkdownComponent', () => {
 
       spyOn(markdownService, 'getSource').and.returnValue(of());
 
-      component.element = new ElementRef(mockHtmlElement);
+      component['element'] = new ElementRef(mockHtmlElement);
       component.data = undefined;
       component.src = undefined;
 
@@ -153,7 +153,7 @@ describe('MarkdownComponent', () => {
 
       spyOn(markdownService, 'getSource').and.returnValue(of());
 
-      component.element = new ElementRef(mockHtmlElement);
+      component['element'] = new ElementRef(mockHtmlElement);
       component.src = './src-example/file.md';
 
       spyOn(component, 'render');
@@ -167,7 +167,7 @@ describe('MarkdownComponent', () => {
       const mockHtmlElement = document.createElement('div');
       mockHtmlElement.innerHTML = 'inner-html';
 
-      component.element = new ElementRef(mockHtmlElement);
+      component['element'] = new ElementRef(mockHtmlElement);
       component.data = '# Markdown';
 
       spyOn(component, 'render');
@@ -183,7 +183,7 @@ describe('MarkdownComponent', () => {
       const mockHtmlElement = document.createElement('div');
       mockHtmlElement.innerHTML = 'inner-html';
 
-      component.element = new ElementRef(mockHtmlElement);
+      component['element'] = new ElementRef(mockHtmlElement);
       component.data = '# Markdown'; // Ensure data is defined
 
       spyOn(component as any, 'loadContent').and.callThrough();
@@ -225,7 +225,7 @@ describe('MarkdownComponent', () => {
 
       await component.render(raw, true);
 
-      expect(component.element.nativeElement.innerHTML).toBe(parsed);
+      expect(component['element'].nativeElement.innerHTML).toBe(parsed);
     });
 
     it('should handle commandline plugin correctly', async () => {
@@ -364,7 +364,7 @@ describe('MarkdownComponent', () => {
       });
 
       expect(markdownService.render).toHaveBeenCalledWith(
-        component.element.nativeElement,
+        component['element'].nativeElement,
         {
           clipboard: true,
           clipboardOptions: clipboardOptions,
@@ -373,7 +373,7 @@ describe('MarkdownComponent', () => {
           mermaid: true,
           mermaidOptions: mermaidOptions,
         },
-        component.viewContainerRef,
+        component['viewContainerRef'],
       );
     });
 
@@ -386,7 +386,7 @@ describe('MarkdownComponent', () => {
 
       component.ready.pipe(first()).subscribe(() => {
         expect(markdownService.parse).toHaveBeenCalled();
-        expect(component.element.nativeElement.innerHTML).toBe(parsed);
+        expect(component['element'].nativeElement.innerHTML).toBe(parsed);
         expect(markdownService.render).toHaveBeenCalled();
       });
 
