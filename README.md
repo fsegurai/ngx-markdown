@@ -1008,8 +1008,8 @@ The following commands will clone the repository, install npm dependencies and s
 
 ```bash
 git clone https://github.com/fsegurai/ngx-markdown.git
-yarn install
-yarn start
+bun install
+bun start
 ```
 
 ## License
