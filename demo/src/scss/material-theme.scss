@@ -1,11 +1,11 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
-@use 'typography' as typography;
-@use 'utils' as utils;
+@use './typography' as typography;
+@use './utils' as utils;
 
-@use 'light-theme' as light-theme;
-@use 'dark-theme' as dark-theme;
+@use './light-theme' as light-theme;
+@use './dark-theme' as dark-theme;
 
 @use '../app/app.component.theme' as app-component;
 @use '../app/shared/scrollspy-nav/scrollspy-nav.component.theme' as scrollspy-nav-component;
@@ -42,7 +42,7 @@
     background: mat.m2-get-color-from-palette($foreground-palette, 'secondary-text', 0.07);
     border-radius: 3px;
     font-size: 0.94em;
-    padding: 0px 6px 2px;
+    padding: 0 6px 2px;
     overflow-wrap: break-word;
   }
 
