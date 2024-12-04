@@ -44,10 +44,7 @@
 - [Renderer](#renderer)
 - [Syntax highlight](#syntax-highlight)
 - [Demo application](#demo-application)
-- [AoT compilation](#aot-compilation)
-- [Road map](#road-map)
-- [Contribution](#contribution)
-- [Support Development](#support-development)
+- [License](#license)
 
 ## Installation
 
