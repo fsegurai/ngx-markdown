@@ -9,20 +9,20 @@
       </mat-form-field>
 
       <markdown
-        (ready)="onLoad()"
-        class="markdown"
-        [disableSanitizer]="true"
-        [lineNumbers]="true"
-        [start]="1"
-        [emoji]="true"
-        [katex]="true"
-        [katexOptions]="katexOptions"
-        [mermaid]="true"
-        [mermaidOptions]="mermaidOptions"
-        [clipboard]="true"
-        [clipboardLanguageButton]="true"
-        [data]="markdownRendering"
-        [routerLinkOptions]="{
+          (ready)="onLoad()"
+          class="markdown"
+          [disableSanitizer]="true"
+          [lineNumbers]="true"
+          [start]="1"
+          [emoji]="true"
+          [katex]="true"
+          [katexOptions]="katexOptions"
+          [mermaid]="true"
+          [mermaidOptions]="mermaidOptions"
+          [clipboard]="true"
+          [clipboardLanguageButton]="true"
+          [data]="markdownRendering"
+          [routerLinkOptions]="{
           internalBrowserHandler: true,
           externalBrowserHandler: true,
         }"/>
