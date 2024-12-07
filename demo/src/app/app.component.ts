@@ -53,19 +53,15 @@ export class AppComponent implements OnInit {
   @HostListener('window:scroll')
   onWindowScroll(): void {
     const tabHeaderValue = this.tabHeader();
-    if (tabHeaderValue == null) {
-      return;
-    }
+    if (tabHeaderValue == null) return;
+
     const tabHeader = tabHeaderValue.nativeElement;
     const tabHeaderOffset = Math.ceil(tabHeader.offsetTop);
     const windowOffset = Math.ceil(window.scrollY);
     const hasStickyClass = tabHeader.classList.contains(this.stickyClassName);
-    if (!hasStickyClass && windowOffset >= tabHeaderOffset) {
-      tabHeader.classList.add(this.stickyClassName);
-    }
-    if (hasStickyClass && windowOffset < tabHeaderOffset) {
-      tabHeader.classList.remove(this.stickyClassName);
-    }
+
+    if (!hasStickyClass && windowOffset >= tabHeaderOffset) tabHeader.classList.add(this.stickyClassName);
+    if (hasStickyClass && windowOffset < tabHeaderOffset) tabHeader.classList.remove(this.stickyClassName);
   }
 
   ngOnInit(): void {
@@ -107,9 +103,9 @@ export class AppComponent implements OnInit {
     this.theme = theme;
     const bodyClassList = this.document.querySelector('body')!.classList;
     const removeClassList = /\w*-theme\b/.exec(bodyClassList.value);
-    if (removeClassList) {
-      bodyClassList.remove(...removeClassList);
-    }
+
+    if (removeClassList) bodyClassList.remove(...removeClassList);
+
     bodyClassList.add(`${ this.theme }-theme`);
     localStorage.setItem(LOCAL_STORAGE_THEME_KEY, this.theme);
   }
