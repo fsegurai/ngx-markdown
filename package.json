@@ -48,7 +48,10 @@
     "test-ci_cd:lib": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "gh-pages:build": "bun build:demo --aot --base-href=./",
     "gh-pages:copy404": "cpy ./dist/demo/browser/index.html . --rename=404.html",
-    "gh-pages:postBuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat"
+    "gh-pages:postBuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat",
+    "registry:npm": "npm config set registry https://registry.npmjs.org/",
+    "registry:gh-npm": "npm config set registry https://npm.pkg.github.com/",
+    "registry:yarn": "npm config set registry https://registry.yarnpkg.com/"
   },
   "dependencies": {
     "@angular/animations": "^19.0.0",
@@ -84,17 +87,17 @@
     "@eslint/js": "^9.16.0",
     "@types/jasmine": "~5.1.5",
     "@types/node": "^22.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.16.0",
-    "@typescript-eslint/parser": "^8.16.0",
-    "@typescript-eslint/types": "8.16.0",
-    "@typescript-eslint/utils": "^8.16.0",
-    "angular-eslint": "^19.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
+    "@typescript-eslint/types": "8.17.0",
+    "@typescript-eslint/utils": "^8.17.0",
+    "angular-eslint": "^19.0.1",
     "cpy-cli": "^5.0.0",
     "eslint": "^9.16.0",
     "eslint-formatter-checkstyle": "^8.40.0",
-    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-import-resolver-typescript": "^3.7.0",
     "eslint-plugin-import": "^2.31.0",
-    "jasmine-core": "~5.4.0",
+    "jasmine-core": "~5.5.0",
     "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.1",
@@ -105,6 +108,6 @@
     "ng-packagr": "^19.0.1",
     "rimraf": "^6.0.1",
     "typescript": "~5.6.3",
-    "typescript-eslint": "^8.16.0"
+    "typescript-eslint": "^8.17.0"
   }
 }

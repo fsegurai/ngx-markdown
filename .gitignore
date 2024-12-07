@@ -72,7 +72,6 @@ typings/
 .history/
 
 # IDE and editor files
-.idea/
 .project
 .classpath
 .c9/

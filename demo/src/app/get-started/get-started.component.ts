@@ -24,15 +24,15 @@ export default class GetStartedComponent {
    * @private - This method is private and should not be accessed outside of this class
    */
   private setHeadings(): void {
-    const headings: Element[] = [];
-    this.elementRef.nativeElement
-      .querySelectorAll('h2')
-      .forEach((x) => headings.push(x));
-    this.headings = headings;
+    this.headings = Array.from(this.elementRef.nativeElement.querySelectorAll('h2')).map((heading) => {
+      // ! We validate the id, because in some cases the content loaded from an external source does not render the id correctly
+      if (!heading.id) heading.id = heading.textContent!.toLowerCase().replace(/\s/g, '-');
+      return heading;
+    });
   }
 
   /**
-   * Strip the content of the markdown
+   * Strip the content of the markdown to remove the first two paragraphs and the table of contents
    * @private - This method is private and should not be accessed outside of this class
    */
   private stripContent(): void {
