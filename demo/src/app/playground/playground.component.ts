@@ -79,7 +79,6 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
   }
 
   onLoad(): void {
-    this.stripContent();
     this.setHeadings();
   }
 
@@ -96,33 +95,20 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Strip the content of the Markdown component to only show the content of the Markdown file
-   * @private - This method is private and should not be accessed outside of this class
-   */
-  private stripContent(): void {
-    this.elementRef.nativeElement
-      .querySelector('markdown')!
-      .querySelectorAll(
-        'markdown > p:nth-child(-n + 2), #ngx-markdown, #table-of-contents + ul, #table-of-contents',
-      )
-      .forEach((x) => x.remove());
-  }
-
-  /**
    * Update the Markdown rendering with the current Markdown content and apply custom rendering
    * @private - This method is private and should not be accessed outside of this class
    */
   private updateMarkdownRendering(): void {
     this.markdownRendering = this.markdownContent;
 
-    this.markdownService.renderer.heading = ({text, depth}: MarkedToken.Heading) => {
+    this.markdownService.renderer.heading = ({ text, depth }: MarkedToken.Heading) => {
       const parsedText = this.markdownService.parseInline(text); // Parse inline Markdown text to HTML
       const escapedText = text
         .toLowerCase()
         .split(/\W+/)
         .filter(Boolean)
         .join('-'); // Remove special characters and join words with hyphens. e.g. "Hello, World!" -> "hello-world"
-      return `<h${depth} id="${escapedText}">${parsedText}</h${depth}>`;
+      return `<h${ depth } id="${ escapedText }">${ parsedText }</h${ depth }>`;
     }
 
     this.changeDetector.detectChanges(); // Manually trigger change detection
