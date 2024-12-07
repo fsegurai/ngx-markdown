@@ -8,7 +8,7 @@
         [GitHub](https://github.com/fsegurai)
       </markdown>
     </div>
-    @if (showScrollUpButton) {
+    @if (displayTOC() && showScrollUpButton) {
       <button (click)="onScrollUp()" [@zoomAnimation] class="scrollup-button--fixed"
               color="accent"
               fxHide.gt-sm mat-fab>
@@ -16,13 +16,15 @@
       </button>
     }
   </div>
-  <div class="sticky" fxFlex="1 0 180px" fxFlexAlign="flex-start" fxHide.lt-md fxLayout="column">
-    <app-scrollspy-nav [headings]="headings()"></app-scrollspy-nav>
-    @if (showScrollUpButton) {
-      <button (click)="onScrollUp()" [@zoomAnimation] class="scrollup-button" color="accent"
-              mat-mini-fab>
-        <img src="icon-chevron-up.svg" alt="Scroll to top">
-      </button>
-    }
-  </div>
+  @if (displayTOC()) {
+    <div class="sticky" fxFlex="1 0 180px" fxFlexAlign="flex-start" fxHide.lt-md fxLayout="column">
+      <app-scrollspy-nav [headings]="headings()"></app-scrollspy-nav>
+      @if (showScrollUpButton) {
+        <button (click)="onScrollUp()" [@zoomAnimation] class="scrollup-button" color="accent"
+                mat-mini-fab>
+          <img src="icon-chevron-up.svg" alt="Scroll to top">
+        </button>
+      }
+    </div>
+  }
 </div>

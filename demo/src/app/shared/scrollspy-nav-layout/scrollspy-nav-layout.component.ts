@@ -25,7 +25,9 @@ import { ZOOM_ANIMATION } from './scrollspy-nav-layout.animation';
 export class ScrollspyNavLayoutComponent {
   readonly headings = input<Element[]>();
 
-  showScrollUpButton = false;
+  readonly displayTOC = input<boolean>(true);
+
+  protected showScrollUpButton = false;
 
   @HostListener('window:scroll')
   onWindowScroll(): void {
