@@ -16,6 +16,7 @@ stages:
     - checkout: self
 
     - task: mirror-git-repository-vsts-task@1
+      displayName: 'Mirror Git "ngx-markdown" Repository'
       inputs:
         sourceGitRepositoryUri: $(SOURCE-REPO-URL)
         sourceGitRepositoryPersonalAccessToken: $(SOURCE-REPO-PAT)
