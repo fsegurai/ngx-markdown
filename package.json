@@ -70,7 +70,7 @@
     "gumshoejs": "^5.1.2",
     "hammerjs": "~2.0.8",
     "katex": "0.16.11",
-    "marked": "15.0.3",
+    "marked": "15.0.4",
     "marked-gfm-heading-id": "^4.1.1",
     "mermaid": "^11.4.1",
     "ngx-markdown": "file:lib",
