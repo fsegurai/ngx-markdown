@@ -15,13 +15,13 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { marked, Renderer } from 'marked';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ClipboardButtonComponent } from './clipboard-button.component';
-import { CLIPBOARD_OPTIONS, ClipboardOptions, ClipboardRenderOptions } from './clipboard-options';
-import { KatexOptions } from './katex-options';
-import { MARKED_EXTENSIONS } from './marked-extensions';
-import { MARKED_OPTIONS, MarkedOptions } from './marked-options';
-import { MarkedRenderer, MarkedToken } from './marked-renderer';
-import { MERMAID_OPTIONS, MermaidAPI } from './mermaid-options';
+import { ClipboardButtonComponent } from '../clipboard-button/clipboard-button.component';
+import { CLIPBOARD_OPTIONS, ClipboardOptions, ClipboardRenderOptions } from '../clipboard-button/clipboard-options';
+import { KatexOptions } from '../configuration/katex-options';
+import { MARKED_EXTENSIONS } from '../configuration/marked-extensions';
+import { MARKED_OPTIONS, MarkedOptions } from '../configuration/marked-options';
+import { MarkedRenderer, MarkedToken } from '../configuration/marked-renderer';
+import { MERMAID_OPTIONS, MermaidAPI } from '../configuration/mermaid-options';
 
 // clipboard
 declare let ClipboardJS: {

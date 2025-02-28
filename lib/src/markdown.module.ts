@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { InjectionToken, ModuleWithProviders, NgModule, Provider, SecurityContext } from '@angular/core';
 import { MarkedExtension } from 'marked';
-import { ClipboardButtonComponent } from './clipboard-button.component';
-import { CLIPBOARD_OPTIONS } from './clipboard-options';
-import { LanguagePipe } from './language.pipe';
-import { MarkdownComponent } from './markdown.component';
-import { MarkdownPipe } from './markdown.pipe';
-import { MARKED_OPTIONS } from './marked-options';
-import { MERMAID_OPTIONS } from './mermaid-options';
-import { provideMarkdown } from './provide-markdown';
+import { ClipboardButtonComponent } from './clipboard-button/clipboard-button.component';
+import { CLIPBOARD_OPTIONS } from './clipboard-button/clipboard-options';
+import { LanguagePipe } from './pipes/language.pipe';
+import { MarkdownComponent } from './markdown/markdown.component';
+import { MarkdownPipe } from './pipes/markdown.pipe';
+import { MARKED_OPTIONS } from './configuration/marked-options';
+import { MERMAID_OPTIONS } from './configuration/mermaid-options';
+import { provideMarkdown } from './configuration/provide-markdown';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type InjectionTokenType<T extends InjectionToken<any>> = T extends InjectionToken<infer R> ? R : unknown;

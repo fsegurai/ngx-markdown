@@ -5,9 +5,9 @@ import { TestBed } from '@angular/core/testing';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { marked, MarkedExtension } from 'marked';
 import { first } from 'rxjs/operators';
-import { ClipboardButtonComponent } from './clipboard-button.component';
-import { KatexOptions } from './katex-options';
-import { MarkdownModule } from './markdown.module';
+import { ClipboardButtonComponent } from '../clipboard-button/clipboard-button.component';
+import { KatexOptions } from '../configuration/katex-options';
+import { MarkdownModule } from '../markdown.module';
 import {
   errorClipboardNotLoaded,
   errorClipboardViewContainerRequired,
@@ -19,9 +19,9 @@ import {
   ParseOptions,
   SECURITY_CONTEXT,
 } from './markdown.service';
-import { MarkedOptions } from './marked-options';
-import { MarkedRenderer, MarkedToken } from './marked-renderer';
-import { MermaidAPI } from './mermaid-options';
+import { MarkedOptions } from '../configuration/marked-options';
+import { MarkedRenderer, MarkedToken } from '../configuration/marked-renderer';
+import { MermaidAPI } from '../configuration/mermaid-options';
 
 declare let window: any;
 declare let Prism: any;
