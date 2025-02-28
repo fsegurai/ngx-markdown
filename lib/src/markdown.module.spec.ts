@@ -5,12 +5,12 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { MarkedExtension } from 'marked';
 import { of } from 'rxjs';
-import { CLIPBOARD_OPTIONS, ClipboardOptions } from './clipboard-options';
-import { MarkdownComponent } from './markdown.component';
+import { CLIPBOARD_OPTIONS, ClipboardOptions } from './clipboard-button/clipboard-options';
+import { MarkdownComponent } from './markdown/markdown.component';
 import { MarkdownModule } from './markdown.module';
-import { errorSrcWithoutHttpClient, SECURITY_CONTEXT } from './markdown.service';
-import { MARKED_EXTENSIONS } from './marked-extensions';
-import { MARKED_OPTIONS, MarkedOptions } from './marked-options';
+import { errorSrcWithoutHttpClient, SECURITY_CONTEXT } from './services/markdown.service';
+import { MARKED_EXTENSIONS } from './configuration/marked-extensions';
+import { MARKED_OPTIONS, MarkedOptions } from './configuration/marked-options';
 
 @Component({
   selector: 'markdown-host-comp',
