@@ -639,7 +639,7 @@ MarkdownModule.forRoot({
 
 > :blue_book: Follow [Angular DomSanitizer](https://angular.io/api/platform-browser/DomSanitizer#sanitize) documentation for more information on sanitization and security contexts.
 
-You can bypass sanitization using the markdown component, directive or pipe using the `disableSanitizer` option as follow:
+You can bypass sanitization using the markdown component, directive or pipe using the `disableSanitizer` option as follows:
 
 ```html
 <!-- disable sanitizer using markdown component -->
@@ -714,13 +714,13 @@ MarkdownModule.forRoot(),
 The example uses a factory function and override the default blockquote token rendering by adding a CSS class for custom styling when using Bootstrap CSS:
 
 ```typescript
-import {MARKED_OPTIONS, MarkedOptions, MarkedRenderer} from '@fsegurai/ngx-markdown';
+import {MARKED_OPTIONS, MarkedOptions, MarkedRenderer, MarkedToken} from '@fsegurai/ngx-markdown';
 
 // function that returns `MarkedOptions` with renderer override
 export function markedOptionsFactory(): MarkedOptions {
   const renderer = new MarkedRenderer();
 
-  renderer.blockquote = (text: string) => {
+  renderer.blockquote = ({ text }: MarkedToken.Blockquote) => {
     return '<blockquote class="blockquote"><p>' + text + '</p></blockquote>';
   };
 
@@ -911,7 +911,7 @@ Here is an example of overriding the default heading token rendering through `Ma
 
 ```typescript
 import {Component, OnInit} from '@angular/core';
-import {MarkdownService} from '@fsegurai/ngx-markdown';
+import {MarkdownService, MarkedToken} from '@fsegurai/ngx-markdown';
 
 @Component({
   selector: 'app-example',
@@ -922,13 +922,18 @@ export class ExampleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.markdownService.renderer.heading = (text: string, level: number) => {
-      const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
-      return '<h' + level + '>' +
+      this.markdownService.renderer.heading = ({text, depth}: MarkedToken.Heading): string => {
+      const parsedText = this.markdownService.parseInline(text); // Parse inline Markdown text to HTML
+      const escapedText = text
+              .toLowerCase()
+              .split(/\W+/)
+              .filter(Boolean)
+              .join('-'); // Remove special characters and join words with hyphens. e.g. "Hello, World!" -> "hello-world"
+      return '<h' + depth + '>' +
         '<a name="' + escapedText + '" class="anchor" href="#' + escapedText + '">' +
         '<span class="header-link"></span>' +
-        '</a>' + text +
-        '</h' + level + '>';
+        '</a>' + parsedText +
+        '</h' + depth + '>';
     };
   }
 }
