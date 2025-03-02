@@ -5,10 +5,10 @@ import { of, throwError } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { ClipboardRenderOptions } from '../clipboard-button/clipboard-options';
 import { KatexOptions } from '../configuration/katex-options';
-import { MarkdownComponent } from './markdown.component';
+import { MermaidAPI } from '../configuration/mermaid-options';
 import { MarkdownModule } from '../markdown.module';
 import { MarkdownService } from '../services/markdown.service';
-import { MermaidAPI } from '../configuration/mermaid-options';
+import { MarkdownComponent } from './markdown.component';
 
 describe('MarkdownComponent', () => {
   let fixture: ComponentFixture<MarkdownComponent>;
