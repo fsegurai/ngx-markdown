@@ -19,11 +19,11 @@ import {
 import { NavigationExtras, Router } from '@angular/router';
 import { from, merge, Subject } from 'rxjs';
 import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { KatexOptions } from './katex-options';
-import { MarkdownLinkService } from './markdown-link.service';
-import { MarkdownService, ParseOptions, RenderOptions } from './markdown.service';
-import { MermaidAPI } from './mermaid-options';
-import { PrismPlugin } from './prism-plugin';
+import { KatexOptions } from '../configuration/katex-options';
+import { MermaidAPI } from '../configuration/mermaid-options';
+import { PrismPlugin } from '../configuration/prism-plugin';
+import { MarkdownLinkService } from '../services/markdown-link.service';
+import { MarkdownService, ParseOptions, RenderOptions } from '../services/markdown.service';
 
 export interface MarkdownRouterLinkOptions {
   global?: NavigationExtras;

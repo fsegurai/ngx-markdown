@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { MarkdownRouterLinkOptions } from './markdown.component';
+import { MarkdownRouterLinkOptions } from '../markdown/markdown.component';
 
 @Injectable({
   providedIn: 'root',
