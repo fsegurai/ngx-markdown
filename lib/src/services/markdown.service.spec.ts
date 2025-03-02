@@ -5,9 +5,12 @@ import { TestBed } from '@angular/core/testing';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { marked, MarkedExtension } from 'marked';
 import { first } from 'rxjs/operators';
-import { ClipboardButtonComponent } from './clipboard-button.component';
-import { KatexOptions } from './katex-options';
-import { MarkdownModule } from './markdown.module';
+import { ClipboardButtonComponent } from '../clipboard-button/clipboard-button.component';
+import { KatexOptions } from '../configuration/katex-options';
+import { MarkedOptions } from '../configuration/marked-options';
+import { MarkedRenderer, MarkedToken } from '../configuration/marked-renderer';
+import { MermaidAPI } from '../configuration/mermaid-options';
+import { MarkdownModule } from '../markdown.module';
 import {
   errorClipboardNotLoaded,
   errorClipboardViewContainerRequired,
@@ -19,9 +22,6 @@ import {
   ParseOptions,
   SECURITY_CONTEXT,
 } from './markdown.service';
-import { MarkedOptions } from './marked-options';
-import { MarkedRenderer, MarkedToken } from './marked-renderer';
-import { MermaidAPI } from './mermaid-options';
 
 declare let window: any;
 declare let Prism: any;
@@ -89,17 +89,17 @@ describe('MarkdownService', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-    imports: [BrowserModule,
-        MarkdownModule.forRoot({
+        imports: [BrowserModule,
+          MarkdownModule.forRoot({
             markedExtensions: mockExtensions,
             sanitize: SecurityContext.NONE,
-        })],
-    providers: [
-        { provide: ViewContainerRef, useValue: viewContainerRefSpy },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ],
-});
+          })],
+        providers: [
+          { provide: ViewContainerRef, useValue: viewContainerRefSpy },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+        ],
+      });
 
       domSanitizer = TestBed.inject(DomSanitizer);
       http = TestBed.inject(HttpTestingController);
@@ -140,15 +140,25 @@ describe('MarkdownService', () => {
         const blockquote = ({ text }: MarkedToken.Blockquote) => {
           const parsedText = markdownService.parseInline(text); // Parse inline Markdown text to HTML
           const safeParsedText = typeof parsedText === 'string' ? parsedText : JSON.stringify(parsedText);
-          return `<mock-blockquote>${safeParsedText}</mock-blockquote>`;
+          return `<mock-blockquote>${ safeParsedText }</mock-blockquote>`;
         };
 
         markdownService.renderer.blockquote = blockquote;
 
         const quoteText = 'foobar';
         const expectedBlockquote = blockquote({ type: 'blockquote', text: quoteText, raw: quoteText, tokens: [] });
-        const rendererBlockquote = (markdownService.renderer as any).blockquote({ type: 'blockquote', text: quoteText, raw: quoteText, tokens: [] });
-        const optionsRendererBlockquote = (markdownService.options.renderer as any)!.blockquote({ type: 'blockquote', text: quoteText, raw: quoteText, tokens: [] });
+        const rendererBlockquote = (markdownService.renderer as any).blockquote({
+          type: 'blockquote',
+          text: quoteText,
+          raw: quoteText,
+          tokens: [],
+        });
+        const optionsRendererBlockquote = (markdownService.options.renderer as any)!.blockquote({
+          type: 'blockquote',
+          text: quoteText,
+          raw: quoteText,
+          tokens: [],
+        });
 
         expect(rendererBlockquote).toBe(expectedBlockquote);
         expect(optionsRendererBlockquote).toBe(expectedBlockquote);
@@ -188,7 +198,7 @@ describe('MarkdownService', () => {
       it('should extend marked renderer when mermaid is true', () => {
 
         const mermaid = 'graph TD; A-->B;';
-        const mockRaw = `\`\`\`mermaid\n${mermaid}\n\`\`\``;
+        const mockRaw = `\`\`\`mermaid\n${ mermaid }\n\`\`\``;
 
         const parsed = markdownService.parse(mockRaw, { mermaid: true });
 
@@ -198,7 +208,7 @@ describe('MarkdownService', () => {
       it('should not extend marked renderer when mermaid is false', () => {
 
         const mermaid = 'graph TD; A-->B;';
-        const mockRaw = `\`\`\`mermaid\n${mermaid}\n\`\`\``;
+        const mockRaw = `\`\`\`mermaid\n${ mermaid }\n\`\`\``;
 
         const parsed = markdownService.parse(mockRaw, { mermaid: false });
 

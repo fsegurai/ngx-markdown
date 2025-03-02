@@ -3,12 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { ClipboardRenderOptions } from './clipboard-options';
-import { KatexOptions } from './katex-options';
+import { ClipboardRenderOptions } from '../clipboard-button/clipboard-options';
+import { KatexOptions } from '../configuration/katex-options';
+import { MermaidAPI } from '../configuration/mermaid-options';
+import { MarkdownModule } from '../markdown.module';
+import { MarkdownService } from '../services/markdown.service';
 import { MarkdownComponent } from './markdown.component';
-import { MarkdownModule } from './markdown.module';
-import { MarkdownService } from './markdown.service';
-import { MermaidAPI } from './mermaid-options';
 
 describe('MarkdownComponent', () => {
   let fixture: ComponentFixture<MarkdownComponent>;
