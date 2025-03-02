@@ -1,6 +1,6 @@
 {
   "name": "@fsegurai/ngx-markdown",
-  "version": "19.1.0",
+  "version": "19.2.0",
   "description": "Angular library that uses marked to parse markdown to html combined with Prism.js for syntax highlights",
   "homepage": "https://github.com/fsegurai/ngx-markdown",
   "license": "MIT",
@@ -48,10 +48,7 @@
     "test-ci_cd:lib": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "gh-pages:build": "bun build:demo --aot --base-href=./",
     "gh-pages:copy404": "cpy ./dist/demo/browser/index.html . --rename=404.html",
-    "gh-pages:postBuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat",
-    "registry:npm": "npm config set registry https://registry.npmjs.org/",
-    "registry:gh-npm": "npm config set registry https://npm.pkg.github.com/",
-    "registry:yarn": "npm config set registry https://registry.yarnpkg.com/"
+    "gh-pages:postBuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat"
   },
   "dependencies": {
     "@angular/animations": "^19.0.0",
@@ -84,9 +81,10 @@
     "@angular/cli": "~19.0.0",
     "@angular/compiler-cli": "^19.0.0",
     "@angular/language-service": "^19.0.0",
+    "@chiragrupani/karma-chromium-edge-launcher": "^2.4.1",
     "@eslint/js": "^9.21.0",
     "@types/jasmine": "~5.1.7",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.13.8",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "@typescript-eslint/types": "8.25.0",
