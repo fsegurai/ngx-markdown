@@ -56,7 +56,7 @@ To add `@fsegurai/ngx-markdown` along with the required marked library to your `
 npm install @fsegurai/ngx-markdown marked@^15.0.3 --save
 ```
 
-### Syntax highlight
+### Syntax highlighting
 
 > :bell: Syntax highlight is **optional**, skip this step if you are not planning to use it
 
