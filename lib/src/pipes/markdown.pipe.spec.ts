@@ -2,8 +2,8 @@ import { ElementRef, EventEmitter, NgZone, ViewContainerRef } from '@angular/cor
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MarkdownModule } from '../markdown.module';
-import { MarkdownPipe, MarkdownPipeOptions } from './markdown.pipe';
 import { MarkdownService } from '../services/markdown.service';
+import { MarkdownPipe, MarkdownPipeOptions } from './markdown.pipe';
 import Expected = jasmine.Expected;
 
 describe('MarkdownPipe', () => {

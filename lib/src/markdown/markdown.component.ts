@@ -20,10 +20,10 @@ import { NavigationExtras, Router } from '@angular/router';
 import { from, merge, Subject } from 'rxjs';
 import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { KatexOptions } from '../configuration/katex-options';
-import { MarkdownLinkService } from '../services/markdown-link.service';
-import { MarkdownService, ParseOptions, RenderOptions } from '../services/markdown.service';
 import { MermaidAPI } from '../configuration/mermaid-options';
 import { PrismPlugin } from '../configuration/prism-plugin';
+import { MarkdownLinkService } from '../services/markdown-link.service';
+import { MarkdownService, ParseOptions, RenderOptions } from '../services/markdown.service';
 
 export interface MarkdownRouterLinkOptions {
   global?: NavigationExtras;

@@ -12,7 +12,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { marked, Renderer } from 'marked';
+import { marked, MarkedExtension, Renderer } from 'marked';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ClipboardButtonComponent } from '../clipboard-button/clipboard-button.component';
@@ -87,7 +87,7 @@ export class ExtendedRenderer extends Renderer {
 @Injectable()
 export class MarkdownService {
   private clipboardOptions = inject<ClipboardOptions>(CLIPBOARD_OPTIONS, { optional: true });
-  private extensions = inject(MARKED_EXTENSIONS, { optional: true });
+  private extensions = inject(MARKED_EXTENSIONS, { optional: true }) as MarkedExtension[];
   private mermaidOptions = inject<MermaidAPI.MermaidConfig>(MERMAID_OPTIONS, { optional: true });
   private platform = inject(PLATFORM_ID);
   private securityContext = inject<SecurityContext>(SECURITY_CONTEXT);
@@ -277,7 +277,7 @@ export class MarkdownService {
 
     if (extendedRenderer[flag]) return renderer;
 
-    if (type === 'extensions' && this.extensions && this.extensions?.length > 0) marked.use(...this.extensions);
+    if (type === 'extensions' && this.extensions?.length > 0) marked.use(...this.extensions);
 
     if (type === 'mermaid') {
       // eslint-disable-next-line @typescript-eslint/unbound-method
