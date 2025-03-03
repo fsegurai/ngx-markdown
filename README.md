@@ -53,7 +53,7 @@
 To add `@fsegurai/ngx-markdown` along with the required marked library to your `package.json` use the following commands.
 
 ```bash
-npm install @fsegurai/ngx-markdown marked@^15.0.3 --save
+npm install @fsegurai/ngx-markdown marked@^15.0.7 --save
 ```
 
 ### Syntax highlighting
@@ -260,7 +260,7 @@ Using `markdown` component and/or directive, you will be able to use the `emoji`
 To add [KaTeX](https://katex.org/) library to your `package.json` use the following command.
 
 ```bash
-npm install katex@^0.16.11 --save
+npm install katex@^0.16.21 --save
 ```
 
 To activate [KaTeX](https://katex.org/) math rendering you will need to include...
