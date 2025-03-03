@@ -27,10 +27,6 @@
     "clipboard.js",
     "ngx-markdown"
   ],
-  "engines": {
-    "bun": ">= 1.0.0 < 2.0.0",
-    "npm": "Please use Bun instead of NPM to install dependencies"
-  },
   "scripts": {
     "ng": "ng",
     "start": "bun link:lib && ng serve",
