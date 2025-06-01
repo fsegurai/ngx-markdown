@@ -56,7 +56,7 @@
     "@angular/forms": "^19.0.0",
     "@angular/material": "^19.0.0",
     "@angular/platform-browser": "^19.0.0",
-    "@angular/platform-browser-dynamic": "^19.0.0",
+    "@angular/platform-browser-dynamic": "^20.0.0",
     "@angular/router": "^19.0.0",
     "clipboard": "^2.0.11",
     "emoji-toolkit": "^9.0.1",
