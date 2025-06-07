@@ -1,4 +1,4 @@
-<p align="center">
+<p align="centHTML>
   <img alt="@fsegurai/ngx-markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png">
 </p>
 
@@ -25,16 +25,14 @@
   </a>
 </p>
 
-**This is just a side project to provide additional features that fulfill my needs.**
-
 `@fsegurai/ngx-markdown` is an [Angular](https://angular.dev/) library that combines...
 
-- [Marked](http://marked.js.org/) to parse markdown to HTML
+- [Marked](http://marked.js.org/) to parse Markdown to HTML
 - [Prism.js](http://prismjs.com/) for language syntax highlight
 - [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) for emoji support
 - [KaTeX](https://katex.org/) for math expression rendering
 - [Mermaid](https://mermaid-js.github.io/) for diagrams and charts visualization
-- [Clipboard.js](https://clipboardjs.com/) to copy code blocks to clipboard
+- [Clipboard.js](https://clipboardjs.com/) to copy code blocks to the clipboard
 
 ### Table of contents
 
@@ -42,6 +40,7 @@
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [Renderer](#renderer)
+- [Re-renderer Markdown](#re-render-markdown)
 - [Syntax highlight](#syntax-highlight)
 - [Demo application](#demo-application)
 - [License](#license)
@@ -66,10 +65,10 @@ To add [Prism.js](http://prismjs.com/) library to your `package.json` use the fo
 npm install prismjs@^1.29.0 --save
 ```
 
-To activate [Prism.js](http://prismjs.com/) syntax highlight you will need to include...
+To activate [Prism.js](http://prismjs.com/) syntax highlight, you will need to include...
 
 - prism.js core library - `node_modules/prismjs/prism.js` file
-- a highlight css theme - from `node_modules/prismjs/themes` directory
+- a highlight CSS theme - from `node_modules/prismjs/themes` directory
 - desired code language syntax files - from `node_modules/prismjs/components` directory
 
 _Additional themes can be found by browsing the web such as [Prism-Themes](https://github.com/PrismJS/prism-themes) or [Mokokai](https://github.com/Ahrengot/Monokai-theme-for-Prism.js) for example._
@@ -111,13 +110,13 @@ If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `ang
 ]
 ```
 
-Using `markdown` component and/or directive, you will be able to use the `lineNumbers` property to activate the plugin. The property can be used in combination with either `data` for variable binding, `src` for remote content or using transclusion for static markdown.
+Using `markdown` component and/or directive, you will be able to use the `lineNumbers` property to activate the plugin. The property can be used in combination with either `data` for variable binding, `src` for remote content or using transclusion for static Markdown.
 
 Additionally, you can use `start` input property to specify the offset number for the first display line.
 
 ```html
 <markdown
-  lineNumbers
+  [lineNumbers]="true"
   [start]="5"
   [src]="path/to/file.js">
 </markdown>
@@ -146,13 +145,13 @@ If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `ang
 ]
 ```
 
-Using `markdown` component and/or directive, you will be able to use the `lineHighlight` property to activate the plugin. The property can be used in combination with either `data` for variable binding, `src` for remote content or using transclusion for static markdown.
+Using `markdown` component and/or directive, you will be able to use the `lineHighlight` property to activate the plugin. The property can be used in combination with either `data` for variable binding, `src` for remote content or using transclusion for static Markdown.
 
 Use `line` input property to specify the line(s) to highlight and optionally there is a `lineOffset` property to specify the starting line of code your snippet represents.
 
 ```html
 <markdown
-  lineHighlight
+  [lineHighlight]="true"
   [line]="'6, 10-16'"
   [lineOffset]="5"
   [src]="path/to/file.js">
@@ -182,7 +181,7 @@ If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `ang
 ]
 ```
 
-Using `markdown` component and/or directive, you will be able to use the `commandLine` property to activate the plugin. The property can be used in combination with either `data` for variable binding, `src` for remote content or using transclusion for static markdown.
+Using `markdown` component and/or directive, you will be able to use the `commandLine` property to activate the plugin. The property can be used in combination with either `data` for variable binding, `src` for remote content or using transclusion for static Markdown.
 
 For a server command line, specify the user and host names using the `user` and `host` input properties. The resulting prompt displays a `#` for the root user and `$` for all other users. For any other command line, such as a Windows prompt, you may specify the entire prompt using the `prompt` input property.
 
@@ -190,12 +189,12 @@ You may also specify the lines to be presented as output (no prompt and no highl
 
 - A single number refers to the line with that number
 - Ranges are denoted by two numbers, separated with a hyphen (-)
-- Multiple line numbers or ranges are separated by commas
+- Commas separate multiple line numbers or ranges
 - Whitespace is allowed anywhere and will be stripped off
 
 ```html
 <markdown
-  commandLine
+  [commandLine]="true"
   [user]="'chris'"
   [host]="'remotehost'"
   [output]="'2, 4-8'"
@@ -207,10 +206,10 @@ Optionally, to automatically present some lines as output without providing the 
 
 ```html
 <markdown
-  commandLine
+  [commandLine]="true"
   [prompt]="'PS C:\Users\Chris>'"
   [filterOutput]="'(out)'">
-  ```powershell
+  ```PowerShell
   Get-Date
   (out)
   (out)Sunday, November 7, 2021 8:19:21 PM
@@ -229,7 +228,7 @@ To add [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) library to yo
 npm install emoji-toolkit@^9.0.1 --save
 ```
 
-To activate [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) for emoji suppport you will need to include...
+To activate [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) for emoji support, you will need to include...
 
 - Emoji-Toolkit library - `node_modules/emoji-toolkit/lib/js/joypixels.min.js`
 
@@ -243,10 +242,10 @@ If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `ang
 
 #### Emoji plugin
 
-Using `markdown` component and/or directive, you will be able to use the `emoji` property to activate [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) plugin that converts emoji shortnames such as `:heart:` to native unicode emojis.
+Using `markdown` component and/or directive, you will be able to use the `emoji` property to activate [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) plugin that converts emoji shortnames such as `:heart:` to native Unicode emojis.
 
 ```html
-<markdown emoji>
+<markdown [emoji]="true">
   I :heart: @fsegurai/ngx-markdown
 </markdown>
 ```
@@ -263,7 +262,7 @@ To add [KaTeX](https://katex.org/) library to your `package.json` use the follow
 npm install katex@^0.16.11 --save
 ```
 
-To activate [KaTeX](https://katex.org/) math rendering you will need to include...
+To activate [KaTeX](https://katex.org/) math rendering, you will need to include...
 
 - KaTex JavaScript library - `node_modules/katex/dist/katex.min.js` file
 - KaTex Auto-Render extension - `node_modules/katex/dist/contrib/auto-render.min.js,` file
@@ -288,7 +287,7 @@ Using `markdown` component and/or directive, you will be able to use the `katex`
 
 ```html
 <markdown
-  katex
+  [katex]="true"
   [src]="path/to/file.md">
 </markdown>
 ```
@@ -309,7 +308,7 @@ public options: KatexOptions = {
 
 ```html
 <markdown
-  katex
+  [katex]="true"
   [katexOptions]="options"
   [src]="path/to/file.md">
 </markdown>
@@ -327,7 +326,7 @@ To add [Mermaid](https://mermaid-js.github.io/) library to your `package.json` u
 npm install mermaid@^11.4.1 --save
 ```
 
-To activate [Mermaid](https://mermaid-js.github.io/) diagramming and charting tool you will need to include...
+To activate [Mermaid](https://mermaid-js.github.io/) diagramming and charting tool, you will need to include...
 
 - Mermaid JavaScript library - `node_modules/mermaid/dist/mermaid.min.js` file
 
@@ -345,7 +344,7 @@ Using `markdown` component and/or directive, you will be able to use the `mermai
 
 ```html
 <markdown
-  mermaid
+  [mermaid]="true"
   [src]="path/to/file.md">
 </markdown>
 ```
@@ -379,7 +378,7 @@ MarkdownModule.forRoot({
 }),
 ```
 #### Component configuration
-Additionally, you can specify mermaid [configuration options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) on component directly using `mermaidOptions` property.
+Additionally, you can specify mermaid [configuration options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) on a component directly using `mermaidOptions` property.
 
 ```typescript
 import {MermaidAPI} from '@fsegurai/ngx-markdown';
@@ -393,7 +392,7 @@ public options: MermaidAPI.MermaidConfig = {
 
 ```html
 <markdown
-  mermaid
+  [mermaid]="true"
   [mermaidOptions]="options"
   [src]="'path/to/file.md'">
 </markdown>
@@ -411,7 +410,7 @@ To add [Clipboard](https://clipboardjs.com/) library to your `package.json` use 
 npm install clipboard@^2.0.11 --save
 ```
 
-To activate [Clipboard](https://clipboardjs.com/) allowing copy-to-clipboard you will need to include...
+To activate [Clipboard](https://clipboardjs.com/) allowing copy-to-clipboard, you will need to include...
 
 - Clipboard JavaScript library - `node_modules/clipboard/dist/clipboard.min.js` file
 
@@ -429,7 +428,7 @@ Using `markdown` component and/or directive, you will be able to use the `clipbo
 
 ```html
 <markdown
-  clipboard
+  [clipboard]="true"
   [src]="path/to/file.md">
 </markdown>
 ```
@@ -438,11 +437,11 @@ Using `markdown` component and/or directive, you will be able to use the `clipbo
 
 The `clipboard` plugin provide an unstyled default button with a default behavior out of the box if no alternative is used.
 
-#### Customize button toolbar
+#### Customize the button toolbar
 
 The clipboard button is placed inside a wrapper element that can be customized using the `.markdown-clipboard-toolbar` CSS selector in your global `styles.css/scss` file.
 
-This allows to override the default positioning of the clipboard button and play with the visibility of the button using the `.hover` CSS selector that is applied on the toolbar when the mouse cursor enters and leaves the code block element.
+This allows overriding the default positioning of the clipboard button and play with the visibility of the button using the `.hover` CSS selector that is applied on the toolbar when the mouse cursor enters and leaves the code block element.
 
 #### Customize default button
 
@@ -450,7 +449,7 @@ To customize the default button styling, use the `.markdown-clipboard-button` CS
 
 #### Using global configuration
 
-You can provide a custom component to use globaly across your application with the `clipboardOptions` in the `MarkdownModuleConfig` either with `provideMarkdown` provide-function for standalone components or `MarkdownModule.forRoot()` for module configuration.
+You can provide a custom component to use globally across your application with the `clipboardOptions` in the `MarkdownModuleConfig` either with `provideMarkdown` provide-function for standalone components or `MarkdownModule.forRoot()` for module configuration.
 
 ##### Using the `provideMarkdown` function
 
@@ -507,14 +506,14 @@ export class ExampleComponent {
 
 ```html
 <markdown
-  clipboard
+  [clipboard]="true"
   [clipboardButtonComponent]="clipboardButton">
 </markdown>
 ```
 
 #### Using ng-template
 
-Alternatively, the `clipboard` directive can be used in conjonction with `ng-template` to provide a custom button implementation via the `clipboardButtonTemplate` input property on the `markdown` component.
+Alternatively, the `clipboard` directive can be used in conjunction with `ng-template` to provide a custom button implementation via the `clipboardButtonTemplate` input property on the `markdown` component.
 
 ```html
 <ng-template #buttonTemplate>
@@ -522,7 +521,7 @@ Alternatively, the `clipboard` directive can be used in conjonction with `ng-tem
 </ng-template>
 
 <markdown
-  clipboard
+  [clipboard]="true"
   [clipboardButtonTemplate]="buttonTemplate">
 </markdown>
 ```
@@ -585,7 +584,7 @@ export class HomeModule { }
 
 ### Remote file configuration
 
-If you want to use the `[src]` attribute to directly load a remote file, in order to keep only one instance of `HttpClient` and avoid issues with interceptors, you also have to provide `HttpClient`:
+If you want to use the `[src]` attribute to directly load a remote file, to keep only one instance of `HttpClient` and avoid issues with interceptors, you also have to provide `HttpClient`:
 
 ##### Using the `provideMarkdown` function
 
@@ -639,16 +638,16 @@ MarkdownModule.forRoot({
 
 > :blue_book: Follow [Angular DomSanitizer](https://angular.io/api/platform-browser/DomSanitizer#sanitize) documentation for more information on sanitization and security contexts.
 
-You can bypass sanitization using the markdown component, directive or pipe using the `disableSanitizer` option as follows:
+You can bypass sanitization using the Markdown component, directive or pipe using the `disableSanitizer` option as follows:
 
 ```html
-<!-- disable sanitizer using markdown component -->
+<!-- disable sanitizer using a Markdown component -->
 <markdown
   [data]="markdown"
   [disableSanitizer]="true">
 </markdown>
 
-<!-- disable sanitizer using markdown directive -->
+<!-- disable sanitizer using a Markdown directive -->
 <div markdown
      [data]="markdown"
      [disableSanitizer]="true">
@@ -711,7 +710,7 @@ MarkdownModule.forRoot(),
 
 `MarkedOptions` also exposes the `renderer` property which allows you to override token rendering for your whole application.
 
-The example uses a factory function and override the default blockquote token rendering by adding a CSS class for custom styling when using Bootstrap CSS:
+The example uses a factory function and overrides the default blockquote token rendering by adding a CSS class for custom styling when using Bootstrap CSS:
 
 ```typescript
 import {MARKED_OPTIONS, MarkedOptions, MarkedRenderer, MarkedToken} from '@fsegurai/ngx-markdown';
@@ -819,14 +818,14 @@ MarkdownModule.forRoot({
 
 ## Usage
 
-`@fsegurai/ngx-markdown` provides different approaches to help you parse markdown to your application depending on your needs.
+`@fsegurai/ngx-markdown` provides different approaches to help you parse Markdown to your application depending on your needs.
 
 > :bulb: As of Angular 6, the template compiler strips whitespace by default. Use `ngPreserveWhitespaces` directive to preserve whitespaces such as newlines in order for the markdown-formatted content to render as intended.  
 https://angular.io/api/core/Component#preserveWhitespaces
 
 ### Component
 
-You can use `markdown` component to either parse static markdown directly from your HTML markup, load the content from a remote URL using `src` property or bind a variable to your component using `data` property. You can get a hook on load complete using `load` output event property, on loading error using `error` output event property or when parsing is completed using `ready` output event property.
+You can use `markdown` component to either parse static Markdown directly from your HTML markup, load the content from a remote URL using `src` property or bind a variable to your component using `data` property. You can get a hook on a load complete using `load` output event property, on loading error using `error` output event property or when parsing is completed using `ready` output event property.
 
 ```html
 <!-- static markdown -->
@@ -856,7 +855,7 @@ You can use `markdown` component to either parse static markdown directly from y
 
 ### Directive
 
-The same way the component works, you can use `markdown` directive to accomplish the same thing.
+The same way the component works, you can use `markdown` directive to achieve the same thing.
 
 ```html
 <!-- static markdown -->
@@ -886,14 +885,14 @@ The same way the component works, you can use `markdown` directive to accomplish
 
 ### Pipe
 
-Using `markdown` pipe to transform markdown to HTML allow you to chain pipe transformations and will update the DOM when value changes. It is important to note that, because the `marked` parsing method returns a `Promise`, it requires the use of the `async` pipe.
+Using `markdown` pipe to transform Markdown to HTML allow you to chain pipe transformations and will update the DOM when value changes. It is important to note that, because the `marked` parsing method returns a `Promise`, it requires the use of the `async` pipe.
 
 ```html
 <!-- chain `language` pipe with `markdown` pipe to convert typescriptMarkdown variable content -->
 <div [innerHTML]="typescriptMarkdown | language : 'typescript' | markdown | async"></div>
 ```
 
-The `markdown` pipe allow you to use all the same plugins as the component by providing the options parameters.
+The `markdown` pipe allow you to use all the same plugins as the component by providing the option parameters.
 
 ```html
 <!-- provide options parameters to activate plugins or for configuration -->
@@ -918,7 +917,7 @@ export interface MarkdownPipeOptions {
 
 ### Service
 
-You can use `MarkdownService` to have access to markdown parsing, rendering and syntax highlight methods.
+You can use `MarkdownService` to have access to Markdown parsing, rendering and syntax highlight methods.
 
 ```typescript
 import {Component, OnInit} from '@angular/core';
@@ -964,7 +963,7 @@ export class ExampleComponent implements OnInit {
               .toLowerCase()
               .split(/\W+/)
               .filter(Boolean)
-              .join('-'); // Remove special characters and join words with hyphens. e.g. "Hello, World!" -> "hello-world"
+              .join('-'); // Remove special characters and join words with hyphens. E.g. "Hello, World!" -> "hello-world"
       return '<h' + depth + '>' +
         '<a name="' + escapedText + '" class="anchor" href="#' + escapedText + '">' +
         '<span class="header-link"></span>' +
@@ -979,18 +978,18 @@ This code will output the following HTML:
 
 ```html
 <h1>
-  <a name="heading" class="anchor" href="#heading">
+  <a class="anchor" href="#heading">
     <span class="header-link"></span>
   </a>
   Heading
 </h1>
 ```
 
-> :blue_book: Follow official [marked.renderer](https://marked.js.org/#/USING_PRO.md#renderer) documentation for the list of tokens that can be overriden.
+> :blue_book: Follow official [marked.renderer](https://marked.js.org/#/USING_PRO.md#renderer) documentation for the list of tokens that can be overridden.
 
 ## Re-render Markdown
 
-In some situations, you might need to re-render markdown after making changes. If you've updated the text this would be done automatically, however if the changes are internal to the library such as rendering options, you will need to inform the `MarkdownService` that it needs to update.
+In some situations, you might need to re-render Markdown after making changes. If you've updated the text, this would be done automatically, however, if the changes are internal to the library such as rendering options, you will need to inform the `MarkdownService` that it needs to update.
 
 To do so, inject the `MarkdownService` and call the `reload()` function as shown below.
 
@@ -1009,7 +1008,7 @@ update(){
 
 ## Syntax highlight
 
-When using static markdown you are responsible to provide the code block with related language.
+When using static Markdown, you are responsible to provide the code block with a related language.
 
 ```diff
 <markdown ngPreserveWhitespaces>
@@ -1020,14 +1019,14 @@ When using static markdown you are responsible to provide the code block with re
 When using remote URL `@fsegurai/ngx-markdown` will use the file extension to automatically resolve the code language.
 
 ```html
-<!-- will use html highlights -->
+<!-- will use HTML highlights -->
 <markdown [src]="'path/to/file.html'"></markdown>
 
 <!-- will use php highlights -->
 <markdown [src]="'path/to/file.php'"></markdown>
 ```
 
-When using variable binding you can optionally use `language` pipe to specify the language of the variable content (default value is markdown when pipe is not used).
+When using variable binding you can optionally use `language` pipe to specify the language of the variable content (default value is Markdown when pipe is not used).
 
 ```html
 <markdown [data]="markdown | language : 'typescript'"></markdown>
@@ -1035,20 +1034,17 @@ When using variable binding you can optionally use `language` pipe to specify th
 
 ## Demo application
 
-A demo is available @ [https://fsegurai.github.io/ngx-markdown](https://fsegurai.github.io/ngx-markdown) and its source code can be found inside the `demo` directory.
+To see the components in action, check out the [[DEMO]](https://fsegurai.github.io/ngx-markdown).
 
-    It's important to mention that for this project I'm using:
-    Node.js v20.11.1 and Bun v1.1.32 (or later).
-
-The following commands will clone the repository, install npm dependencies and serve the application @ [http://localhost:4200](http://localhost:4200)
-
-> It is advisable to use `bun` as the package manager for managing numerous dependencies, as it is faster than `npm` and generally more reliable.
+To set up the demo locally, follow the next steps:
 
 ```bash
 git clone https://github.com/fsegurai/ngx-markdown.git
 bun install
 bun start
 ```
+
+This will serve the application locally at [http://localhost:4200](http://localhost:4200).
 
 ## License
 

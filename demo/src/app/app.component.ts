@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, OnInit, viewChild } from '@angular/core';
+
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, OnInit, viewChild, DOCUMENT } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout/flex';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';

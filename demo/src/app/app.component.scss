@@ -1,12 +1,10 @@
 @use '@angular/material' as mat;
 
 // variables
-
 $viewport-max-width: 960px;
 $viewport-offset-x: 16px;
 
 // mixins
-
 @mixin viewport-width($padding: true) {
   margin: 0 auto;
   max-width: $viewport-max-width;
@@ -18,7 +16,6 @@ $viewport-offset-x: 16px;
 }
 
 // style
-
 :host {
   display: block;
 }
@@ -29,7 +26,7 @@ $viewport-offset-x: 16px;
 }
 
 .github-icon {
-  --mdc-icon-button-icon-size: 28px;
+  --mat-icon-button-icon-size: 28px;
   position: relative;
   top: -2px;
   left: -2px;
