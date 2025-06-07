@@ -1,16 +1,11 @@
 {
   "name": "@fsegurai/ngx-markdown",
-  "version": "19.2.0",
+  "version": "20.0.0-beta.0",
   "description": "Angular library that uses marked to parse markdown to html combined with Prism.js for syntax highlights",
-  "homepage": "https://github.com/fsegurai/ngx-markdown",
   "license": "MIT",
   "author": {
     "name": "Fabián Segura",
     "url": "https://www.fsegurai.com/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fsegurai/ngx-markdown"
   },
   "keywords": [
     "angular",
@@ -30,21 +25,22 @@
   "scripts": {
     "ng": "ng",
     "start": "bun link:lib && ng serve",
-    "build:demo": "ng build demo --configuration production",
-    "build:lib": "ng build lib --configuration production",
-    "postBuild:lib": "cpy ./README.md ./dist/lib && cpy ./LICENSE ./dist/lib",
     "link:lib": "rimraf --glob node_modules/ngx-markdown && linklocal",
-    "lint": "bun lint:lib && bun lint:demo",
+    "build:demo": "ng build demo --configuration production --aot --base-href=./",
+    "build_post:demo": "cpy ./README.md ./dist/lib && cpy ./LICENSE ./dist/lib && cpy ./dist/demo/browser/index.html . --rename=404.html && cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat",
+    "build_doppler:demo": "doppler run bun run build:demo && bun run build_post:demo",
+    "build:lib": "ng build lib --configuration production",
+    "build_post:lib": "cpy ./README.md ./dist/lib && cpy ./LICENSE ./dist/lib",
+    "build_doppler:lib": "doppler run bun run build:lib && bun run build_post:lib",
+    "build:all": "bun build:lib && bun build:demo",
     "lint:demo": "ng lint demo",
     "lint:lib": "ng lint lib",
+    "lint": "bun lint:lib && bun lint:demo",
     "type-check:demo": "tsc --project ./demo/tsconfig.app.json --inlineSourceMap --noEmit",
     "type-check:lib": "tsc --project ./lib/tsconfig.lib.json --inlineSourceMap --noEmit",
     "watch": "ng build --watch --configuration development",
     "test-local:lib": "ng test",
-    "test-ci_cd:lib": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
-    "gh-pages:build": "bun build:demo --aot --base-href=./",
-    "gh-pages:copy404": "cpy ./dist/demo/browser/index.html . --rename=404.html",
-    "gh-pages:postBuild": "cpy ./dist/demo/3rdpartylicenses.txt ./dist/demo/browser --flat"
+    "test-ci_cd:lib": "ng test --no-watch --no-progress --browsers=ChromeHeadless"
   },
   "dependencies": {
     "@angular/animations": "^19.0.0",
