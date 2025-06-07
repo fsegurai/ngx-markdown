@@ -48,7 +48,7 @@
         "eslint-formatter-checkstyle": "^8.40.0",
         "eslint-import-resolver-typescript": "^4.4.3",
         "eslint-plugin-import": "^2.31.0",
-        "jasmine-core": "~5.7.1",
+        "jasmine-core": "~5.8.0",
         "karma": "~6.4.4",
         "karma-chrome-launcher": "~3.2.0",
         "karma-coverage": "~2.2.1",
@@ -1590,7 +1590,7 @@
 
     "jackspeak": ["jackspeak@4.1.0", "", { "dependencies": { "@isaacs/cliui": "^8.0.2" } }, "sha512-9DDdhb5j6cpeitCbvLO7n7J4IxnbM6hoF6O1g4HQ5TfhvvKN8ywDM7668ZhMHRqVmxqhps/F6syWK2KcPxYlkw=="],
 
-    "jasmine-core": ["jasmine-core@5.7.1", "", {}, "sha512-QnurrtpKsPoixxG2R3d1xP0St/2kcX5oTZyDyQJMY+Vzi/HUlu1kGm+2V8Tz+9lV991leB1l0xcsyz40s9xOOw=="],
+    "jasmine-core": ["jasmine-core@5.8.0", "", {}, "sha512-Q9dqmpUAfptwyueW3+HqBOkSuYd9I/clZSSfN97wXE/Nr2ROFNCwIBEC1F6kb3QXS9Fcz0LjFYSDQT+BiwjuhA=="],
 
     "jest-worker": ["jest-worker@27.5.1", "", { "dependencies": { "@types/node": "*", "merge-stream": "^2.0.0", "supports-color": "^8.0.0" } }, "sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg=="],
 
