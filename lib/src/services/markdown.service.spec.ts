@@ -8,6 +8,7 @@ import { first } from 'rxjs/operators';
 import { ClipboardButtonComponent } from '../clipboard-button/clipboard-button.component';
 import { KatexOptions } from '../configuration/katex-options';
 import { MarkedOptions } from '../configuration/marked-options';
+import { MARKED_EXTENSIONS } from '../configuration/marked-extensions';
 import { MarkedRenderer, MarkedToken } from '../configuration/marked-renderer';
 import { MermaidAPI } from '../configuration/mermaid-options';
 import { MarkdownModule } from '../markdown.module';
@@ -35,7 +36,10 @@ describe('MarkdownService', () => {
   let securityContext: SecurityContext;
   let viewContainerRef: ViewContainerRef;
 
-  const mockExtensions = [{ name: 'mock-extension' } as MarkedExtension];
+  const mockExtensions = [
+    { name: 'mock-extension-one' } as MarkedExtension,
+    { name: 'mock-extension-two' } as MarkedExtension,
+  ];
   const viewContainerRefSpy = jasmine.createSpyObj<ViewContainerRef>(['createComponent', 'createEmbeddedView']);
 
   describe('with SecurityContext.HTML', () => {
@@ -91,7 +95,10 @@ describe('MarkdownService', () => {
       TestBed.configureTestingModule({
         imports: [BrowserModule,
           MarkdownModule.forRoot({
-            markedExtensions: mockExtensions,
+            markedExtensions: [
+              { provide: MARKED_EXTENSIONS, useValue: mockExtensions[0], multi: true },
+              { provide: MARKED_EXTENSIONS, useFactory: () => mockExtensions[1], multi: true },
+            ],
             sanitize: SecurityContext.NONE,
           })],
         providers: [
