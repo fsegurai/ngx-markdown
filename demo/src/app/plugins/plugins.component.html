@@ -11,7 +11,7 @@
   <section>
     <h2 id="emoji">Emoji plugin</h2>
 
-    <markdown ngPreserveWhitespaces>
+    <markdown [emoji]="true" ngPreserveWhitespaces>
       #### Emoji-Toolkit file to include
       ```javascript
       node_modules/emoji-toolkit/lib/js/joypixels.min.js
@@ -313,8 +313,10 @@
 
     <markdown [src]="'app/plugins/remote/katex.html'"></markdown>
 
-    <markdown>
+    <markdown [emoji]="true" ngPreserveWhitespaces>
       The example below illustrate `katex` directive in action.
+
+      > :bulb: By default, KaTeX uses two backslashes (`\\`) as delimiters for block math expressions. However, the markdown parser does not support double backslashes directly. To render a KaTeX block, you need to use four backslashes (`\\\\`) in your markdown so that the parser outputs the correct delimiter for KaTeX to recognize the math block.
     </markdown>
 
     <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="16px">
