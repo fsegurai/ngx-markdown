@@ -9,30 +9,40 @@ export type MarkdownPipeOptions = ParseOptions & RenderOptions;
   name: 'markdown',
 })
 export class MarkdownPipe implements PipeTransform {
-  private domSanitizer = inject(DomSanitizer);
-  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private markdownService = inject(MarkdownService);
-  private viewContainerRef = inject(ViewContainerRef);
-  private zone = inject(NgZone);
+  // * == SERVICE INJECTIONS ==
+  private _markdownService = inject(MarkdownService);
+  private _domSanitizer = inject(DomSanitizer);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _viewContainerRef = inject(ViewContainerRef);
+  private _ngZone = inject(NgZone);
 
-  async transform(value: string, options?: MarkdownPipeOptions): Promise<SafeHtml> {
+  /**
+   * Transforms a Markdown string into SafeHtml and triggers a post-rendering process
+   * on the host element when the DOM is stable.
+   *
+   * @param value The Markdown string to transform. Can be null or undefined.
+   * @param options Optional configuration for parsing and rendering Markdown.
+   * @returns A Promise that resolves to SafeHtml ready for binding to [innerHTML].
+   * Returns an empty string if the input value is null, undefined, or not a string.
+   */
+  async transform(value: string | null | undefined, options?: MarkdownPipeOptions): Promise<SafeHtml> {
     if (value == null) return '';
 
     if (typeof value !== 'string') {
-      console.error(`MarkdownPipe has been invoked with an invalid value type [${typeof value}]`);
+      console.error(`MarkdownPipe has been invoked with an invalid value type [${ typeof value }]`);
       return value;
     }
 
-    const markdown = await this.markdownService.parse(value, options);
+    const parsedMarkdown = await this._markdownService.parse(value, options);
 
-    if (this.zone) {
-      this.zone.onStable
+    if (this._ngZone) {
+      this._ngZone.onStable
         .pipe(first())
-        .subscribe(() => this.markdownService.render(this.elementRef.nativeElement, options, this.viewContainerRef));
+        .subscribe(() => this._markdownService.render(this._elementRef.nativeElement, options, this._viewContainerRef));
     } else {
-      this.markdownService.render(this.elementRef.nativeElement, options, this.viewContainerRef);
+      this._markdownService.render(this._elementRef.nativeElement, options, this._viewContainerRef);
     }
 
-    return this.domSanitizer.bypassSecurityTrustHtml(markdown);
+    return this._domSanitizer.bypassSecurityTrustHtml(parsedMarkdown);
   }
 }
