@@ -85,7 +85,7 @@ export class ExtendedRenderer extends Renderer {
 }
 
 @Injectable({
-  providedIn: 'root' // Make the service a singleton and tree-shakable
+  providedIn: 'root', // Make the service a singleton and tree-shakable
 })
 export class MarkdownService {
   // * == SERVICE INJECTIONS ==
@@ -268,7 +268,7 @@ export class MarkdownService {
     if (!isPlatformBrowser(this._platform)) return;
     if (typeof Prism === 'undefined' || typeof Prism.highlightAllUnder === 'undefined') {
       console.warn('Prism.js not loaded. Code highlighting will not be applied.');
-      return
+      return;
     }
 
     const targetElement = element || document;
@@ -439,7 +439,7 @@ export class MarkdownService {
         preElement,
         languageButton,
         buttonTextCopy,
-        buttonTextCopied
+        buttonTextCopied,
       );
 
       // Attach clipboard.js to the root node

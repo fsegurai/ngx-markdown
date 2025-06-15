@@ -7,7 +7,7 @@ import {
   model,
   ModelSignal,
   signal,
-  WritableSignal
+  WritableSignal,
 } from '@angular/core';
 
 @Component({
@@ -31,7 +31,7 @@ export class ClipboardButtonComponent {
   buttonTextCopied: ModelSignal<string> = model('Copied!');
   protected readonly copied: WritableSignal<boolean> = signal(false);
   protected readonly copiedText = computed(() =>
-    this.copied() ? this.buttonTextCopied() : this.buttonTextCopy()
+    this.copied() ? this.buttonTextCopied() : this.buttonTextCopy(),
   );
 
   // * == PRIVATE PROPERTIES ==

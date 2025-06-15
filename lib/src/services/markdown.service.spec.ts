@@ -1,23 +1,30 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentRef, EmbeddedViewRef, SecurityContext, TemplateRef, ViewContainerRef, ViewRef } from '@angular/core';
+import {
+  ComponentRef,
+  EmbeddedViewRef,
+  SecurityContext,
+  TemplateRef,
+  ViewContainerRef,
+  ViewRef,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { marked, MarkedExtension } from 'marked';
 import { first } from 'rxjs/operators';
 import { ClipboardButtonComponent } from '../clipboard-button/clipboard-button.component';
 import { KatexOptions } from '../configuration/katex-options';
-import { MarkedOptions } from '../configuration/marked-options';
 import { MARKED_EXTENSIONS } from '../configuration/marked-extensions';
+import { MarkedOptions } from '../configuration/marked-options';
 import { MarkedRenderer, MarkedToken } from '../configuration/marked-renderer';
 import { MermaidAPI } from '../configuration/mermaid-options';
 import { MarkdownModule } from '../markdown.module';
 import {
-  errorClipboardNotLoaded,
-  errorClipboardViewContainerRequired,
-  errorJoyPixelsNotLoaded,
-  errorKatexNotLoaded,
-  errorMermaidNotLoaded,
+  ERROR_CLIPBOARD_NOT_LOADED,
+  ERROR_CLIPBOARD_VIEW_CONTAINER_REQUIRED,
+  ERROR_JOYPIXELS_NOT_LOADED,
+  ERROR_KATEX_NOT_LOADED,
+  ERROR_MERMAID_NOT_LOADED,
   ExtendedRenderer,
   MarkdownService,
   ParseOptions,
@@ -90,6 +97,7 @@ describe('MarkdownService', () => {
   });
 
   describe('with SecurityContext.NONE', () => {
+    const _platform = '_platform';
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -113,6 +121,8 @@ describe('MarkdownService', () => {
       markdownService = TestBed.inject(MarkdownService);
       securityContext = TestBed.inject(SECURITY_CONTEXT);
       viewContainerRef = TestBed.inject(ViewContainerRef);
+
+      Object.defineProperty(markdownService, _platform, { writable: true });
     });
 
     describe('options', () => {
@@ -303,7 +313,7 @@ describe('MarkdownService', () => {
         const mockRaw = '&lt;html&gt;';
         const expected = '<p>&lt;html&gt;</p>\n';
 
-        markdownService['platform'] = 'server';
+        Object.defineProperty(markdownService, _platform, { writable: true, value: 'server' });
 
         expect(markdownService.parse(mockRaw, { decodeHtml: true })).toBe(expected);
       });
@@ -315,14 +325,14 @@ describe('MarkdownService', () => {
         expect(() => markdownService.parse('I :heart: ngx-markdown', {
           decodeHtml: false,
           emoji: true,
-        })).toThrowError(errorJoyPixelsNotLoaded);
+        })).toThrowError(ERROR_JOYPIXELS_NOT_LOADED);
 
         window['joypixels'] = { shortnameToUnicode: undefined };
 
         expect(() => markdownService.parse('I :heart: ngx-markdown', {
           decodeHtml: false,
           emoji: true,
-        })).toThrowError(errorJoyPixelsNotLoaded);
+        })).toThrowError(ERROR_JOYPIXELS_NOT_LOADED);
       });
 
       it('should call joypixels when emoji is true', () => {
@@ -376,7 +386,7 @@ describe('MarkdownService', () => {
 
         spyOn(joypixels, 'shortnameToUnicode');
 
-        markdownService['platform'] = 'server';
+        Object.defineProperty(markdownService, _platform, { writable: true, value: 'server' });
 
         expect(() => markdownService.parse(mockRaw, { decodeHtml: false, emoji: true })).not.toThrowError();
         expect(joypixels.shortnameToUnicode).not.toHaveBeenCalled();
@@ -392,7 +402,7 @@ describe('MarkdownService', () => {
         ];
 
         useCases.forEach(platform => {
-          markdownService['platform'] = platform;
+          Object.defineProperty(markdownService, _platform, { writable: true, value: platform });
 
           expect(() => markdownService.parse(mockRaw)).not.toThrowError();
           expect(markdownService.parse(mockRaw)).toBe(marked.parse(mockRaw));
@@ -493,12 +503,25 @@ describe('MarkdownService', () => {
           { left: '$$', right: '$$', display: true },
           { left: '$', right: '$', display: false },
           { left: '\\(', right: '\\)', display: false },
-          { left: '\\begin{equation}', right: '\\end{equation}', display: true },
-          { left: '\\begin{align}', right: '\\end{align}', display: true },
-          { left: '\\begin{alignat}', right: '\\end{alignat}', display: true },
-          { left: '\\begin{gather}', right: '\\end{gather}', display: true },
-          { left: '\\begin{CD}', right: '\\end{CD}', display: true },
           { left: '\\[', right: '\\]', display: true },
+          { left: '\\begin{align}', right: '\\end{align}', display: true },
+          { left: '\\begin{align*}', right: '\\end{align*}', display: true },
+          { left: '\\begin{aligned}', right: '\\end{aligned}', display: true },
+          { left: '\\begin{alignat}', right: '\\end{alignat}', display: true },
+          { left: '\\begin{alignat*}', right: '\\end{alignat*}', display: true },
+          { left: '\\begin{alignedat}', right: '\\end{alignedat}', display: true },
+          { left: '\\begin{array}', right: '\\end{array}', display: true },
+          { left: '\\begin{bmatrix}', right: '\\end{bmatrix}', display: true },
+          { left: '\\begin{cases}', right: '\\end{cases}', display: true },
+          { left: '\\begin{CD}', right: '\\end{CD}', display: true },
+          { left: '\\begin{equation}', right: '\\end{equation}', display: true },
+          { left: '\\begin{gather}', right: '\\end{gather}', display: true },
+          { left: '\\begin{matrix}', right: '\\end{matrix}', display: true },
+          { left: '\\begin{pmatrix}', right: '\\end{pmatrix}', display: true },
+          { left: '\\begin{rcases}', right: '\\end{rcases}', display: true },
+          { left: '\\begin{smallmatrix}', right: '\\end{smallmatrix}', display: true },
+          { left: '\\begin{vmatrix}', right: '\\end{vmatrix}', display: true },
+          { left: '\\begin{Vmatrix}', right: '\\end{Vmatrix}', display: true },
         ],
       };
 
@@ -591,7 +614,7 @@ describe('MarkdownService', () => {
 
         spyOn(window, 'renderMathInElement');
 
-        markdownService['platform'] = 'server';
+        Object.defineProperty(markdownService, _platform, { writable: true, value: 'server' });
 
         expect(() => markdownService.render(element, { katex: true })).not.toThrowError();
         expect(window['renderMathInElement']).not.toHaveBeenCalled();
@@ -604,12 +627,12 @@ describe('MarkdownService', () => {
 
         window['katex'] = undefined;
 
-        expect(() => markdownService.render(element, { katex: true })).toThrowError(errorKatexNotLoaded);
+        expect(() => markdownService.render(element, { katex: true })).toThrowError(ERROR_KATEX_NOT_LOADED);
 
         window['katex'] = {};
         window['renderMathInElement'] = undefined;
 
-        expect(() => markdownService.render(element, { katex: true })).toThrowError(errorKatexNotLoaded);
+        expect(() => markdownService.render(element, { katex: true })).toThrowError(ERROR_KATEX_NOT_LOADED);
       });
 
       it('should render katex with math expressions', () => {
@@ -672,7 +695,9 @@ describe('MarkdownService', () => {
         markdownService.render(container, { mermaid: true });
 
         expect(mermaid.initialize).toHaveBeenCalledWith(defaultOptions);
-        expect(mermaid.run).toHaveBeenCalledWith({ nodes: Array.from(mermaidElements) });
+        expect(mermaid.run).toHaveBeenCalledWith({
+          nodes: mermaidElements,
+        });
       });
 
       it('should render mermaid with provided options when mermaid is true and at least one element is found', () => {
@@ -704,7 +729,9 @@ describe('MarkdownService', () => {
         markdownService.render(container, { mermaid: true, mermaidOptions: providedOptions });
 
         expect(mermaid.initialize).toHaveBeenCalledWith(providedOptions);
-        expect(mermaid.run).toHaveBeenCalledWith({ nodes: Array.from(mermaidElements) });
+        expect(mermaid.run).toHaveBeenCalledWith(jasmine.objectContaining({
+          nodes: mermaidElements,
+        }));
       });
 
       it('should not render mermaid when mermaid is omitted/false/null/undefined', () => {
@@ -749,7 +776,7 @@ describe('MarkdownService', () => {
         spyOn(mermaid, 'initialize');
         spyOn(mermaid, 'run');
 
-        markdownService['platform'] = 'server';
+        Object.defineProperty(markdownService, _platform, { writable: true, value: 'server' });
 
         expect(() => markdownService.render(container, { mermaid: true })).not.toThrowError();
         expect(mermaid.initialize).not.toHaveBeenCalled();
@@ -762,12 +789,12 @@ describe('MarkdownService', () => {
 
         window['mermaid'] = undefined;
 
-        expect(() => markdownService.render(container, { mermaid: true })).toThrowError(errorMermaidNotLoaded);
+        expect(() => markdownService.render(container, { mermaid: true })).toThrowError(ERROR_MERMAID_NOT_LOADED);
 
         window['mermaid'] = { initialize: undefined };
         window['mermaid'] = { run: undefined };
 
-        expect(() => markdownService.render(container, { mermaid: true })).toThrowError(errorMermaidNotLoaded);
+        expect(() => markdownService.render(container, { mermaid: true })).toThrowError(ERROR_MERMAID_NOT_LOADED);
       });
 
       it('should not render mermaid when no elements are found', () => {
@@ -1007,7 +1034,7 @@ describe('MarkdownService', () => {
 
         spyOn(window, 'ClipboardJS');
 
-        markdownService['platform'] = 'server';
+        Object.defineProperty(markdownService, _platform, { writable: true, value: 'server' });
 
         expect(() => markdownService.render(container, { clipboard: true })).not.toThrowError();
         expect(window['ClipboardJS']).not.toHaveBeenCalled();
@@ -1019,7 +1046,7 @@ describe('MarkdownService', () => {
 
         window['ClipboardJS'] = undefined;
 
-        expect(() => markdownService.render(container, { clipboard: true })).toThrowError(errorClipboardNotLoaded);
+        expect(() => markdownService.render(container, { clipboard: true })).toThrowError(ERROR_CLIPBOARD_NOT_LOADED);
       });
 
       it('should throw when clipboard is called and viewContainerRef is omitted/null/undefined', () => {
@@ -1035,7 +1062,7 @@ describe('MarkdownService', () => {
         ];
 
         useCases.forEach(func => {
-          expect(func).toThrowError(errorClipboardViewContainerRequired);
+          expect(func).toThrowError(ERROR_CLIPBOARD_VIEW_CONTAINER_REQUIRED);
         });
       });
 
@@ -1206,7 +1233,7 @@ describe('MarkdownService', () => {
 
         spyOn(Prism, 'highlightAllUnder');
 
-        markdownService['platform'] = 'server';
+        Object.defineProperty(markdownService, _platform, { writable: true, value: 'server' });
 
         expect(() => markdownService.highlight(mockHtmlElement)).not.toThrow();
         expect(Prism.highlightAllUnder).not.toHaveBeenCalled();
@@ -1309,6 +1336,30 @@ describe('MarkdownService', () => {
           expect(Prism.highlightAllUnder).toHaveBeenCalledWith(document);
           Prism.highlightAllUnder.calls.reset();
         });
+      });
+    });
+
+    describe('parseInline', () => {
+      it('should call marked.parseInline with provided markdown and options', () => {
+        const mockRaw = '**Strong text**';
+        const mockOptions = { breaks: true, gfm: false };
+
+        const markedParseInlineSpy = spyOn(marked, 'parseInline').and.returnValue('<strong>Strong text</strong>');
+
+        const result = markdownService.parseInline(mockRaw, mockOptions);
+
+        expect(markedParseInlineSpy).toHaveBeenCalledWith(mockRaw, mockOptions);
+        expect(result).toBe('<strong>Strong text</strong>');
+      });
+
+      it('should call marked.parseInline with only markdown when options are not provided', () => {
+        const mockRaw = '*Italic text*';
+
+        const markedParseInlineSpy = spyOn(marked, 'parseInline').and.returnValue('<em>Italic text</em>');
+
+        markdownService.parseInline(mockRaw);
+
+        expect(markedParseInlineSpy).toHaveBeenCalledWith(mockRaw, undefined);
       });
     });
   });

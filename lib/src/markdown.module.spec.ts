@@ -10,7 +10,7 @@ import { MARKED_EXTENSIONS } from './configuration/marked-extensions';
 import { MARKED_OPTIONS, MarkedOptions } from './configuration/marked-options';
 import { MarkdownComponent } from './markdown/markdown.component';
 import { MarkdownModule } from './markdown.module';
-import { errorSrcWithoutHttpClient, SECURITY_CONTEXT } from './services/markdown.service';
+import { ERROR_SRC_WITHOUT_HTTP_CLIENT, SECURITY_CONTEXT } from './services/markdown.service';
 
 @Component({
   selector: 'markdown-host-comp',
@@ -394,7 +394,7 @@ describe('MarkdownModule', () => {
 
       fixture.componentInstance.src = '/some/path/to/file.md';
 
-      expect(() => fixture.detectChanges()).toThrowError(errorSrcWithoutHttpClient);
+      expect(() => fixture.detectChanges()).toThrowError(ERROR_SRC_WITHOUT_HTTP_CLIENT);
     });
   });
 });

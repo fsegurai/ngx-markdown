@@ -63,7 +63,7 @@ export class MarkdownLinkService {
    * @private - This method is private and should not be accessed outside of this class
    */
   private externalUrlHandler(target: HTMLElement): void {
-    let hyperlink = target.getAttribute('href')!;
+    const hyperlink = target.getAttribute('href')!;
 
     if (!hyperlink) {
       console.warn('Attempted to handle external URL without href attribute.');
@@ -105,7 +105,7 @@ export class MarkdownLinkService {
   private handleRouterNavigation(
     commands: string,
     fragment: string | undefined,
-    routerLinkOptions?: MarkdownRouterLinkOptions
+    routerLinkOptions?: MarkdownRouterLinkOptions,
   ): void {
     let extras: NavigationExtras = {};
 

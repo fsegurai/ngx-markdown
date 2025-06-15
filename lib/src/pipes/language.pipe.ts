@@ -21,14 +21,14 @@ export class LanguagePipe implements PipeTransform {
 
     if (typeof safeValue !== 'string') {
       console.error(
-        `LanguagePipe: 'value' must be a string. Received type: [${typeof value}]. Returning empty string.`
+        `LanguagePipe: 'value' must be a string. Received type: [${typeof value}]. Returning empty string.`,
       );
       return '';
     }
 
     if (typeof safeLanguage !== 'string') {
       console.error(
-        `LanguagePipe: 'language' must be a string. Received type: [${typeof language}]. Returning value without code block.`
+        `LanguagePipe: 'language' must be a string. Received type: [${typeof language}]. Returning value without code block.`,
       );
       return safeValue;
     }

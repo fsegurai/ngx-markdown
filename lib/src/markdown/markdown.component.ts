@@ -19,13 +19,13 @@ import {
   Type,
   ViewContainerRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationExtras } from '@angular/router';
 import { KatexOptions } from '../configuration/katex-options';
 import { MermaidAPI } from '../configuration/mermaid-options';
 import { PrismPlugin } from '../configuration/prism-plugin';
 import { MarkdownLinkService } from '../services/markdown-link.service';
 import { MarkdownService, ParseOptions, RenderOptions } from '../services/markdown.service';
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 export interface MarkdownRouterLinkOptions {
   global?: NavigationExtras;
@@ -44,11 +44,11 @@ export interface MarkdownRouterLinkOptions {
 })
 export class MarkdownComponent implements AfterViewInit {
   // * == SERVICE INJECTIONS ==
-  private _markdownService: MarkdownService = inject(MarkdownService);
-  private _markdownLinkService: MarkdownLinkService = inject(MarkdownLinkService);
-  private _element: ElementRef<HTMLElement> = inject<ElementRef<HTMLElement>>(ElementRef);
-  private _viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
-  private _destroyRef = inject(DestroyRef);
+  private readonly _markdownService: MarkdownService = inject(MarkdownService);
+  private readonly _markdownLinkService: MarkdownLinkService = inject(MarkdownLinkService);
+  private readonly _element: ElementRef<HTMLElement> = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly _viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+  private readonly _destroyRef = inject(DestroyRef);
 
   // * == INPUTS ==
   readonly data: ModelSignal<string | null | undefined> = model<string | null>();
@@ -198,7 +198,7 @@ export class MarkdownComponent implements AfterViewInit {
     const links = this._element.nativeElement.querySelectorAll('a');
     links.forEach(link => {
       if (link.getAttribute('href')?.includes('/routerLink:') === true) {
-        this.internalLinksConverter(link as HTMLAnchorElement);
+        this.internalLinksConverter(link);
       }
     });
   }
@@ -217,7 +217,7 @@ export class MarkdownComponent implements AfterViewInit {
     link.setAttribute('href', `${ path }${ fragment ? `#${ fragment }` : '' }`);
     link.setAttribute('routerLink', `${ path }${ fragment ? `#${ fragment }` : '' }`);
     if (fragment) link.setAttribute('fragment', fragment);
-  }
+  };
 
   /**
    * Fetches a Markdown source using the `src` value, processes it, and emits the result or an error.
