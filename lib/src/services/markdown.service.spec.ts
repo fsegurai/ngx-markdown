@@ -1,13 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import {
-  ComponentRef,
-  EmbeddedViewRef,
-  SecurityContext,
-  TemplateRef,
-  ViewContainerRef,
-  ViewRef,
-} from '@angular/core';
+import { ComponentRef, EmbeddedViewRef, SecurityContext, TemplateRef, ViewContainerRef, ViewRef, } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { marked, MarkedExtension } from 'marked';
