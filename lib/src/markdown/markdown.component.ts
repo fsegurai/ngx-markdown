@@ -38,7 +38,7 @@ export interface MarkdownRouterLinkOptions {
 @Component({
   selector: 'ngx-markdown, markdown, [markdown]',
   template: `
-    <ng-content></ng-content>
+    <ng-content />
   `,
   imports: [CommonModule],
 })

@@ -31,5 +31,5 @@
 
 <mat-tab-nav-panel #tabPanel (@routeAnimation.Done)="handleFragment()"
                    [@routeAnimation]="getRouteAnimation(outlet)" class="outlet-wrapper">
-  <router-outlet #outlet="outlet"></router-outlet>
+  <router-outlet #outlet="outlet" />
 </mat-tab-nav-panel>

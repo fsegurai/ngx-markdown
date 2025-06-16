@@ -20,7 +20,7 @@ import { ERROR_SRC_WITHOUT_HTTP_CLIENT, SECURITY_CONTEXT } from './services/mark
         <markdown [src]="src"></markdown>
       </div>
     } @else {
-      <markdown [data]="markdown"></markdown>
+      <markdown [data]="markdown" />
     }
   `,
   imports: [
