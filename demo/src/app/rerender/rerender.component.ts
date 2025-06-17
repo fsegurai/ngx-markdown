@@ -21,11 +21,13 @@ import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
   ]
 })
 export default class RerenderComponent implements OnInit, OnDestroy {
+  // * == SERVICE INJECTIONS ==
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private markdownService = inject(MarkdownService);
 
+  // * == PROPERTIES ==
   // property to handle override as per marked documentation, if a renderer
-  // function returns `false` it will fall back to previous implementation
+  // function returns `false,` it will fall back to the previous implementation
   protected headings: Element[] | undefined;
   protected markdown = `## Markdown rules!
 ---

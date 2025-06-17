@@ -17,11 +17,12 @@ import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
   ]
 })
 export default class SyntaxHighlightComponent implements OnInit {
+  // * == SERVICE INJECTIONS ==
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
+  // * == PROPERTIES ==
   headings: Element[] | undefined;
-
-  myValue = 'print(\'hello-world\')';
+  myValue: string = 'print(\'hello-world\')';
 
   ngOnInit(): void {
     this.setHeadings();

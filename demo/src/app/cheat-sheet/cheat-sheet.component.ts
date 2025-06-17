@@ -16,9 +16,11 @@ import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
   ]
 })
 export default class CheatSheetComponent implements OnInit {
+  // * == SERVICE INJECTIONS ==
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private rawLoaderService = inject(HttpRawLoaderService);
 
+  // * == PROPERTIES ==
   protected blockquotes$ = this.rawLoaderService.get('app/cheat-sheet/remote/blockquotes.md');
   protected codeAndSyntaxHighlighting$ = this.rawLoaderService.get('app/cheat-sheet/remote/code-and-synthax-highlighting.md');
   protected emphasis$ = this.rawLoaderService.get('app/cheat-sheet/remote/emphasis.md');

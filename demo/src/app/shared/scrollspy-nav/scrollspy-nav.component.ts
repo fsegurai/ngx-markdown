@@ -5,7 +5,7 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
+  input, InputSignal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import Gumshoe from 'gumshoejs';
@@ -21,11 +21,11 @@ import Gumshoe from 'gumshoejs';
 })
 export class ScrollspyNavComponent {
   // * == SERVICE INJECTIONS ==
-  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private destroyRef = inject(DestroyRef);
+  private elementRef: ElementRef<HTMLElement> = inject<ElementRef<HTMLElement>>(ElementRef);
+  private destroyRef: DestroyRef = inject(DestroyRef);
 
   // * == INPUTS ==
-  readonly headings = input<Element[] | undefined>();
+  readonly headings: InputSignal<Element[] | undefined> = input<Element[] | undefined>();
 
   // * == PROPERTIES ==
   private scrollSpy: Gumshoe | undefined;
@@ -53,8 +53,8 @@ export class ScrollspyNavComponent {
    */
   private setupScrollSpyEffect(): void {
     // Use an effect to react to changes in the headings input
-    effect(() => {
-      const currentHeadings = this.headings();
+    effect((): void => {
+      const currentHeadings: Element[] | undefined = this.headings();
       if (currentHeadings && currentHeadings.length > 0) {
         queueMicrotask(() => {
           // Ensure the scroll spy is set up when headings are available
@@ -67,7 +67,7 @@ export class ScrollspyNavComponent {
     });
 
     // Use DestroyRef for component cleanup
-    this.destroyRef.onDestroy(() => {
+    this.destroyRef.onDestroy((): void => {
       this.destroyScrollSpy();
     });
   }

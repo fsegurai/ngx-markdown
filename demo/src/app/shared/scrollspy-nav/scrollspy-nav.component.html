@@ -1,5 +1,5 @@
 <ul class="scrollspy-nav">
-  @for (heading of headings(); track heading) {
+  @for (heading of headings(); track heading.id) {
     <li>
       <a [fragment]="heading.id" routerLink=".">{{ sanitizeInnerHTML(heading.innerHTML) }}</a>
     </li>

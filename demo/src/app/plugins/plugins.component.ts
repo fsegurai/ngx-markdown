@@ -26,9 +26,11 @@ import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
   ]
 })
 export default class PluginsComponent implements OnInit {
+  // * == SERVICE INJECTIONS ==
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private snackbar = inject(MatSnackBar);
 
+  // * == PROPERTIES ==
   protected readonly clipboardButton = ClipboardButtonComponent;
   protected emojiMarkdown = '# I :heart: @fsegurai/ngx-markdown';
   protected katexMarkdown =

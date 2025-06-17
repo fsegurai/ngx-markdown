@@ -1,11 +1,10 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, DestroyRef, effect,
   ElementRef,
   inject,
-  OnDestroy,
-  OnInit
+  signal,
 } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout/flex';
 import { FormsModule } from '@angular/forms';
@@ -30,27 +29,21 @@ import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
   styleUrl: './playground.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export default class PlaygroundComponent implements OnInit, OnDestroy {
+export default class PlaygroundComponent {
+  // * == SERVICE INJECTIONS ==
   private markdownService = inject(MarkdownService);
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private changeDetector = inject(ChangeDetectorRef);
+  private readonly _destroyRef = inject(DestroyRef);
+
+  // * == PROPERTIES ==
+  protected markdownContent = signal<string>(playgroundDemo);
+  private debounceRendering = debounce(() => this.updateMarkdownRendering(), 250);
 
   // property to handle override as per marked documentation, if a renderer
-  // function returns `false` it will fall back to previous implementation
+  // function returns `false,` it will fall back to the previous implementation
   protected headings: Element[] | undefined;
   protected markdownRendering: string | undefined;
-
-  private debounceRendering = debounce(() => this.updateMarkdownRendering(), 1000);
-  private _markdownContent = playgroundDemo;
-
-  get markdownContent() {
-    return this._markdownContent;
-  }
-
-  set markdownContent(value: string) {
-    this._markdownContent = value;
-    this.debounceRendering();
-  }
 
   protected katexOptions: KatexOptions = {
     displayMode: true,
@@ -70,12 +63,16 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
     theme: 'dark',
   };
 
-  ngOnInit(): void {
-    this.updateMarkdownRendering();
-  }
+  constructor() {
+    effect(() => {
+      this.markdownContent(); // Trigger the effect when markdownContent changes
+      this.debounceRendering(); // Call the debounced rendering method
+    });
 
-  ngOnDestroy(): void {
-    this.headings = undefined;
+    this._destroyRef.onDestroy(() => {
+      this.headings = undefined; // Clear headings
+      this.markdownRendering = undefined; // Clear markdown rendering
+    });
   }
 
   onLoad(): void {
@@ -99,16 +96,18 @@ export default class PlaygroundComponent implements OnInit, OnDestroy {
    * @private - This method is private and should not be accessed outside of this class
    */
   private updateMarkdownRendering(): void {
-    this.markdownRendering = this.markdownContent;
+    this.markdownRendering = this.markdownContent();
 
-    this.markdownService.renderer.heading = ({ text, depth }: MarkedToken.Heading) => {
-      const parsedText = this.markdownService.parseInline(text); // Parse inline Markdown text to HTML
-      const escapedText = text
-        .toLowerCase()
-        .split(/\W+/)
-        .filter(Boolean)
-        .join('-'); // Remove special characters and join words with hyphens. e.g. "Hello, World!" -> "hello-world"
-      return `<h${ depth } id="${ escapedText }">${ parsedText }</h${ depth }>`;
+    if (this.markdownRendering) {
+      this.markdownService.renderer.heading = ({ text, depth }: MarkedToken.Heading) => {
+        const parsedText = this.markdownService.parseInline(text); // Parse inline Markdown text to HTML
+        const escapedText = text
+          .toLowerCase()
+          .split(/\W+/)
+          .filter(Boolean)
+          .join('-'); // Remove special characters and join words with hyphens. e.g. "Hello, World!" -> "hello-world"
+        return `<h${ depth } id="${ escapedText }">${ parsedText }</h${ depth }>`;
+      }
     }
 
     this.changeDetector.detectChanges(); // Manually trigger change detection
