@@ -1,0 +1,1 @@
+import{A as e,J as o,Mb as n,N as i}from"./chunk-KUNPX5WM.js";var t=class t{constructor(){this.httpClient=i(n)}get(r){return this.httpClient.get(r,{responseType:"text"}).pipe(e())}};t.\u0275fac=function(s){return new(s||t)},t.\u0275prov=o({token:t,factory:t.\u0275fac,providedIn:"root"});var p=t;export{p as a};
