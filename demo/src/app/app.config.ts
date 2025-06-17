@@ -4,7 +4,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { gfmHeadingId } from 'marked-gfm-heading-id';
 import { CLIPBOARD_OPTIONS, MARKED_EXTENSIONS, MARKED_OPTIONS, MERMAID_OPTIONS, provideMarkdown } from 'ngx-markdown';
-import { appRoutes } from '@app/app-routes';
+import { routes } from '@app/app.routes';
 import { markedOptionsFactory } from '@app/marked-options-factory';
 import { AnchorService } from '@shared/anchor/anchor.service';
 import { ClipboardButtonComponent } from '@shared/clipboard-button';
@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideHttpClient(),
     provideRouter(
-      appRoutes,
+      routes,
       withInMemoryScrolling({
         anchorScrolling: 'enabled',
         scrollPositionRestoration: 'enabled',

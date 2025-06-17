@@ -38,7 +38,7 @@ export default class PlaygroundComponent {
 
   // * == PROPERTIES ==
   protected markdownContent = signal<string>(playgroundDemo);
-  private debounceRendering = debounce(() => this.updateMarkdownRendering(), 250);
+  private debounceRendering = debounce(() => this.updateMarkdownRendering(), 300);
 
   // property to handle override as per marked documentation, if a renderer
   // function returns `false,` it will fall back to the previous implementation

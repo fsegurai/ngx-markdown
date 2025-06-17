@@ -126,7 +126,6 @@ export class MarkdownService {
       { left: '\\begin{Vmatrix}', right: '\\end{Vmatrix}', display: true },
     ],
   };
-
   private readonly DEFAULT_MERMAID_OPTIONS: MermaidAPI.MermaidConfig = { startOnLoad: false };
   private readonly DEFAULT_CLIPBOARD_OPTIONS: ClipboardOptions = { buttonComponent: undefined };
   private readonly DEFAULT_PARSE_OPTIONS: ParseOptions = {
@@ -150,10 +149,6 @@ export class MarkdownService {
   private readonly _reload$ = new Subject<void>();
   readonly reload$ = this._reload$.asObservable();
 
-  constructor() {
-    this._options = { ...this.DEFAULT_MARKED_OPTIONS, ...this._userMarkedOptions };
-  }
-
   get options(): MarkedOptions {
     return this._options;
   }
@@ -170,6 +165,10 @@ export class MarkdownService {
 
   set renderer(value: MarkedRenderer) {
     this.options.renderer = value;
+  }
+
+  constructor() {
+    this._options = { ...this.DEFAULT_MARKED_OPTIONS, ...this._userMarkedOptions };
   }
 
   /**
