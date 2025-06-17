@@ -26,9 +26,11 @@ import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
   ]
 })
 export default class BindingsComponent implements OnInit {
+  // * == SERVICE INJECTIONS ==
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private rawLoaderService = inject(HttpRawLoaderService);
 
+  // * == PROPERTIES ==
   // remote url
   protected demoPython$ = this.rawLoaderService.get('app/bindings/remote/demo.py');
 

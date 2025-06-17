@@ -1,24 +1,26 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  booleanAttribute,
   Component,
+  DestroyRef,
+  effect,
   ElementRef,
-  EventEmitter,
   HostListener,
   inject,
   input,
-  Input,
-  OnChanges,
-  OnDestroy,
+  InputSignal,
+  InputSignalWithTransform,
+  model,
+  ModelSignal,
   output,
-  Output,
+  OutputEmitterRef,
   TemplateRef,
   Type,
   ViewContainerRef,
 } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
-import { from, merge, Subject } from 'rxjs';
-import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationExtras } from '@angular/router';
 import { KatexOptions } from '../configuration/katex-options';
 import { MermaidAPI } from '../configuration/mermaid-options';
 import { PrismPlugin } from '../configuration/prism-plugin';
@@ -36,239 +38,201 @@ export interface MarkdownRouterLinkOptions {
 @Component({
   selector: 'ngx-markdown, markdown, [markdown]',
   template: `
-    <ng-content></ng-content>
-
-    @if (changed$ | async) {
-      <ng-container></ng-container>
-    }
+    <ng-content />
   `,
   imports: [CommonModule],
 })
-export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
-  private markdownService = inject(MarkdownService);
-  private markdownLinkService = inject(MarkdownLinkService);
-  private element = inject<ElementRef<HTMLElement>>(ElementRef);
-  private viewContainerRef = inject(ViewContainerRef);
-  private router? = inject(Router, { optional: true });
+export class MarkdownComponent implements AfterViewInit {
+  // * == SERVICE INJECTIONS ==
+  private readonly _markdownService: MarkdownService = inject(MarkdownService);
+  private readonly _markdownLinkService: MarkdownLinkService = inject(MarkdownLinkService);
+  private readonly _element: ElementRef<HTMLElement> = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly _viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+  private readonly _destroyRef = inject(DestroyRef);
 
-  @Input() data: string | null | undefined;
-  @Input() src: string | null | undefined;
-  readonly disableRouterLinkHandler = input<boolean | undefined>(false);
+  // * == INPUTS ==
+  readonly data: ModelSignal<string | null | undefined> = model<string | null>();
+  readonly src: ModelSignal<string | null | undefined> = model<string | null>();
+  // ? Router link options for internal and external links
+  readonly routerLinkOptions: InputSignal<MarkdownRouterLinkOptions | undefined> = input<MarkdownRouterLinkOptions>();
+  // ? Disable the sanitizer for the Markdown content
+  readonly disableSanitizer: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  readonly disableRouterLinkHandler: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  // ? Whether to render the Markdown inline or not
+  readonly inline: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  // ? Whether to enable the clipboard functionality
+  readonly clipboard: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  readonly clipboardButtonComponent: InputSignal<Type<unknown> | undefined> = input<Type<unknown>>();
+  readonly clipboardButtonTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown>>();
+  readonly clipboardButtonTextCopy: InputSignal<string | undefined> = input<string>();
+  readonly clipboardButtonTextCopied: InputSignal<string | undefined> = input<string>();
+  readonly clipboardLanguageButton: InputSignal<boolean | undefined> = input<boolean>();
+  // ? Whether to enable the emoji rendering
+  readonly emoji: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  // ? Options for KaTeX rendering
+  readonly katex: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  readonly katexOptions: InputSignal<KatexOptions | undefined> = input<KatexOptions>();
+  // ? Whether to enable the Mermaid rendering
+  readonly mermaid: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  readonly mermaidOptions: InputSignal<MermaidAPI.MermaidConfig | undefined> = input<MermaidAPI.MermaidConfig>();
+  // ? Whether to enable the line highlighting
+  readonly lineHighlight: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  readonly line: InputSignal<string | string[] | undefined> = input<string | string[]>();
+  readonly lineOffset: InputSignal<number | undefined> = input<number>();
+  // ? Whether to enable the line numbers
+  readonly lineNumbers: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  readonly start: InputSignal<number | undefined> = input<number>();
+  // ? Whether to enable the command line rendering
+  readonly commandLine: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  readonly filterOutput: InputSignal<string | undefined> = input<string>();
+  readonly host: InputSignal<string | undefined> = input<string>();
+  readonly prompt: InputSignal<string | undefined> = input<string>();
+  readonly output: InputSignal<string | undefined> = input<string>();
+  readonly user: InputSignal<string | undefined> = input<string>();
 
-  @Input()
-  get disableSanitizer(): boolean {
-    return this._disableSanitizer;
-  }
+  // * == OUTPUTS ==
+  readonly error: OutputEmitterRef<string | Error> = output<string | Error>();
+  readonly load: OutputEmitterRef<string> = output<string>();
+  readonly ready: OutputEmitterRef<void> = output<void>();
 
-  set disableSanitizer(value: boolean) {
-    this._disableSanitizer = this.coerceBooleanProperty(value);
-  }
-
-  @Input()
-  get inline(): boolean {
-    return this._inline;
-  }
-
-  set inline(value: boolean) {
-    this._inline = this.coerceBooleanProperty(value);
-  }
-
-  @Input()
-  get clipboard(): boolean {
-    return this._clipboard;
-  }
-
-  set clipboard(value: boolean) {
-    this._clipboard = this.coerceBooleanProperty(value);
-  }
-
-  @Input() clipboardButtonComponent: Type<unknown> | undefined;
-  @Input() clipboardButtonTemplate: TemplateRef<unknown> | undefined;
-  @Input() clipboardButtonTextCopy: string | undefined;
-  @Input() clipboardButtonTextCopied: string | undefined;
-  @Input() clipboardLanguageButton: boolean | undefined;
-
-  @Input()
-  get emoji(): boolean {
-    return this._emoji;
-  }
-
-  set emoji(value: boolean) {
-    this._emoji = this.coerceBooleanProperty(value);
-  }
-
-  @Input()
-  get katex(): boolean {
-    return this._katex;
-  }
-
-  set katex(value: boolean) {
-    this._katex = this.coerceBooleanProperty(value);
-  }
-
-  @Input() katexOptions: KatexOptions | undefined;
-
-  @Input()
-  get mermaid(): boolean {
-    return this._mermaid;
-  }
-
-  set mermaid(value: boolean) {
-    this._mermaid = this.coerceBooleanProperty(value);
-  }
-
-  @Input() mermaidOptions: MermaidAPI.MermaidConfig | undefined;
-
-  @Input()
-  get lineHighlight(): boolean {
-    return this._lineHighlight;
-  }
-
-  set lineHighlight(value: boolean) {
-    this._lineHighlight = this.coerceBooleanProperty(value);
-  }
-
-  @Input() line: string | string[] | undefined;
-  @Input() lineOffset: number | undefined;
-
-  @Input()
-  get lineNumbers(): boolean {
-    return this._lineNumbers;
-  }
-
-  set lineNumbers(value: boolean) {
-    this._lineNumbers = this.coerceBooleanProperty(value);
-  }
-
-  @Input() start: number | undefined;
-
-  @Input()
-  get commandLine(): boolean {
-    return this._commandLine;
-  }
-
-  set commandLine(value: boolean) {
-    this._commandLine = this.coerceBooleanProperty(value);
-  }
-
-  @Input() filterOutput: string | undefined;
-  @Input() host: string | undefined;
-  @Input() prompt: string | undefined;
-  @Input() output: string | undefined;
-  @Input() user: string | undefined;
-  readonly routerLinkOptions = input<MarkdownRouterLinkOptions>();
-
-  readonly error = output<string | Error>();
-  readonly load = output<string>();
-  @Output() ready = new EventEmitter<void>();
-
-  private _clipboard = false;
-  private _commandLine = false;
-  private _disableSanitizer = false;
-  private _emoji = false;
-  private _inline = false;
-  private _katex = false;
-  private _lineHighlight = false;
-  private _lineNumbers = false;
-  private _mermaid = false;
-
-  private readonly destroyed$ = new Subject<void>();
-
-  private changed = new Subject<void>();
-
-  protected changed$ = merge(this.ready, this.changed).pipe(
-    map(() => this.element.nativeElement.querySelectorAll('a')),
-    switchMap(links => from(links)),
-    filter(link => link.getAttribute('href')?.includes('/routerLink:') === true),
-    tap(link => {
-      const href = link.getAttribute('href')!;
-      const [path, fragment] = href.split('#');
-      link.setAttribute('data-routerLink', path);
-      link.setAttribute('href', `${ path }${ fragment ? `#${ fragment }` : '' }`);
-      link.setAttribute('routerLink', `${ path }${ fragment ? `#${ fragment }` : '' }`);
-      if (fragment) {
-        link.setAttribute('fragment', fragment);
-      }
-    }),
-  );
-
-  @HostListener('click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (this.disableRouterLinkHandler()) return;
-    this.markdownLinkService.interceptClick(event, this.routerLinkOptions());
-  }
-
-  ngOnChanges(): void {
-    this.loadContent();
-    this.changed.next();
+  constructor() {
+    this.setupContentLoadingEffect();
   }
 
   ngAfterViewInit(): void {
-    if (!this.data && !this.src) this.handleTransclusion();
-
-    this.markdownService.reload$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(() => this.loadContent());
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    if (!this.data() && !this.src()) this.handleTransclusion();
   }
 
   /**
-   * Renders the markdown content.
+   * Handles document click events and processes them based on application logic.
+   *
+   * @param {MouseEvent} event - The mouse click event triggered within the document.
+   * @return {void}
+   */
+  @HostListener('click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.disableRouterLinkHandler()) return;
+    this._markdownLinkService.interceptClick(event, this.routerLinkOptions());
+  }
+
+  /**
+   * Sets up the content loading effect to handle changes to data and src inputs,
+   * replacing traditional change detection methods like ngOnChanges for these inputs.
+   * The method uses reactive programming to monitor changes and trigger respective
+   * content handling processes. It also listens for a reload signal from the markdownService,
+   * ensuring the content is reloaded when necessary, with the appropriate cleanup upon
+   * component destruction.
+   *
+   * @private - This method is private and should not be accessed outside of this class
+   * @return {void} This method does not return a value.
+   */
+  private setupContentLoadingEffect(): void {
+    // ? Effect for reacting to data() and src() input changes (replaces ngOnChanges for these)
+    effect(() => {
+      this.loadContent(); // This will call handleData or handleSrc based on the inputs
+      // ! Note: We avoid an `else` that triggers `handleTransclusion` here
+      // ! because transclusion content is only available in ngAfterViewInit.
+      // ! The initial transclusion is handled in ngAfterViewInit.
+    });
+
+    // Subscribe to markdownService.reload$ and automatically unsubscribe on component destruction
+    this._markdownService.reload$
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        this.loadContent(); // This call is sufficient. render() will trigger contentRenderedTrigger.update()
+      });
+  }
+
+  /**
+   * Renders the Markdown content.
    * @param markdown The markdown content to render.
    * @param decodeHtml Whether to decode HTML entities.
+   * @private - This method is private and should not be accessed outside of this class
    */
-  async render(markdown: string, decodeHtml = false): Promise<void> {
+  private async render(markdown: string, decodeHtml = false): Promise<void> {
     const parsedOptions: ParseOptions = {
       decodeHtml,
-      inline: this.inline,
-      emoji: this.emoji,
-      mermaid: this.mermaid,
-      disableSanitizer: this.disableSanitizer,
+      inline: this.inline(),
+      emoji: this.emoji(),
+      mermaid: this.mermaid(),
+      disableSanitizer: this.disableSanitizer(),
     };
 
     const renderOptions: RenderOptions = {
-      clipboard: this.clipboard,
+      clipboard: this.clipboard(),
       clipboardOptions: {
-        buttonComponent: this.clipboardButtonComponent,
-        buttonTemplate: this.clipboardButtonTemplate,
-        buttonTextCopy: this.clipboardButtonTextCopy,
-        buttonTextCopied: this.clipboardButtonTextCopied,
-        languageButton: this.clipboardLanguageButton,
+        buttonComponent: this.clipboardButtonComponent(),
+        buttonTemplate: this.clipboardButtonTemplate(),
+        buttonTextCopy: this.clipboardButtonTextCopy(),
+        buttonTextCopied: this.clipboardButtonTextCopied(),
+        languageButton: this.clipboardLanguageButton(),
       },
-      katex: this.katex,
-      katexOptions: this.katexOptions,
-      mermaid: this.mermaid,
-      mermaidOptions: this.mermaidOptions,
+      katex: this.katex(),
+      katexOptions: this.katexOptions(),
+      mermaid: this.mermaid(),
+      mermaidOptions: this.mermaidOptions(),
     };
 
-    this.element.nativeElement.innerHTML = await this.markdownService.parse(markdown, parsedOptions);
+    this._element.nativeElement.innerHTML = await this._markdownService.parse(markdown, parsedOptions);
 
     this.handlePlugins();
-    this.markdownService.render(this.element.nativeElement, renderOptions, this.viewContainerRef);
+    this._markdownService.render(this._element.nativeElement, renderOptions, this._viewContainerRef);
+
+    this.processInternalLinks(); // Process internal links after rendering
 
     this.ready.emit();
   }
 
   /**
-   * Coerces a data-bound value (typically a string) to a boolean.
-   * @param value The value to coerce to a boolean.
+   * Processes all internal links within a native HTML element and converts them
+   * if they contain a specific routerLink attribute.
+   *
+   * This method queries all anchor elements within the associated native element,
+   * checks for the presence of the `href` attribute containing `/routerLink:`,
+   * and applies the `internalLinksConverter` method to each qualifying link.
+   *
+   * @private - This method is private and should not be accessed outside of this class
+   * @return {void} This method does not return a value.
+   */
+  private processInternalLinks(): void {
+    const links = this._element.nativeElement.querySelectorAll('a');
+    links.forEach(link => {
+      if (link.getAttribute('href')?.includes('/routerLink:') === true) {
+        this.internalLinksConverter(link);
+      }
+    });
+  }
+
+  /**
+   * A handler function for processing anchor elements within an internal browser.
+   * This function modifies the attributes of the provided anchor element to work with a custom routing mechanism.
+   *
+   * @param {HTMLAnchorElement} link - The anchor element whose attributes will be modified.
    * @private - This method is private and should not be accessed outside of this class
    */
-  private coerceBooleanProperty(value: boolean | ''): boolean {
-    return value != null && `${ String(value) }` !== 'false';
-  }
+  private internalLinksConverter = (link: HTMLAnchorElement): void => {
+    const href = link.getAttribute('href')!;
+    const [path, fragment] = href.split('#');
+    link.setAttribute('data-routerLink', path);
+    link.setAttribute('href', `${ path }${ fragment ? `#${ fragment }` : '' }`);
+    link.setAttribute('routerLink', `${ path }${ fragment ? `#${ fragment }` : '' }`);
+    if (fragment) link.setAttribute('fragment', fragment);
+  };
 
-  private handleData(): void {
-    void this.render(this.data!);
-  }
-
+  /**
+   * Fetches a Markdown source using the `src` value, processes it, and emits the result or an error.
+   *
+   * The method subscribes to the Markdown source provided by the `markdownService`. On successful retrieval,
+   * it processes the Markdown using the `render` method and emits the result via the `load` event. In case of
+   * an error, it emits the error through the `error` event.
+   *
+   * @private - This method is private and should not be accessed outside of this class
+   * @return {void} This method does not return a value.
+   */
   private handleSrc(): void {
-    this.markdownService
-      .getSource(this.src!)
+    this._markdownService
+      .getSource(this.src()!)
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
         next: markdown => {
           this.render(markdown).then(() => {
@@ -279,8 +243,13 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
       });
   }
 
+  /**
+   * Handles the transclusion of content by rendering the innerHTML of the associated element.
+   * @private - This method is private and should not be accessed outside of this class
+   * @return {void} This method does not return a value.
+   */
   private handleTransclusion(): void {
-    void this.render(this.element.nativeElement.innerHTML, true);
+    void this.render(this._element.nativeElement.innerHTML, true);
   }
 
   /**
@@ -288,22 +257,24 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
    * @private - This method is private and should not be accessed outside of this class
    */
   private handlePlugins(): void {
-    if (this.commandLine) {
-      this.setPluginClass(this.element.nativeElement, PrismPlugin.CommandLine);
-      this.setPluginOptions(this.element.nativeElement, {
-        dataFilterOutput: this.filterOutput,
-        dataHost: this.host,
-        dataPrompt: this.prompt,
-        dataOutput: this.output,
-        dataUser: this.user,
+    if (this.commandLine()) {
+      this.setPluginClass(this._element.nativeElement, PrismPlugin.CommandLine);
+      this.setPluginOptions(this._element.nativeElement, {
+        dataFilterOutput: this.filterOutput(),
+        dataHost: this.host(),
+        dataPrompt: this.prompt(),
+        dataOutput: this.output(),
+        dataUser: this.user(),
       });
     }
-    if (this.lineHighlight) {
-      this.setPluginOptions(this.element.nativeElement, { dataLine: this.line, dataLineOffset: this.lineOffset });
+
+    if (this.lineHighlight()) {
+      this.setPluginOptions(this._element.nativeElement, { dataLine: this.line(), dataLineOffset: this.lineOffset() });
     }
-    if (this.lineNumbers) {
-      this.setPluginClass(this.element.nativeElement, PrismPlugin.LineNumbers);
-      this.setPluginOptions(this.element.nativeElement, { dataStart: this.start });
+
+    if (this.lineNumbers()) {
+      this.setPluginClass(this._element.nativeElement, PrismPlugin.LineNumbers);
+      this.setPluginOptions(this._element.nativeElement, { dataStart: this.start() });
     }
   }
 
@@ -341,7 +312,7 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Converts the value to lisp-case for the plugin options.
+   * Converts the value to a lisp-case for the plugin options.
    * @param value The value to convert to lisp-case.
    * @private - This method is private and should not be accessed outside of this class
    */
@@ -354,9 +325,12 @@ export class MarkdownComponent implements OnChanges, AfterViewInit, OnDestroy {
    * @private - This method is private and should not be accessed outside of this class
    */
   private loadContent(): void {
-    if (this.data) {
-      this.handleData();
-    } else if (this.src) {
+    const dataValue = this.data();
+    const srcValue = this.src();
+
+    if (dataValue) {
+      void this.render(dataValue);
+    } else if (srcValue) {
       this.handleSrc();
     }
   }

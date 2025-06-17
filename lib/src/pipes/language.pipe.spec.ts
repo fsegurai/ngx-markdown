@@ -35,9 +35,9 @@ describe('LanguagePipe', () => {
     markdowns.forEach((markdown: string) => {
       const result = pipe.transform(markdown, markdown);
 
-      expect(result).toBe(markdown);
+      expect(result).toEqual('');
       expect(console.error).toHaveBeenCalledWith(
-        `LanguagePipe has been invoked with an invalid value type [${typeof markdown}]`,
+        `LanguagePipe: 'value' must be a string. Received type: [${typeof markdown}]. Returning empty string.`,
       );
     });
   });
@@ -53,7 +53,7 @@ describe('LanguagePipe', () => {
 
       expect(result).toBe(markdown);
       expect(console.error).toHaveBeenCalledWith(
-        `LanguagePipe has been invoked with an invalid parameter [${typeof language}]`,
+        `LanguagePipe: 'language' must be a string. Received type: [${typeof language}]. Returning value without code block.`,
       );
     });
   });

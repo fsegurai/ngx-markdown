@@ -4,25 +4,35 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'language',
 })
 export class LanguagePipe implements PipeTransform {
-  transform(value: string | null, language: string): string {
-    if (value == null) {
-      value = '';
-    }
-    if (language == null) {
-      language = '';
-    }
-    if (typeof value !== 'string') {
+  /**
+   * Transforms a string value by wrapping it in a Markdown code block for a specified language.
+   *
+   * @param value The string contents to be wrapped in a code block.
+   * If null or undefined, it defaults to an empty string.
+   * @param language The programming language for the code block (e.g., 'typescript', 'html', 'css').
+   * If null or undefined, it defaults to an empty string.
+   * @returns A string formatted as a Markdown code block
+   * Returns an empty string if the input 'value' is not a string after null check,
+   * or if 'language' is not a string after null check.
+   */
+  transform(value: string | null | undefined, language: string | null | undefined): string {
+    const safeValue = value ?? '';
+    const safeLanguage = language ?? '';
+
+    if (typeof safeValue !== 'string') {
       console.error(
-        `LanguagePipe has been invoked with an invalid value type [${typeof value}]`,
+        `LanguagePipe: 'value' must be a string. Received type: [${typeof value}]. Returning empty string.`,
       );
-      return value;
+      return '';
     }
-    if (typeof language !== 'string') {
+
+    if (typeof safeLanguage !== 'string') {
       console.error(
-        `LanguagePipe has been invoked with an invalid parameter [${typeof language}]`,
+        `LanguagePipe: 'language' must be a string. Received type: [${typeof language}]. Returning value without code block.`,
       );
-      return value;
+      return safeValue;
     }
-    return '```' + language + '\n' + value + '\n```';
+
+    return `\`\`\`${safeLanguage}\n${safeValue}\n\`\`\``;
   }
 }

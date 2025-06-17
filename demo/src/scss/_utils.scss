@@ -1,9 +1,21 @@
-@use 'sass:math';
 @use 'sass:color';
+@use 'sass:math';
+
+@function darken-color($color, $percent) {
+  @return color.adjust($color, $lightness: -$percent);
+}
+
+@function lighten-color($color, $percent) {
+  @return color.adjust($color, $lightness: $percent);
+}
+
+@function get-lightness($color) {
+  @return color.channel($color, 'lightness', $space: hsl);
+}
 
 @function soften-color($color, $percent) {
-  @if color.channel($color, "lightness", $space: hsl) < 50% {
-    @return color.adjust($color, $lightness: $percent);
+  @if get-lightness($color) < 50 {
+    @return lighten-color($color, $percent);
   }
-  @return color.adjust($color, $lightness: - math.div($percent, 2));
+  @return darken-color($color, math.div($percent, 2));
 }

@@ -16,18 +16,6 @@ With a reference later in the document defining the URL location:
 
 ***
 
-## Advertisement
-
-__Advertisement :smile:
-
-## Emphasis Section
-
-**This is bold text**
-
-*This is italic text*
-
-~~Strikethrough~~
-
 ## Headings Section
 
 # h1 Heading
@@ -56,6 +44,8 @@ __This is bold text__
 _This is italic text_
 
 ~~Strikethrough~~
+
+__Advertisement :smile:
 
 ## Blockquotes Section
 

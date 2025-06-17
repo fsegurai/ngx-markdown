@@ -1,39 +1,78 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { merge, of, Subject, timer } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  model,
+  ModelSignal,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 
 @Component({
-    selector: 'markdown-clipboard',
-    template: `
-        <button
-            class="markdown-clipboard-button"
-            [class.copied]="copied$ | async"
-            (click)="onCopyToClipboardClick()">
-            {{ copiedText$ | async }}
-        </button>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AsyncPipe],
+  selector: 'markdown-clipboard',
+  template: `
+    <button
+      class="markdown-clipboard-button"
+      [class.copied]="copied()"
+      (click)="onCopyToClipboardClick()">
+      {{ copiedText() }}
+    </button>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClipboardButtonComponent {
-    @Input() buttonTextCopy = 'Copy';
-    @Input() buttonTextCopied = 'Copied!';
+  // * == SERVICE INJECTIONS ==
+  private _destroyRef = inject(DestroyRef);
 
-    private _buttonClick$ = new Subject<void>();
+  // * == INPUTS ==
+  buttonTextCopy: ModelSignal<string> = model('Copy');
+  buttonTextCopied: ModelSignal<string> = model('Copied!');
+  protected readonly copied: WritableSignal<boolean> = signal(false);
+  protected readonly copiedText = computed(() =>
+    this.copied() ? this.buttonTextCopied() : this.buttonTextCopy(),
+  );
 
-    readonly copied$ = this._buttonClick$.pipe(
-        switchMap(() => merge(of(true), timer(3000).pipe(map(() => false)))),
-        distinctUntilChanged(),
-        shareReplay(1),
-    );
+  // * == PRIVATE PROPERTIES ==
+  private timeoutId: ReturnType<typeof setTimeout> | undefined; // To store the setTimeout ID for clearing
 
-    readonly copiedText$ = this.copied$.pipe(
-        startWith(false),
-        map((copied) => (copied ? this.buttonTextCopied : this.buttonTextCopy)),
-    );
+  constructor() {
+    this.registerDestroyCleanup();
+  }
 
-    onCopyToClipboardClick(): void {
-        this._buttonClick$.next();
-    }
+  /**
+   * Handles the click event to copy content to the clipboard.
+   * Sets a "copied" state to true, resets it to false after a timeout, and clears any existing timeouts if applicable.
+   *
+   * @protected - This method is intended for internal use within the component.
+   * @return {void} This method does not return a value.
+   */
+  protected onCopyToClipboardClick(): void {
+    this.copied.set(true);
+
+    if (this.timeoutId) clearTimeout(this.timeoutId);
+
+    this.timeoutId = setTimeout(() => {
+      this.copied.set(false);
+      this.timeoutId = undefined;
+    }, 3000);
+  }
+
+  /**
+   * Clears an existing timeout if it has been set. This method is typically used to clean up resources when the component is destroyed.
+   * The timeout ID is reset to `undefined` after clearing to prevent unintended reuse.
+   *
+   * @private - This method is private and should not be accessed outside of this class
+   * @return {void} This method does not return a value.
+   */
+  private registerDestroyCleanup(): void {
+    this._destroyRef.onDestroy(() => {
+      // This code will run when the component is destroyed
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = undefined; // Optional, but good practice
+      }
+    });
+  }
 }

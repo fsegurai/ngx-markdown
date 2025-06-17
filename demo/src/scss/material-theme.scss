@@ -4,8 +4,8 @@
 @use './typography' as typography;
 @use './utils' as utils;
 
-@use './light-theme' as light-theme;
-@use './dark-theme' as dark-theme;
+@use './themes/light-theme' as light-theme;
+@use './themes/dark-theme' as dark-theme;
 
 @use '../app/app.component.theme' as app-component;
 @use '../app/shared/scrollspy-nav/scrollspy-nav.component.theme' as scrollspy-nav-component;
@@ -64,22 +64,31 @@
   }
 }
 
+@mixin material-element-themes($theme) {
+  @include mat.all-component-colors($theme);
+  @include mat.all-component-bases($theme);
+}
+
+@mixin app-component-themes($theme) {
+  @include app-component.theme($theme);
+  @include scrollspy-nav-component.theme($theme);
+}
+
 @mixin theme($theme, $name) {
   .#{$name}-theme {
-    // native elements
     @include native-element-theme($theme);
-
-    // all components
-    @include mat.all-component-themes($theme);
-
-    // app components
-    @include app-component.theme($theme);
-    @include scrollspy-nav-component.theme($theme);
+    @include material-element-themes($theme);
+    @include app-component-themes($theme);
   }
 }
 
 // common theme styling
 @include typography.typography-styles;
+
+// Include typography once
+@include mat.all-component-typographies(light-theme.$theme);
+// Include density styles once
+@include mat.all-component-densities(light-theme.$theme);
 
 // material core
 @include mat.elevation-classes();

@@ -6,92 +6,148 @@ import { MarkdownRouterLinkOptions } from '../markdown/markdown.component';
   providedIn: 'root',
 })
 export class MarkdownLinkService {
+  // * == SERVICE INJECTIONS ==
   private _router = inject(Router);
 
   /**
-   * Check if the URL is an external URL
-   * @param href - string - URL to check
-   * @private - This method is private and should not be accessed outside of this class
+   * Defines a set of known external URL patterns that should always be opened outside the Angular application.
+   * This includes common web protocols, mailto, tel, SMS, geo, file, and data URIs.
+   */
+  private readonly EXTERNAL_URL_PATTERNS = [
+    /^https?:\/\//, // http:// or https://
+    /^www\./,      // common web prefix (e.g., www.example.com)
+    /^ftp:\/\//,
+    /^ftps:\/\//,
+    /^mailto:/,
+    /^tel:/,
+    /^sms:/,
+    /^geo:/,
+    /^file:\/\//, // Explicitly file:/// to avoid `/localFile:` confusion
+    /^data:/,
+  ];
+
+  /**
+   * Defines a set of known internal URL patterns that should be handled by the Angular router
+   * or specific internal application logic (like scrolling or local file access).
+   * This includes fragment identifiers, custom routerLink flags, relative paths,
+   * absolute paths within the app, and the custom '/localFile:' directive.
+   */
+  private readonly INTERNAL_URL_PATTERNS = [
+    /^#/,              // Fragment identifiers (e.g., #section)
+    /^\/routerLink:/,  // Custom Angular router link flag (e.g., /routerLink:/path/to/route)
+    /^\.\.\//,         // Relative parent directory (e.g., ../some-page)
+    /^\.\//,           // Relative current directory (e.g., ./some-page)
+    /^\//,             // Absolute path within the application (e.g., /dashboard, /users/profile)
+    /^\/localFile:/,   // Custom flag for local file access (e.g., /localFile:assets/doc.pdf)
+  ];
+
+  /**
+   * Checks if a given URL is an external link.
+   * External URLs typically start with a protocol (http, https, ftp, mailto, tel, sms, geo, file, data)
+   * or a known external domain prefix (www.).
+   * @param href The URL string to check.
+   *
+   * @private - This method is private and should not be accessed outside this class
+   * @returns True if the URL is external, false otherwise.
    */
   private isExternalUrl(href: string): boolean {
-    return !href
-      || (href.startsWith('/') && !href.startsWith('/routerLink:'))
-      || href.startsWith('http:')
-      || href.startsWith('https:')
-      || href.startsWith('www.')
-      || href.startsWith('ftp:')
-      || href.startsWith('ftps:')
-      || href.startsWith('mailto:')
-      || href.startsWith('tel:')
-      || href.startsWith('sms:')
-      || href.startsWith('geo:')
-      || href.startsWith('file:')
-      || href.startsWith('data:')
-      || href.startsWith('/localFile:'); // Custom Angular flag for local files. e.g. /localFile:/path/to/file ~ /localFile:favicon.ico
+    if (!href) return false;
+
+    return this.EXTERNAL_URL_PATTERNS.some(pattern => pattern.test(href));
   }
 
   /**
-   * Handle the external URL clicked by the user and open it in a new tab
-   * @param target - HTMLElement - Target element that contains the URL
+   * Handles external URLs by opening them in a new tab.
+   * Removes any custom internal flags like '/localFile': before opening.
+   * @param target The HTMLAnchorElement that triggered the action.
    * @private - This method is private and should not be accessed outside of this class
    */
   private externalUrlHandler(target: HTMLElement): void {
-    let hyperlink = target.getAttribute('href')!;
+    const hyperlink = target.getAttribute('href')!;
 
-    // * Remove custom Angular flags from the URL for local files. e.g. /localFile:/path/to/file ~ /localFile:favicon.ico
-    hyperlink = hyperlink.replace('/localFile:', '');
+    if (!hyperlink) {
+      console.warn('Attempted to handle external URL without href attribute.');
+      return;
+    }
 
     target.setAttribute('target', '_blank');
     window.open(hyperlink, '_blank');
   }
 
   /**
-   * Check if the URL is an internal URL
-   * @param href - string - URL to check
-   * @param element - HTMLAnchorElement - Element that contains the URL
-   * @private - This method is private and should not be accessed outside of this class
+   * Checks if a given URL is an internal link.
+   * Internal URLs are considered those starting with '#' (fragments),
+   * '/routerLink:' (custom Angular routing flag), or '.. /' (relative paths).
+   * It also includes paths that don't match external URL patterns.
+   * @param href The URL string to check.
+   *
+   * @private - This method is private and should not be accessed outside this class
+   * @returns True if the URL is internal, false otherwise.
    */
-  private isInternalUrl(href: string, element: HTMLAnchorElement): boolean {
-    const angularAnchorAttributes = ['_ngcontent', 'data-routerlink', 'routerlink'];
+  private isInternalUrl(href: string): boolean {
+    if (!href) return false;
 
-    return !href || (
-      /^#|\/routerLink|\.\.\//.test(href) ||
-      element.getAttributeNames().some(n => angularAnchorAttributes.some(a => n.toLowerCase().includes(a)))
-    );
+    // If it's explicitly an external URL, it's not internal.
+    if (this.isExternalUrl(href)) return false;
+
+    // Otherwise, check if it matches any of the internal patterns.
+    return this.INTERNAL_URL_PATTERNS.some(pattern => pattern.test(href));
   }
 
   /**
-   * Handle the internal URL clicked by the user and navigate to the path using the router service
-   * @param target - HTMLAnchorElement - Target element that contains the internal URL
-   * @param routerLinkOptions - MarkdownRouterLinkOptions - Options to handle the internal URL
+   * Navigates using the Angular Router with optional fragment and NavigationExtras.
+   * This helper function centralizes the routing logic.
+   * @param commands The path segments for Angular Router.
+   * @param fragment The URL fragment to scroll to (optional).
+   * @param routerLinkOptions Options containing global or path-specific NavigationExtras.
+   * @private - This method is private and should not be accessed outside of this class
+   */
+  private handleRouterNavigation(
+    commands: string,
+    fragment: string | undefined,
+    routerLinkOptions?: MarkdownRouterLinkOptions,
+  ): void {
+    let extras: NavigationExtras = {};
+
+    if (routerLinkOptions?.paths?.[commands]) {
+      extras = { ...routerLinkOptions.paths[commands] }; // Clone to avoid modifying the original
+    } else if (routerLinkOptions?.global) {
+      extras = { ...routerLinkOptions.global }; // Clone to avoid modifying the original
+    }
+
+    if (fragment) {
+      extras.fragment = fragment;
+    }
+
+    void this._router.navigate([commands], extras);
+  }
+
+  /**
+   * Handles navigation for internal URLs using the Angular Router.
+   * Supports hash fragments, custom routerLink paths, and general internal paths.
+   * Applies global or path-specific `NavigationExtras` if provided.
+   * @param target The HTMLAnchorElement that triggered the action.
+   * @param routerLinkOptions Optional options for router link behavior.
    * @private - This method is private and should not be accessed outside of this class
    */
   private internalUrlHandler(target: HTMLAnchorElement, routerLinkOptions?: MarkdownRouterLinkOptions): void {
-    const anchor = target.nodeName.toLowerCase() === 'a' ? target : target.closest('a');
-    const path = anchor!.getAttribute('href')!;
-    /**
-     * Handle the navigation based on the options provided
-     * @param commands - string - Path to navigate to using the router service
-     * @param fragment - string - Fragment to scroll to after navigation
-     */
-    const handleNavigation = (commands: string, fragment?: string) => {
-      let extras: NavigationExtras | undefined;
+    const path = target.getAttribute('href');
 
-      if (routerLinkOptions?.paths) {
-        extras = routerLinkOptions.paths[commands];
-      }
-      if (!extras && routerLinkOptions?.global) {
-        extras = routerLinkOptions.global;
-      }
-      if (fragment) {
-        extras = extras || {};
-        extras.fragment = fragment;
-      }
-
-      void this._router.navigate([commands], extras);
-    };
+    if (!path) {
+      console.warn('Attempted to handle internal URL without href attribute.');
+      return;
+    }
 
     if (routerLinkOptions?.internalBrowserHandler) {
+      // --- Special handling for /localFile: URLs ---
+      if (path.startsWith('/localFile:')) {
+        const localFilePath = path.replace('/localFile:', '');
+        target.setAttribute('target', '_blank'); // Ensure it opens in a new tab
+        window.open(localFilePath, '_blank'); // Open local file paths externally
+        return;
+      }
+      // --- End special handling ---
+
       if (path.startsWith('#')) {
         void this._router.navigate([], { fragment: path.slice(1) });
         return;
@@ -100,56 +156,67 @@ export class MarkdownLinkService {
       if (path.startsWith('/routerLink:')) {
         const routerLinkPath = path.replace('/routerLink:', '');
         const [commands, fragment] = routerLinkPath.split('#');
-        handleNavigation(commands, fragment);
+        this.handleRouterNavigation(commands, fragment);
         return;
       }
 
-      // Fallback for other internal URLs
+      // Default handling for other internal paths (e.g., relative paths, absolute paths)
       const [commands, fragment] = path.split('#');
-      handleNavigation(commands, fragment);
+      this.handleRouterNavigation(commands, fragment);
       return;
     } else {
+      // Assuming internalDesktopHandler implies scrolling to ID without Angular Router
       try {
-        // Validate if there are more than one element with the same id
-        const elements = document.querySelectorAll(path);
+        const elementId = path.startsWith('#') ? path.slice(1) : path;
+        const targetElement = document.getElementById(elementId);
 
-        // Scroll to the first element with the id
-        elements[0].scrollIntoView({ behavior: 'smooth' });
-        return;
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          // If not an ID, and it's a localFile: path, the desktop app would handle opening the file
+          // This part would typically interface with Electron, Capacitor, etc., not directly with window.open
+          console.warn(`MarkdownLinkService: Element with ID "${ elementId }" not found for scrolling. For desktop, consider implementing native file open for "${ path }".`);
+        }
       } catch (error) {
-        console.error(error);
+        console.error('MarkdownLinkService: Error attempting to scroll to element or handle desktop link:', error);
       }
     }
   }
 
   /**
-   * Intercept the click event on an anchor element and handle the URL based on the options provided
-   * @param event - Event - Click event
-   * @param routerLinkOptions - MarkdownRouterLinkOptions - Options to handle the URL
+   * Intercepts click events on anchor elements within Markdown content to handle navigation.
+   * Differentiates between internal and external links based on provided options and URL structure.
+   * @param event The click event object.
+   * @param routerLinkOptions Optional options to configure link handling behavior.
    */
   interceptClick(event: Event, routerLinkOptions?: MarkdownRouterLinkOptions): void {
-    const element = event.target;
-    if (!(element instanceof HTMLAnchorElement)) return;
+    const element = event.target as HTMLAnchorElement; // Cast directly for better type inference
 
-    const href = element.getAttribute('href');
+    // Ensure the clicked element is an anchor or within one
+    const anchor = element.nodeName.toLowerCase() === 'a' ? element : element.closest('a');
 
+    if (!anchor || !anchor.href) return;
+
+    const href = anchor.getAttribute('href');
     if (!href) return;
 
-    // If an internal URL is clicked
-    if ((routerLinkOptions?.internalBrowserHandler || routerLinkOptions?.internalDesktopHandler)
-      && this.isInternalUrl(href, element)) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.internalUrlHandler(element, routerLinkOptions);
-      return;
-    }
+    const isExternalCandidate = this.isExternalUrl(href);
+    const isInternalCandidate = this.isInternalUrl(href);
 
-    // If an external URL is clicked
-    if (routerLinkOptions?.externalBrowserHandler && this.isExternalUrl(href)) {
+    const shouldHandleInternal = routerLinkOptions?.internalBrowserHandler || routerLinkOptions?.internalDesktopHandler;
+    const shouldHandleExternal = routerLinkOptions?.externalBrowserHandler;
+
+    // Prioritize handling if specific options are enabled and the link matches the type
+    if (shouldHandleExternal && isExternalCandidate) {
       event.preventDefault();
       event.stopPropagation();
-      this.externalUrlHandler(element);
-      return;
+      this.externalUrlHandler(anchor);
+    } else if (shouldHandleInternal && isInternalCandidate) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.internalUrlHandler(anchor, routerLinkOptions);
     }
+    // If no specific handler applies, let the default browser behavior occur.
+    // This allows for normal behavior for non-intercepted links (e.g., direct asset downloads).
   }
 }

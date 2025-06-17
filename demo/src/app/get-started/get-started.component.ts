@@ -10,8 +10,10 @@ import { ScrollspyNavLayoutComponent } from '@shared/scrollspy-nav-layout';
   imports: [MarkdownComponent, ScrollspyNavLayoutComponent]
 })
 export default class GetStartedComponent {
+  // * == SERVICE INJECTIONS ==
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
+  // * == PROPERTIES ==
   protected headings: Element[] | undefined;
 
   onLoad(): void {
@@ -32,7 +34,7 @@ export default class GetStartedComponent {
   }
 
   /**
-   * Strip the content of the markdown to remove the first two paragraphs and the table of contents
+   * Strip the content of the Markdown to remove the first two paragraphs and the table of contents
    * @private - This method is private and should not be accessed outside of this class
    */
   private stripContent(): void {

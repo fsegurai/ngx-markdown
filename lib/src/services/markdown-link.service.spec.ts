@@ -45,14 +45,13 @@ describe('MarkdownLinkService', () => {
     expect(service['isExternalUrl']('https://example.com')).toBeTrue();
     expect(service['isExternalUrl']('mailto:test@example.com')).toBeTrue();
     expect(service['isExternalUrl']('tel:+1234567890')).toBeTrue();
-    expect(service['isExternalUrl']('/path')).toBeTrue();
+    expect(service['isExternalUrl']('/path')).toBeFalse();
     expect(service['isExternalUrl']('internal/path')).toBeFalse();
   });
 
   it('should identify internal URLs', () => {
-    const anchor = document.createElement('a');
-    expect(service['isInternalUrl']('#anchor', anchor)).toBeTrue();
-    expect(service['isInternalUrl']('../relative/path', anchor)).toBeTrue();
-    expect(service['isInternalUrl']('http://example.com', anchor)).toBeFalse();
+    expect(service['isInternalUrl']('#anchor')).toBeTrue();
+    expect(service['isInternalUrl']('../relative/path')).toBeTrue();
+    expect(service['isInternalUrl']('http://example.com')).toBeFalse();
   });
 });

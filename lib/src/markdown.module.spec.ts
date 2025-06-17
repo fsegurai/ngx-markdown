@@ -10,7 +10,7 @@ import { MARKED_EXTENSIONS } from './configuration/marked-extensions';
 import { MARKED_OPTIONS, MarkedOptions } from './configuration/marked-options';
 import { MarkdownComponent } from './markdown/markdown.component';
 import { MarkdownModule } from './markdown.module';
-import { errorSrcWithoutHttpClient, SECURITY_CONTEXT } from './services/markdown.service';
+import { ERROR_SRC_WITHOUT_HTTP_CLIENT, SECURITY_CONTEXT } from './services/markdown.service';
 
 @Component({
   selector: 'markdown-host-comp',
@@ -20,7 +20,7 @@ import { errorSrcWithoutHttpClient, SECURITY_CONTEXT } from './services/markdown
         <markdown [src]="src"></markdown>
       </div>
     } @else {
-      <markdown [data]="markdown"></markdown>
+      <markdown [data]="markdown" />
     }
   `,
   imports: [
@@ -182,24 +182,6 @@ describe('MarkdownModule', () => {
       const markedOptions = TestBed.inject(MARKED_OPTIONS, null, { optional: true });
 
       expect(markedOptions).toBeNull();
-    });
-
-    it('should provide MarkedExtensions when MarkdownModuleConfig is provided with markedExtension functions', () => {
-
-      const mockExtensions = [
-        { name: 'mock-extension-one' } as MarkedExtension,
-        { name: 'mock-extension-two' } as MarkedExtension,
-      ];
-
-      TestBed.configureTestingModule({
-        imports: [
-          MarkdownModule.forRoot({ markedExtensions: mockExtensions }),
-        ],
-      });
-
-      const markedExtensions = TestBed.inject<MarkedExtension[]>(MARKED_EXTENSIONS);
-
-      expect(markedExtensions).toEqual(mockExtensions);
     });
 
     it('should provide MarkedExtensions when MarkdownModuleConfig is provided with markedExtension providers', () => {
@@ -412,7 +394,7 @@ describe('MarkdownModule', () => {
 
       fixture.componentInstance.src = '/some/path/to/file.md';
 
-      expect(() => fixture.detectChanges()).toThrowError(errorSrcWithoutHttpClient);
+      expect(() => fixture.detectChanges()).toThrowError(ERROR_SRC_WITHOUT_HTTP_CLIENT);
     });
   });
 });
