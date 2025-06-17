@@ -1,11 +1,11 @@
-<p align="centHTML>
-  <img alt="@fsegurai/ngx-markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png">
+<p align="center" class="intro">
+  <img alt="NGX Markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/public/ngx-markdown.png">
 </p>
 
-<p align="center">
-  <a href="https://github.com/fsegurai/ngx-markdown/actions/workflows/release-library.yml">
-      <img src="https://github.com/fsegurai/ngx-markdown/actions/workflows/release-library.yml/badge.svg"
-          alt="Build Status">
+<p align="center" class="intro">
+  <a href="https://github.com/fsegurai/ngx-markdown">
+      <img src="https://img.shields.io/azure-devops/build/fsegurai/93779823-473d-4fb3-a5b1-27aaa1a88ea2/24/main?label=Build%20Status&"
+          alt="Build Main Status">
   </a>
   <a href="https://github.com/fsegurai/ngx-markdown/releases/latest">
       <img src="https://img.shields.io/github/v/release/fsegurai/ngx-markdown"
@@ -52,7 +52,7 @@
 To add `@fsegurai/ngx-markdown` along with the required marked library to your `package.json` use the following commands.
 
 ```bash
-npm install @fsegurai/ngx-markdown marked@^15.0.3 --save
+npm install @fsegurai/ngx-markdown marked@^15.0.12 --save
 ```
 
 ### Syntax highlighting
@@ -62,7 +62,7 @@ npm install @fsegurai/ngx-markdown marked@^15.0.3 --save
 To add [Prism.js](http://prismjs.com/) library to your `package.json` use the following command.
 
 ```bash
-npm install prismjs@^1.29.0 --save
+npm install prismjs@^1.30.0 --save
 ```
 
 To activate [Prism.js](http://prismjs.com/) syntax highlight, you will need to include...
@@ -259,7 +259,7 @@ Using `markdown` component and/or directive, you will be able to use the `emoji`
 To add [KaTeX](https://katex.org/) library to your `package.json` use the following command.
 
 ```bash
-npm install katex@^0.16.11 --save
+npm install katex@^0.16.22 --save
 ```
 
 To activate [KaTeX](https://katex.org/) math rendering, you will need to include...
@@ -323,7 +323,7 @@ public options: KatexOptions = {
 To add [Mermaid](https://mermaid-js.github.io/) library to your `package.json` use the following command.
 
 ```bash
-npm install mermaid@^11.4.1 --save
+npm install mermaid@^11.6.0 --save
 ```
 
 To activate [Mermaid](https://mermaid-js.github.io/) diagramming and charting tool, you will need to include...
