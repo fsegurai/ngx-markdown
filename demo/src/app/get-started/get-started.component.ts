@@ -22,6 +22,25 @@ export default class GetStartedComponent {
   }
 
   /**
+   * Strip the content of the Markdown to remove the first two paragraphs and the table of contents
+   * @private - This method is private and should not be accessed outside of this class
+   */
+  private stripContent(): void {
+    const markdown = this.elementRef.nativeElement.querySelector('ngx-markdown')!;
+    // Remove the first two paragraphs
+    markdown.querySelectorAll('p:nth-child(-n + 2)').forEach((x) => x.remove());
+    // Remove the "Table of contents" heading and the next sibling (the list)
+    const tocHeading = Array.from(markdown.querySelectorAll('h3')).find(
+      (h) => h.textContent?.trim().toLowerCase() === 'table of contents'
+    );
+    if (tocHeading) {
+      const tocList = tocHeading.nextElementSibling;
+      tocHeading.remove();
+      if (tocList && tocList.tagName.toLowerCase() === 'ul') tocList.remove();
+    }
+  }
+
+  /**
    * Set the headings for the scrollspy
    * @private - This method is private and should not be accessed outside of this class
    */
@@ -31,18 +50,5 @@ export default class GetStartedComponent {
       if (!heading.id) heading.id = heading.textContent!.toLowerCase().replace(/\s/g, '-');
       return heading;
     });
-  }
-
-  /**
-   * Strip the content of the Markdown to remove the first two paragraphs and the table of contents
-   * @private - This method is private and should not be accessed outside of this class
-   */
-  private stripContent(): void {
-    this.elementRef.nativeElement
-      .querySelector('markdown')!
-      .querySelectorAll(
-        'markdown > p:nth-child(-n + 2), #ngx-markdown, #table-of-contents + ul, #table-of-contents',
-      )
-      .forEach((x) => x.remove());
   }
 }
