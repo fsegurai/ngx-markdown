@@ -531,7 +531,7 @@ describe('MarkdownService', () => {
             onDestroy: (callback) => {
             },
           } as EmbeddedViewRef<unknown>,
-        } as ComponentRef<unknown>;
+        } as unknown as ComponentRef<unknown>;
 
         return { componentRef, rootNode };
       }
