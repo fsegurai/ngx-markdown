@@ -36,6 +36,8 @@
     "lint:demo": "ng lint demo --fix",
     "lint:lib": "ng lint lib --fix",
     "lint": "bun lint:lib && bun lint:demo",
+    "lint-ci:demo": "ng lint demo",
+    "lint-ci:lib": "ng lint lib",
     "type-check:demo": "tsc --project ./demo/tsconfig.app.json --inlineSourceMap --noEmit",
     "type-check:lib": "tsc --project ./lib/tsconfig.lib.json --inlineSourceMap --noEmit",
     "watch": "ng build --watch --configuration development",
