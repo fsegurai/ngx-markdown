@@ -42,7 +42,8 @@
     "type-check:lib": "tsc --project ./lib/tsconfig.lib.json --inlineSourceMap --noEmit",
     "watch": "ng build --watch --configuration development",
     "test-local:lib": "ng test",
-    "test-ci_cd:lib": "ng test --no-watch --no-progress --browsers=ChromeHeadless"
+    "test-ci_cd:lib": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
+    "test-ci_cd:coverage:lib": "ng test --no-watch --no-progress --browsers=ChromeHeadless --code-coverage"
   },
   "dependencies": {
     "@angular/animations": "^20.0.4",
@@ -75,6 +76,7 @@
     "@angular/cli": "~20.0.3",
     "@angular/compiler-cli": "^20.0.4",
     "@angular/language-service": "^20.0.4",
+    "@biomejs/biome": "2.5.14",
     "@chiragrupani/karma-chromium-edge-launcher": "^2.4.1",
     "@eslint/js": "^9.29.0",
     "@types/jasmine": "~5.1.8",
