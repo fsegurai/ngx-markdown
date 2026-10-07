@@ -1,5 +1,5 @@
 <p align="center" class="intro">
-  <img alt="NGX Markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/public/ngx-markdown.png">
+  <img alt="Ngx Markdown Logo" src="https://raw.githubusercontent.com/fsegurai/ngx-markdown/main/demo/public/ngx-markdown.png">
 </p>
 
 <p align="center" class="intro">
