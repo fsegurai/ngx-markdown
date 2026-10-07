@@ -1,0 +1,1 @@
+import{E as o,Hb as n,I as i,v as r}from"./chunk-BGA6J36P.js";var p=class t{constructor(){this.httpClient=i(n)}get(e){return this.httpClient.get(e,{responseType:"text"}).pipe(r())}static{this.\u0275fac=function(a){return new(a||t)}}static{this.\u0275prov=o({token:t,factory:t.\u0275fac,providedIn:"root"})}};export{p as a};
