@@ -1,0 +1,11 @@
+@use '../shared/styles/layout';
+
+:host {
+  display: block;
+}
+
+@include layout.split;
+
+textarea {
+  min-height: 360px;
+}

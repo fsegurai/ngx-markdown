@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>&#64;fsegurai/ngx-markdown | Demo</title>
+  <base href="/">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,700|Roboto:300,400,500" rel="stylesheet">
+  <link href="favicon.ico" rel="icon" type="image/x-icon">
+  <!--
+    Mermaid is copied as a static asset (see angular.json "assets") instead of a global "scripts" entry,
+    so the build does not re-bundle its 5.5 MB prebuilt file. The version in the path busts caches on upgrades;
+    `check:demo-mermaid` (run by build:demo) fails if it drifts from the installed mermaid version.
+  -->
+  <script src="mermaid/12.1.0/mermaid.min.js"></script>
+</head>
+<body class="mat-app-background">
+<script>
+  // Apply the stored theme before the app boots, so there is no light/dark flash.
+  // Keep the key and values in sync with LOCAL_STORAGE_THEME_KEY and Theme in demo/src/app.
+  (() => {
+    var theme = 'light';
+    var stored;
+    try {
+      stored = localStorage.getItem('ngx-markdown:theme');
+      if (stored === 'light' || stored === 'dark') theme = stored;
+    } catch (e) {}
+    document.body.classList.add(theme + '-theme');
+  })();
+</script>
+<app-root></app-root>
+</body>
+</html>
