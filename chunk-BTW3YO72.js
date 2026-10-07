@@ -1,4 +1,4 @@
-import{a as E,b as D,c as _,d as L,e as F,f as R,g as T,h as I,i as A,j as O}from"./chunk-NY33LEVP.js";import"./chunk-QKTMIQJI.js";import{a as k,b}from"./chunk-BCIRNEUW.js";import{Ac as M,Bc as x,Ec as S,Ha as c,Ia as o,Ja as n,Ka as v,N as m,aa as f,ab as a,db as p,eb as h,fb as u,ia as d,lc as w,qa as y,zc as C}from"./chunk-KUNPX5WM.js";var l=class l{constructor(){this.elementRef=m(f);this.markdownService=m(w);this.markdown=`## Markdown rules!
+import{a as E,b as D,c as _,d as L,e as F,f as R,g as T,h as I,i as A,j as O}from"./chunk-EM7UXHBI.js";import"./chunk-SJSXRHWC.js";import{a as k,b}from"./chunk-DCRT7ZO6.js";import{Cc as C,Dc as M,Ec as x,Ha as c,Hc as S,Ia as o,Ja as n,Ka as v,N as m,ba as f,db as a,gb as p,hb as h,ia as d,ib as u,oc as w,ta as y}from"./chunk-6WJTZSC5.js";var l=class l{constructor(){this.elementRef=m(f);this.markdownService=m(w);this.markdown=`## Markdown rules!
 ---
 
 ### Syntax highlight
