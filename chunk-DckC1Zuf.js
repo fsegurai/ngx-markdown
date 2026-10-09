@@ -1,1 +1,0 @@
-import{K as Ku,Y as M,kt as Vl,rn as m}from"./main-DEIDU2DI.js";var p=class t{constructor(){this.httpClient=m(Vl)}get(e){return this.httpClient.get(e,{responseType:`text`}).pipe(Ku())}static{this.ɵfac=function(a){return new(a||t)}}static{this.ɵprov=M({token:t,factory:t.ɵfac,providedIn:`root`})}};export{p as t};

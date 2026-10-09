@@ -1,0 +1,1 @@
+import{cr as wu,ln as g,lr as x,x as Dl}from"./chunk-D6AO0_Ol.js";var p=class t{constructor(){this.httpClient=g(Dl)}get(e){return this.httpClient.get(e,{responseType:`text`}).pipe(wu())}static{this.ɵfac=function(a){return new(a||t)}}static{this.ɵprov=x({token:t,factory:t.ɵfac,providedIn:`root`})}};export{p as t};

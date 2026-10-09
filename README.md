@@ -39,6 +39,7 @@
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
+- [Plugins](#plugins)
 - [Renderer](#renderer)
 - [Re-renderer Markdown](#re-render-markdown)
 - [Syntax highlight](#syntax-highlight)
@@ -82,6 +83,13 @@ To activate [Prism.js](http://prismjs.com/) syntax highlight, you will need to i
 _Additional themes can be found by browsing the web such as [Prism-Themes](https://github.com/PrismJS/prism-themes) or [Mokokai](https://github.com/Ahrengot/Monokai-theme-for-Prism.js) for example._
 
 If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `angular.json` example below...
+
+Then provide the Prism plugin, which highlights the code blocks of every `<markdown>` (see
+[Clipboard and Prism plugins](#clipboard-and-prism-plugins)). Without it, nothing is highlighted at render time.
+
+```typescript
+provideMarkdown({ plugins: [withPrism()] })
+```
 
 ```diff
 "styles": [
@@ -252,6 +260,9 @@ If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `ang
 
 #### Emoji plugin
 
+Provide the plugin with `provideMarkdown({ plugins: [withEmoji()] })` (see [Plugins](#plugins)); without it, `[emoji]`
+does nothing (a dev-mode warning names `withEmoji()`).
+
 Using `markdown` component and/or directive, you will be able to use the `emoji` property to activate [Emoji-Toolkit](https://github.com/joypixels/emoji-toolkit) plugin that converts emoji shortnames such as `:heart:` to native Unicode emojis.
 
 ```html
@@ -259,6 +270,14 @@ Using `markdown` component and/or directive, you will be able to use the `emoji`
   I :heart: @fsegurai/ngx-markdown
 </markdown>
 ```
+
+Only the text is converted: shortcodes inside code blocks, inline code, raw HTML tags and link URLs are left as written.
+The label of a link written as `[label](url)` or `[label][ref]` is converted; an autolink (`<https://…>`) or a bare URL
+shows its URL, so it is left as written, like its `href`.
+
+The shortcodes are looked up in Emoji-Toolkit's `emojiList`, with the same result as `joypixels.shortnameToUnicode`
+(alternate shortnames, skin tones, flags and ZWJ sequences included; unknown shortcodes stay as written). With
+`joypixels.ascii = true` (ASCII smileys such as `:)`), `shortnameToUnicode` itself is used.
 
 > :blue_book: You can refer to this [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md) for a complete list of _shortnames_.
 
@@ -294,6 +313,9 @@ If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `ang
 
 #### KaTeX plugin
 
+Provide the plugin with `provideMarkdown({ plugins: [withKatex(options)] })` (see [Plugins](#plugins)); without it,
+`[katex]` does nothing (a dev-mode warning names `withKatex()`).
+
 Using `markdown` component and/or directive, you will be able to use the `katex` property to activate [KaTeX](https://katex.org/) plugin that renders mathematical expression to HTML.
 
 ```html
@@ -324,8 +346,8 @@ extension, so `_`, `*` and `\` inside math are never turned into emphasis or esc
 - The extension is opt-in per parse: without `katex`, `$x$` stays text, and the global `katex` is not needed.
 
 Optionally, you can use the `katexOptions` property to specify [KaTeX options](https://katex.org/docs/options.html),
-plus `nonStandard`. Application-wide defaults go in `provideMarkdown({ katexOptions })` (the `KATEX_OPTIONS` token);
-the `katexOptions` input is merged over them and wins. `displayMode` is set by the delimiters.
+plus `nonStandard`. Application-wide defaults go in `withKatex(options)`; the `katexOptions` input is merged over them
+and wins. `displayMode` is set by the delimiters.
 
 ```typescript
 import {KatexOptions} from '@fsegurai/ngx-markdown';
@@ -400,12 +422,15 @@ npm install mermaid@^12.1.0 --save
 
 Mermaid can be loaded in two ways: on demand, through a loader function (recommended), or as a global script.
 
-**Option 1: load Mermaid on demand (`mermaidLoader`).** Give `provideMarkdown()` a function that imports Mermaid. The
-import becomes a lazy chunk: only pages that render a diagram download Mermaid, and only the diagram types they use.
+Either way, provide the Mermaid plugin with `withMermaid()` (see
+[Mermaid and Mermaid export plugins](#mermaid-and-mermaid-export-plugins)); without it, `[mermaid]` does nothing.
+
+**Option 1: load Mermaid on demand (`loader`).** Give `withMermaid()` a function that imports Mermaid. The import
+becomes a lazy chunk: only pages that render a diagram download Mermaid, and only the diagram types they use.
 
 ```typescript
 provideMarkdown({
-  mermaidLoader: () => import('mermaid').then((m) => m.default),
+  plugins: [withMermaid({ loader: () => import('mermaid').then((m) => m.default) })],
 }),
 ```
 
@@ -416,11 +441,10 @@ provideMarkdown({
 - When the loader fails (e.g. a network error while fetching the chunk), every diagram of that render shows a
   `.mermaid-error` box and the render rejects with a `MermaidRenderError` (the `error` output of `<markdown>`), as for
   any other Mermaid failure. The failed load is not kept: the next render calls the loader again. The load is bounded
-  by the render timeout (`mermaidRenderTimeout`), counted once from when the load starts (renders that join a pending
+  by the render timeout (`renderTimeout`), counted once from when the load starts (renders that join a pending
   load share its remaining time), so a load that never settles fails instead of blocking every later render; with the
   timeout disabled (`0`), a stalled load waits indefinitely.
-- The loader takes precedence over a global `mermaid`. It sets the `MERMAID_LOADER` token, typed `MermaidLoader`
-  (`() => Promise<MermaidLike>`); `MermaidLike` is the structural part of the Mermaid API the library uses, so the
+- The loader takes precedence over a global `mermaid`. It is typed `MermaidLoader` (`() => Promise<MermaidLike>`); `MermaidLike` is the structural part of the Mermaid API the library uses, so the
   library itself never imports `mermaid`, which stays an optional peer.
 - Mermaid pulls in a few CommonJS packages, so the Angular CLI warns about them. List them in the build options of
   `angular.json` to silence the warnings:
@@ -431,7 +455,7 @@ provideMarkdown({
 
 The demo application uses this setup: its pages without diagrams no longer download the 5.5 MB Mermaid script.
 
-**Option 2: load Mermaid as a global script.** Without `mermaidLoader`, the library uses the global `mermaid` of the
+**Option 2: load Mermaid as a global script.** Without a `loader`, the library uses the global `mermaid` of the
 prebuilt file, `node_modules/mermaid/dist/mermaid.min.js`, which must be loaded before a diagram is rendered (otherwise
 rendering throws `ERROR_MERMAID_NOT_LOADED`). It is simpler, needs no bundler support for dynamic imports, but every page
 downloads all of Mermaid (about 5.5 MB) up front.
@@ -478,17 +502,10 @@ Using `markdown` component and/or directive, you will be able to use the `mermai
 ```
 
 #### Global configuration
-You can provide a global configuration for mermaid [configuration options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) to use across your application with the `mermaidOptions` property of `provideMarkdown()`.
+You can provide a global configuration for mermaid [configuration options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) to use across your application with the `withMermaid()` plugin feature (see [Mermaid and Mermaid export plugins](#mermaid-and-mermaid-export-plugins)):
 ```typescript
 provideMarkdown({
-  mermaidOptions: {
-    provide: MERMAID_OPTIONS,
-    useValue: {
-      darkMode: true,
-      look: 'handDrawn',
-      ...
-    },
-  },
+  plugins: [withMermaid({ config: { darkMode: true, look: 'handDrawn' } })],
 }),
 ```
 #### Mermaid 12 appearance
@@ -497,15 +514,12 @@ Mermaid 12 changed how diagrams look when nothing is configured:
 - the layout engine defaults to ELK (`layout: 'elk'`) instead of dagre;
 - most diagrams default to the `redux-color` theme and the `neo` look.
 
-To restore the classic (Mermaid 11) appearance, pin these options in `MERMAID_OPTIONS` (or in the component
-`mermaidOptions`):
+To restore the classic (Mermaid 11) appearance, pin these options in the `config` of `withMermaid()` (or in the
+component `mermaidOptions`):
 
 ```typescript
 provideMarkdown({
-  mermaidOptions: {
-    provide: MERMAID_OPTIONS,
-    useValue: { layout: 'dagre', look: 'classic', theme: 'default' },
-  },
+  plugins: [withMermaid({ config: { layout: 'dagre', look: 'classic', theme: 'default' } })],
 }),
 ```
 
@@ -567,7 +581,7 @@ Without the component (e.g. with the `markdown` pipe and `render()`), or when on
 await markdownService.rerenderMermaid(element, { mermaidOptions: { theme: 'dark', darkMode: true } });
 ```
 
-Its options are merged like a render's (defaults, then `MERMAID_OPTIONS`, then `mermaidOptions`). It goes through the
+Its options are merged like a render's (defaults, then the `config` of `withMermaid()`, then `mermaidOptions`). It goes through the
 shared Mermaid queue and supersedes the element's pending Mermaid render, so the latest call wins.
 
 > :blue_book: Follow official [Mermaid](https://mermaid-js.github.io/) documentation for more details on diagrams and charts syntax.
@@ -609,7 +623,7 @@ The box has no inline styles; style it with the `.mermaid-error` class, e.g.:
 ```
 
 Mermaid's configuration is global to the page, so every `MarkdownService` shares one rendering queue: a render calls
-`mermaid.initialize()` only when its merged options (defaults, then `MERMAID_OPTIONS`, then `mermaidOptions`) differ
+`mermaid.initialize()` only when its merged options (defaults, then `withMermaid()`'s `config`, then `mermaidOptions`) differ
 from the ones last applied, then renders its diagrams before the next render starts. Components with different
 `mermaidOptions` therefore no longer race. If your own code calls `mermaid.initialize()`, the next render with
 unchanged options does not apply them again; render with different options (or load Mermaid only through this library).
@@ -621,7 +635,7 @@ has not drawn yet: they are no longer drawn, their failures are not reported, an
 #### SVG export
 Set `mermaidExport` to add an export button to every rendered diagram (not to the `.mermaid-error` boxes). A click
 downloads the diagram as an SVG file, named `diagram-1.svg`, `diagram-2.svg`… after the position of the diagram in the
-content. It is opt-in, like `clipboard`, and needs `mermaid`:
+content. It is opt-in, like `clipboard`, needs `mermaid`, and is provided with `withMermaidExport()`:
 
 ```html
 <markdown
@@ -649,7 +663,7 @@ content. It is opt-in, like `clipboard`, and needs `mermaid`:
 - **Events:** `mermaidExported` (`MarkdownMermaidExportEvent`: `{ element, svg, filename }`) once the download has been
   triggered, `mermaidExportError` (`MarkdownMermaidExportErrorEvent`: `{ error, element, filename }`, the `error` has
   the `ERROR_MERMAID_EXPORT_FAILED` message and the thrown error as `cause`) when it could not be.
-- **Global options:** `provideMarkdown({ mermaidExportOptions: { provide: MERMAID_EXPORT_OPTIONS, useValue: { buttonComponent, filenamePrefix } } })`.
+- **Global options:** `provideMarkdown({ plugins: [withMermaid(), withMermaidExport({ buttonComponent, filenamePrefix })] })`.
   The inputs win over them, unset inputs never override them, and a button set on the component (a component or a
   template) replaces the global one. Enabling the export stays per component.
 - **Pipe and service:** pass `{ mermaid: true, mermaidExport: true, mermaidExportOptions: { onExported, onExportError } }`
@@ -674,12 +688,11 @@ export class ExportButtonComponent {
 ```
 
 #### Render timeout
-Set the time one `mermaid.render()` call may take with `provideMarkdown({ mermaidRenderTimeout })` (or the
-`MERMAID_RENDER_TIMEOUT` token), in milliseconds. It defaults to `30000`; `0` or `Infinity` disables it. An invalid
+Set the time one `mermaid.render()` call may take with `withMermaid({ renderTimeout })`, in milliseconds. It defaults to `30000`; `0` or `Infinity` disables it. An invalid
 value (a negative number, `NaN`) falls back to `30000` with an `[ngx-markdown]` warning.
 
 ```typescript
-provideMarkdown({ mermaidRenderTimeout: 120000 }) // large diagrams: 2 minutes
+provideMarkdown({ plugins: [withMermaid({ renderTimeout: 120000 })] }) // large diagrams: 2 minutes
 ```
 
 The timeout is a tradeoff:
@@ -737,7 +750,9 @@ If you are using [Angular CLI](https://cli.angular.dev/) you can follow the `ang
 
 #### Clipboard plugin
 
-Using `markdown` component and/or directive, you will be able to use the `clipboard` property to activate [Clipboard](https://clipboardjs.com/) plugin that enable copy-to-clipboard for code block from a single click.
+Provide the plugin with `provideMarkdown({ plugins: [withClipboard(options)] })` (see
+[Clipboard and Prism plugins](#clipboard-and-prism-plugins)); without it, `[clipboard]` does nothing (a dev-mode warning
+names `withClipboard()`). Using `markdown` component and/or directive, you will be able to use the `clipboard` property to activate [Clipboard](https://clipboardjs.com/) plugin that enable copy-to-clipboard for code block from a single click.
 
 ```html
 <markdown
@@ -772,16 +787,11 @@ To customize the default button styling, use the `.markdown-clipboard-button` CS
 
 #### Using global configuration
 
-You can provide a custom component to use globally across your application with the `clipboardOptions` property of `provideMarkdown()`.
+You can provide a custom component to use globally across your application with `withClipboard({ buttonComponent })`:
 
 ```typescript
 provideMarkdown({
-  clipboardOptions: {
-    provide: CLIPBOARD_OPTIONS,
-    useValue: {
-      buttonComponent: ClipboardButtonComponent,
-    },
-  },
+  plugins: [withClipboard({ buttonComponent: ClipboardButtonComponent })],
 })
 ```
 
@@ -821,7 +831,7 @@ export class ExampleComponent {
 
 #### Inputs of a custom component
 
-A custom button component (from `clipboardButtonComponent` or `CLIPBOARD_OPTIONS`) gets these inputs
+A custom button component (from `clipboardButtonComponent` or `withClipboard({ buttonComponent })`) gets these inputs
 (`ClipboardButtonInputs`), set with `ComponentRef.setInput()` when it creates the button:
 
 | Input              | Value                                                                                   |
@@ -908,6 +918,9 @@ A pipe has no outputs: pass the same results as callbacks in the `clipboardOptio
 
 ### Image lightbox
 
+Provide the plugin with `provideMarkdown({ plugins: [withLightbox(options)] })` (see [Plugins](#plugins)); without it,
+`[lightbox]` does nothing (a dev-mode warning names `withLightbox()`).
+
 Set `lightbox` to open the images of the content in a built-in viewer when they are clicked. It has no dependency: the
 viewer is a native `<dialog>` opened with `showModal()`, so it sits in the top layer above the page.
 
@@ -927,7 +940,7 @@ viewer is a native `<dialog>` opened with `showModal()`, so it sits in the top l
   with the content, which closes it.
 - **Options:** `lightboxOptions` (`LightboxOptions`): `wrap` (`true`), and the `aria-label`s `dialogLabel`
   (`Image viewer`), `closeLabel` (`Close`), `previousLabel` (`Previous image`) and `nextLabel` (`Next image`).
-- **Global options:** `provideMarkdown({ lightboxOptions: { provide: LIGHTBOX_OPTIONS, useValue: { wrap: false } } })`.
+- **Global options:** `provideMarkdown({ plugins: [withLightbox({ wrap: false })] })`.
   The `lightboxOptions` input is merged over them, and its unset (`undefined`) values never override them. Enabling the
   lightbox stays per component.
 - **`imageClick`:** emitted only with `lightbox` on, before the viewer opens, with a `MarkdownImageClickEvent`:
@@ -996,6 +1009,38 @@ export class HomeComponent { }
 
 > :bell: `<markdown>` and the `markdown` pipe also work without `provideMarkdown()`: the defaults apply, including
 > HTML sanitization (`SecurityContext.HTML`). Use `provideMarkdown()` to change the configuration.
+
+### Migrating from 21 to 22
+
+22.0.0 contains breaking changes. Check each item below; the CHANGELOG lists them all.
+
+1. **Minimum versions:** Angular `^22`, TypeScript `>=6.0 <6.1`, Node.js `^22.22.3 || ^24.15.0 || >=26` and
+   `marked ^18` (see [Installation](#installation)).
+2. **`MarkdownModule` is removed:** use `provideMarkdown(config)` and import the standalone `MarkdownComponent` /
+   `MarkdownPipe` (see [Migrating from MarkdownModule](#migrating-from-markdownmodule)).
+3. **Optional peer dependencies:** `prismjs`, `emoji-toolkit`, `katex`, `mermaid` and `clipboard` are no longer
+   installed with the library. Install each one you use explicitly.
+4. **Plugins need their `withX()` feature:** the per-plugin fields of `provideMarkdown()` (`katexOptions`,
+   `mermaidOptions`, `mermaidLoader`, `mermaidRenderTimeout`, `mermaidExportOptions`, `clipboardOptions`,
+   `lightboxOptions`) and their tokens are removed. Provide each feature in `provideMarkdown({ plugins: [...] })`;
+   Prism highlighting needs `withPrism()` and `[emoji]` needs `withEmoji()`. See the replacement table in
+   [Migrating to 22: plugins](#migrating-to-22-plugins).
+5. **Asynchronous highlighting:** `MarkdownService.render()` returns a `Promise<void>` and highlights the code blocks
+   after it returns. `await render()` (or use the `ready` output of `<markdown>`) before reading the highlighted
+   markup or the clipboard buttons. Errors (Mermaid, Prism, a missing plugin file) reject the Promise instead of
+   throwing, and every enabled plugin still runs when another one fails (see [Service](#service)).
+6. **`error` output type:** `<markdown>` emits a `MarkdownError` (`Error | HttpErrorResponse | string`) instead of
+   `string | Error`; update handlers typed `(error: string | Error)` (see
+   [Loading and rendering behavior](#loading-and-rendering-behavior)).
+7. **`SANITIZE` token:** `provideMarkdown({ sanitize })` now also accepts a sanitize function, provided as the new
+   `SANITIZE` token. `SECURITY_CONTEXT` is deprecated and will be removed in v23 (see [Sanitization](#sanitization)).
+8. **Emoji in code:** shortcodes inside code blocks, inline code, raw HTML and link URLs are no longer converted (see
+   [Emoji support](#emoji-support)).
+9. **`cacheSrc`:** `src` responses can now be cached per service with `provideMarkdown({ cacheSrc: true })`. It is
+   opt-in, so every load still fetches unless you enable it (see [Caches](#caches)).
+
+KaTeX is also rendered while parsing now (the Auto-Render script is no longer used): see
+[Math rendering](#math-rendering).
 
 ### Migrating from MarkdownModule
 
@@ -1485,6 +1530,7 @@ export interface MarkdownPipeOptions {
   onFrontMatter?: (frontMatter: MarkdownFrontMatter) => void;
   headingIds?: boolean;
   onHeadings?: (headings: MarkdownHeading[]) => void;
+  plugins?: MarkdownPluginToggles; // see [Plugins](#plugins)
 }
 ```
 
@@ -1524,6 +1570,359 @@ and Mermaid export buttons created by the previous `render` of the same element,
 `cleanup(element)` when you discard that content.
 Each `MarkdownService` parses with its own `Marked` instance, so `MARKED_EXTENSIONS` and the configured renderer never
 modify the global `marked` object.
+
+## Plugins
+
+This is the configuration of every optional feature of the library: **a plugin works only when its `withX()` feature is
+in `provideMarkdown({ plugins: [...] })`**, and its global options are the options of that feature. Components then
+enable it with its input (`[katex]`, `[mermaid]`, `[clipboard]`…) or the `[plugins]` record.
+
+```typescript
+import {
+  provideMarkdown,
+  withClipboard,
+  withEmoji,
+  withKatex,
+  withLightbox,
+  withMermaid,
+  withMermaidExport,
+  withPrism,
+} from '@fsegurai/ngx-markdown';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideMarkdown({
+      plugins: [
+        withPrism({ lineNumbers: true }),
+        withKatex({ throwOnError: false }),
+        withMermaid({ loader: () => import('mermaid').then((m) => m.default), config: { look: 'classic' } }),
+        withMermaidExport(),
+        withClipboard({ buttonComponent: ClipboardButtonComponent }),
+        withEmoji(),
+        withLightbox(),
+      ],
+      // plain Marked extensions need no plugin
+      markedExtensions: [{ provide: MARKED_EXTENSIONS, useFactory: gfmHeadingId, multi: true }],
+    }),
+  ],
+};
+```
+
+Upgrading from 21.x or an earlier 22 pre-release? See [Migrating to 22: plugins](#migrating-to-22-plugins).
+
+The Markdown pipeline runs **plugins**: plain objects with hooks that the service calls in a fixed order. There are two
+kinds:
+
+| Kind | Plugins | Registration |
+| --- | --- | --- |
+| Core built-ins | `frontMatter`, `baseUrl` | Always registered, nothing to provide: they have no dependency and are tiny, so tree-shaking would gain nothing. |
+| Feature plugins | `emoji` (`withEmoji()`), `katex` (`withKatex()`), `lightbox` (`withLightbox()`), `clipboard` (`withClipboard()`), `prism` (`withPrism()`), `mermaid` (`withMermaid()`), `mermaidExport` (`withMermaidExport()`), your own | Provided with a `withX()` feature in `provideMarkdown({ plugins: [...] })`, so their code is only bundled when used. |
+
+A registered plugin still runs only where it is **enabled**: per component with the `[plugins]` input, or with its
+specific input (`[frontMatter]`, `[baseUrl]`…), and per parse/render with the `plugins` option of the `markdown` pipe and
+of `MarkdownService.parse()`/`render()`:
+
+```html
+<!-- true enables, false disables, an object enables and overrides options -->
+<markdown [data]="markdown" [plugins]="{ frontMatter: true, baseUrl: { url: 'docs/' } }"></markdown>
+<!-- a specific input wins over the record: front-matter stays off here -->
+<markdown [data]="markdown" [plugins]="{ frontMatter: true }" [frontMatter]="false"></markdown>
+<div [innerHTML]="markdown | markdown: { plugins: { externalLinks: true } } | async"></div>
+```
+
+- A plugin left out of the record follows its `enabledByDefault` (default `false`).
+- Options are merged in this order, `undefined` never overriding: the plugin `defaults`, then the `withX(options)`
+  value, then the `[plugins]` options object, then the specific inputs.
+- A plugin enabled but not provided (by the record or by its specific input, e.g. `[katex]` without `withKatex()`) is
+  ignored, with one `[ngx-markdown]` warning per plugin in dev mode that names the `withX()` to add.
+  `MarkdownService.rerenderMermaid()` without `withMermaid()` throws `ERROR_MERMAID_NOT_PROVIDED`.
+- Like the other rendering options, `[plugins]` is read when the content renders: changing it alone does not re-render.
+
+### Emoji, KaTeX and lightbox plugins
+
+```typescript
+import { provideMarkdown, withEmoji, withKatex, withLightbox } from '@fsegurai/ngx-markdown';
+
+provideMarkdown({
+  plugins: [
+    withEmoji(), // needs the joypixels global (Emoji-Toolkit), no options
+    withKatex({ throwOnError: false, macros: { '\\RR': '\\mathbb{R}' } }), // needs the katex global
+    withLightbox({ wrap: false }),
+  ],
+});
+```
+
+```html
+<!-- the specific inputs still work, and win over the record -->
+<markdown [data]="markdown" emoji katex [katexOptions]="{ errorColor: '#c00' }" lightbox (imageClick)="open($event)"></markdown>
+<!-- or the record: an options object enables the plugin and overrides its options -->
+<markdown [data]="markdown" [plugins]="{ emoji: true, katex: { output: 'mathml' }, lightbox: true }"></markdown>
+```
+
+- `[emoji]`, `[katex]` and `[lightbox]` are unset by default, so the `[plugins]` record decides; `false` disables the
+  plugin even when the record enables it. `[katexOptions]` and `[lightboxOptions]` are merged over the record options.
+  `imageClick` is emitted however the lightbox is enabled.
+- KaTeX is an `enforce: 'pre'` plugin: it inserts the rendered math before the `postSanitize` hooks of the other plugins
+  run, so they see the final math HTML.
+
+
+### Clipboard and Prism plugins
+
+```typescript
+import { provideMarkdown, withClipboard, withPrism } from '@fsegurai/ngx-markdown';
+
+provideMarkdown({
+  plugins: [
+    withClipboard({ languageButton: true }), // needs the ClipboardJS global
+    withPrism({ lineNumbers: true }), // needs the Prism global; enabled by default once provided
+  ],
+});
+```
+
+```html
+<!-- clipboard: per component, with its input or the record -->
+<markdown [data]="markdown" clipboard [clipboardButtonTemplate]="button" (copied)="onCopied($event)"></markdown>
+<markdown [data]="markdown" [plugins]="{ clipboard: { buttonTextCopy: 'Copy code' } }"></markdown>
+<!-- prism: highlights every <markdown> once provided; the Prism inputs are its per-component options -->
+<markdown [data]="markdown" lineHighlight line="2-4" [lineNumbers]="false"></markdown>
+<markdown [data]="markdown" [plugins]="{ prism: false }"></markdown>
+```
+
+- `withClipboard(options)` takes `ClipboardOptions` (`buttonComponent`, `buttonTextCopy`,
+  `buttonTextCopied`, `languageButton`). `[clipboard]` is unset by default (the record decides); the `clipboard*`
+  inputs are merged over the record options, and `copied`/`copyError` are emitted however the plugin is enabled. A
+  button set by a higher layer (a per-component template or component) replaces the global button component.
+- `withPrism(options)` takes `PrismOptions`: `lineNumbers`, `start`, `lineHighlight`, `line`, `lineOffset`,
+  `commandLine`, `filterOutput`, `host`, `prompt`, `output`, `user` (the classes and `data-*` attributes of Prism's
+  Line Numbers, Line Highlight and Command Line plugins). The `<markdown>` inputs of the same names are merged over them
+  (unset inputs never override). It is `enabledByDefault` and `enforce: 'pre'`: it sets the `pre` attributes before the
+  other `render` hooks run. A hook of another plugin that throws (e.g. the clipboard without ClipboardJS) does not stop
+  the highlighting: the code is still highlighted and the render then rejects with that error. The clipboard reads the
+  languages of the code blocks before the highlighting marks the blocks without one `language-none`. Without
+  `withPrism()`, nothing is highlighted at render time and the Prism inputs do nothing.
+- `MarkdownService.highlight(element)` keeps working on its own (with or without `withPrism()`).
+
+
+### Mermaid and Mermaid export plugins
+
+```typescript
+import { provideMarkdown, withMermaid, withMermaidExport } from '@fsegurai/ngx-markdown';
+
+provideMarkdown({
+  plugins: [
+    withMermaid({
+      loader: () => import('mermaid'), // or the `mermaid` global of its script build when left out
+      config: { theme: 'neutral' }, // the `mermaid.initialize()` configuration
+      renderTimeout: 30000, // per `mermaid.render()` call (and the load); 0 or Infinity disables it
+    }),
+    withMermaidExport({ filenamePrefix: 'chart' }), // requires withMermaid()
+  ],
+});
+```
+
+```html
+<!-- per component, with the inputs or the record -->
+<markdown [data]="markdown" mermaid [mermaidOptions]="{ theme: 'dark' }" mermaidExport></markdown>
+<markdown [data]="markdown" [plugins]="{ mermaid: { config: { theme: 'dark' } }, mermaidExport: true }"></markdown>
+```
+
+- `withMermaid(options)` takes `MermaidPluginOptions`: `config` (merged over `{ startOnLoad: false, securityLevel:
+  'strict' }`), `loader`, `renderTimeout`. `config` is merged **key by key** across the layers (`withMermaid()`, the
+  record, then `[mermaidOptions]`), so a per-component `{ theme: 'dark' }` keeps the other keys of the global one.
+- `[mermaid]` and `[mermaidExport]` are unset by default (the record decides); `false` disables the plugin even when
+  the record enables it. A `[mermaidOptions]` change re-renders the diagrams alone (no parse), whether `[mermaid]` or the
+  record enabled Mermaid; so does `MarkdownService.rerenderMermaid(element, options, viewContainerRef)`, which runs the
+  `rerender` hooks of both plugins (it throws `ERROR_MERMAID_NOT_PROVIDED` without `withMermaid()`).
+- `withMermaidExport(options)` takes `buttonComponent` and `filenamePrefix`; the `mermaidExport*` inputs are merged over
+  them (a per-component button replaces the global one), and `mermaidExported`/`mermaidExportError` are emitted however
+  the export is enabled. The export only adds buttons where Mermaid is enabled too, and needs a `ViewContainerRef`
+  (`ERROR_MERMAID_EXPORT_VIEW_CONTAINER_REQUIRED`: the render rejects before any diagram is drawn).
+- Plugin order: the export always runs after Mermaid, whatever their registration order (it `requires` Mermaid), and
+  does not run when Mermaid's checks fail, so a failed `rerenderMermaid()` leaves the existing buttons in place. A
+  plugin that fails (e.g. `withClipboard()` without ClipboardJS) does not stop the diagrams. When several plugins fail,
+  the first one in plugin order wins.
+
+### Migrating to 22: plugins
+
+22.0.0 removes the per-plugin configuration of `provideMarkdown()` and its injection tokens, with no compatibility
+bridge: every optional feature is now a plugin, provided with its `withX()` feature. **A plugin works only when its
+feature is provided**: a component enabling a plugin that is not provided (`[katex]`, `[mermaid]`, `[clipboard]`…)
+gets nothing, and one `[ngx-markdown]` warning per plugin in dev mode names the `withX()` to add. Prism highlighting
+(and the `pre` attributes of `[lineNumbers]`, `[lineHighlight]`, `[commandLine]`) now needs `withPrism()`.
+
+| Removed | Replacement |
+| --- | --- |
+| `provideMarkdown({ katexOptions })`, `KATEX_OPTIONS` | `plugins: [withKatex(katexOptions)]` |
+| `provideMarkdown({ mermaidOptions: { provide: MERMAID_OPTIONS, useValue } })`, `MERMAID_OPTIONS` | `plugins: [withMermaid({ config })]` |
+| `provideMarkdown({ mermaidLoader })`, `MERMAID_LOADER` | `plugins: [withMermaid({ loader })]` |
+| `provideMarkdown({ mermaidRenderTimeout })`, `MERMAID_RENDER_TIMEOUT` | `plugins: [withMermaid({ renderTimeout })]` |
+| `provideMarkdown({ mermaidExportOptions: { provide: MERMAID_EXPORT_OPTIONS, useValue } })`, `MERMAID_EXPORT_OPTIONS` | `plugins: [withMermaidExport(options)]` |
+| `provideMarkdown({ clipboardOptions: { provide: CLIPBOARD_OPTIONS, useValue } })`, `CLIPBOARD_OPTIONS` | `plugins: [withClipboard(options)]` |
+| `provideMarkdown({ lightboxOptions: { provide: LIGHTBOX_OPTIONS, useValue } })`, `LIGHTBOX_OPTIONS` | `plugins: [withLightbox(options)]` |
+| `[emoji]` without a feature | `plugins: [withEmoji()]` |
+| highlighting whenever the `Prism` global is loaded | `plugins: [withPrism(options?)]` |
+
+Unchanged: `MARKED_OPTIONS` / `markedOptions`, `MARKED_EXTENSIONS` / `markedExtensions`, `loader`, `cacheSrc`,
+`sanitize`, every per-component input (`[katex]`, `[katexOptions]`, `[mermaid]`, `[mermaidOptions]`, `[clipboard]`,
+`clipboard*`, `[emoji]`, `[lightbox]`, `[lightboxOptions]`, `[mermaidExport]`, `mermaidExport*`, the Prism inputs) and
+the matching `ParseOptions`/`RenderOptions` of the pipe and the service: they still win over the `[plugins]` record.
+The option types (`KatexOptions`, `ClipboardOptions`, `LightboxOptions`, `MermaidExportOptions`, `MermaidLoader`,
+`MermaidAPI`…) are still exported.
+
+Before (21.x):
+
+```typescript
+provideMarkdown({
+  katexOptions: { throwOnError: false },
+  mermaidLoader: () => import('mermaid').then((m) => m.default),
+  mermaidOptions: { provide: MERMAID_OPTIONS, useValue: { look: 'handDrawn' } },
+  mermaidRenderTimeout: 60000,
+  mermaidExportOptions: { provide: MERMAID_EXPORT_OPTIONS, useValue: { filenamePrefix: 'chart' } },
+  clipboardOptions: { provide: CLIPBOARD_OPTIONS, useValue: { buttonComponent: ClipboardButtonComponent } },
+  lightboxOptions: { provide: LIGHTBOX_OPTIONS, useValue: { wrap: false } },
+  markedExtensions: [{ provide: MARKED_EXTENSIONS, useFactory: gfmHeadingId, multi: true }],
+});
+```
+
+After (22.0.0):
+
+```typescript
+provideMarkdown({
+  plugins: [
+    withKatex({ throwOnError: false }),
+    withMermaid({
+      loader: () => import('mermaid').then((m) => m.default),
+      config: { look: 'handDrawn' },
+      renderTimeout: 60000,
+    }),
+    withMermaidExport({ filenamePrefix: 'chart' }),
+    withClipboard({ buttonComponent: ClipboardButtonComponent }),
+    withLightbox({ wrap: false }),
+    withEmoji(), // if a component uses [emoji]
+    withPrism(), // if the Prism global highlights your code blocks
+  ],
+  markedExtensions: [{ provide: MARKED_EXTENSIONS, useFactory: gfmHeadingId, multi: true }], // unchanged
+});
+```
+
+A token provided directly (e.g. `{ provide: MERMAID_OPTIONS, useValue }` in a component's `providers`) has no
+replacement token: give that component's injector its own `provideMarkdown({ plugins: [...] })` (it creates a
+`MarkdownService` for it, which reads `MARKED_OPTIONS` and `MARKED_EXTENSIONS` from the parent injector).
+
+Behaviour of a render also changed: `MarkdownService.render()` (and `rerenderMermaid()`) no longer throw when a plugin
+cannot run (missing ClipboardJS, Mermaid or `ViewContainerRef`); every enabled plugin still runs, and the returned
+Promise rejects with the first error in plugin order. `<markdown>` emits it through `error`, as before.
+
+### Marked extensions or plugins?
+
+`MARKED_EXTENSIONS` (`provideMarkdown({ markedExtensions })`, see [Marked extensions](#marked-extensions)) stay fully
+supported and are not part of the plugin migration: use them for a plain Marked extension (e.g. `marked-gfm-heading-id`)
+that applies to every parse of the service. Write a plugin when the feature also needs a per-component toggle
+(`[plugins]`), options merged per component, a `render` hook on the element (DOM work, views) or a cleanup. Both work
+together: the plugin `walkTokens` run before those of `MARKED_EXTENSIONS`, `MARKED_EXTENSIONS` tokenizers are tried
+before the plugin tokenizers, and `MARKED_EXTENSIONS` renderer overrides stay in the renderer chain.
+
+### Writing a plugin
+
+A plugin implements `MarkdownPlugin<Options>`; every hook is optional:
+
+```typescript
+export interface MarkdownPlugin<O extends object> {
+  readonly name: string; // its key in [plugins]; a later registration with the same name replaces it
+  readonly enabledByDefault?: boolean; // runs without being enabled per component (default false)
+  readonly workerSafe?: boolean; // reserved for the opt-in parse worker
+  readonly enforce?: 'pre' | 'post'; // runs before / after the plugins without it
+  readonly defaults?: Partial<O>;
+  preprocess?(markdown: string, ctx: MarkdownParseContext<O>): string;
+  markedExtensions?(ctx: MarkdownParseContext<O>): MarkedExtension[];
+  readonly tokenizerExtensions?: readonly MarkdownTokenizerExtension<O>[];
+  postSanitize?(html: string, ctx: MarkdownParseContext<O>): string;
+  render?(element: HTMLElement, ctx: MarkdownRenderContext<O>): MarkdownRenderResult;
+  rerender?(element: HTMLElement, ctx: MarkdownRenderContext<O>): MarkdownRenderResult;
+  cleanup?(element: HTMLElement): void;
+}
+```
+
+The hooks run in this order, each for the enabled plugins in plugin order: the core built-ins first, then the
+`enforce: 'pre'` plugins, the plugins without `enforce`, and the `enforce: 'post'` plugins. Within a group, a plugin
+runs after the plugins of the group it `requires`, in registration order otherwise (a requirement in a later group
+does not move it: `enforce` wins; a requirement cycle keeps registration order).
+
+1. `preprocess`: the Markdown text, after the indentation trim (and the HTML decoding of transcluded content).
+2. `markedExtensions`: the Marked extensions of the parse, called once per parse. Their `walkTokens` run before those of
+   `MARKED_EXTENSIONS` and of the Marked options; `async: true` makes the parse asynchronous; `renderer` methods run
+   before the configured renderer (`MARKED_OPTIONS`, `MARKED_EXTENSIONS`, `MarkdownService.renderer`) and fall back to it
+   when they return `false` (the heading ids and `onHeadings` see their output). Other fields (`tokenizer`, `hooks`,
+   `extensions`…) are ignored, with a dev-mode warning.
+   `tokenizerExtensions` (`{ name, level, start?, tokenizer, renderer?, childTokens? }`, as in Marked's `extensions`)
+   are registered once per service, but only work in the parses the plugin is enabled in; each function gets the
+   parse context as its last argument (`tokenizer(src, tokens, ctx)`, `renderer(token, ctx)`).
+3. Marked parses, then the core sanitizes the HTML (`sanitize`).
+4. `postSanitize`: the sanitized HTML. What it inserts is **not** sanitized: escape it.
+5. `render`: the element holding the inserted HTML, once per render. It may return a cleanup function (or a Promise of
+   one). The hooks start one after another, with an abort check before each, and run concurrently; `render()` (and the
+   `ready` output) waits for them. Each hook is isolated: one that throws synchronously stops neither the others nor
+   their `signal`; `render()` never throws, it rejects with the first error in plugin order (thrown or rejected) once
+   every started hook has settled. Only the plugins that `require` a plugin whose hook threw do not start.
+6. Cleanup: before the next render of the element, on `MarkdownService.cleanup()` and when `<markdown>` is destroyed,
+   the cleanup functions run (last first), then each plugin's `cleanup(element)`.
+
+Two more fields: `validate(ctx)` runs for every enabled plugin before any `preprocess` hook (throw there when the parse
+cannot run, e.g. a missing library: no other hook, and no `onFrontMatter`, has run), and `exclusiveOptions` lists groups
+of options that replace each other across the option layers (e.g. `[['buttonComponent', 'buttonTemplate']]`: a
+per-component template replaces a global component). `nestedOptions` lists options whose object values are merged key
+by key across the layers (Mermaid's `config`); `requires` names the plugins this one works with (it runs after them,
+does not run when one of their hooks threw in the same render, and a dev-mode warning says when one is not provided); `rerender(element, ctx)` is a partial re-render outside of the full render (no parse, no
+cleanup of the other plugins), e.g. `MarkdownService.rerenderMermaid()`.
+
+Each hook gets a context: `options` (merged as above), `platform` (`'browser'` or `'server'`), `injector` (the injector
+of the `MarkdownService`), `state` (a fresh object per parse, shared by the parse hooks and tokenizer extensions of that
+parse, and per render) and `serviceState` (one object per plugin and service, e.g. for a cache). The `render` context adds `signal` (aborted when the render is superseded or the element cleaned up),
+`viewContainerRef`, `onCleanup(fn)` (registers a cleanup at once, e.g. before asynchronous work: it still runs when
+the hook later rejects) and `isEnabled(name)` (whether another plugin is enabled in the same render).
+
+Example: open the external links of the content in a new tab.
+
+```typescript
+import { type MarkdownPlugin, type MarkdownPluginFeature, withMarkdownPlugin } from '@fsegurai/ngx-markdown';
+
+interface ExternalLinksOptions {
+  target?: string;
+  rel?: string;
+}
+
+const externalLinksPlugin: MarkdownPlugin<ExternalLinksOptions> = {
+  name: 'externalLinks',
+  defaults: { target: '_blank', rel: 'noopener noreferrer' },
+  render(element, { options }) {
+    const links = Array.from(element.querySelectorAll<HTMLAnchorElement>('a[href^="http://"], a[href^="https://"]'));
+    for (const link of links) {
+      link.setAttribute('target', options.target ?? '_blank');
+      link.setAttribute('rel', options.rel ?? 'noopener noreferrer');
+    }
+    return () => {
+      for (const link of links) {
+        link.removeAttribute('target');
+        link.removeAttribute('rel');
+      }
+    };
+  },
+};
+
+export function withExternalLinks(options?: ExternalLinksOptions): MarkdownPluginFeature {
+  return withMarkdownPlugin(externalLinksPlugin, options);
+}
+
+// app.config.ts
+provideMarkdown({ plugins: [withExternalLinks({ rel: 'noopener' })] });
+```
+
+```html
+<markdown [data]="markdown" [plugins]="{ externalLinks: true }"></markdown>
+```
+
+`withMarkdownPlugin(plugin, options?, providers?)` returns the feature; its third argument adds providers the plugin
+reads through `ctx.injector`. This example is tested end to end in the library (`external-links.example.spec.ts`).
 
 ## Renderer
 
@@ -1596,6 +1995,14 @@ update(){
 
 > :blue_book: Refer to the `@fsegurai/ngx-markdown` [re-render demo](https://fsegurai.github.io/ngx-markdown/rerender) for a live example.
 
+### Caches
+
+Each `MarkdownService` keeps small caches (the last 50 entries each), so repeated renders do less work:
+
+- **`src` text (opt-in):** with `provideMarkdown({ cacheSrc: true })`, the same `src` is fetched once and shared by every `<markdown>` that loads it, including while the request is pending and when a component is mounted again. There is no expiry: a re-mounted component gets the cached text, not updated server content. A failed request is not cached, and `reload()` drops the cache, so every `src` is fetched again. Off by default: every load fetches, and the browser HTTP cache applies.
+- **KaTeX output:** identical math with the same `displayMode` and options is rendered once. An expression KaTeX throws on is never cached, nor math whose options hold a class instance or a symbol (they have no stable key); with a `macros` option, a parse stops using the cache once an expression may define a global macro (`\gdef`, `\newcommand`…).
+- **Mermaid SVG:** an identical diagram (same source and merged options, including the theme) is drawn from the cache with fresh element ids. Diagrams with interactions (`click`, `call`, `href`, `callback`, `link`) and failed diagrams are always rendered by Mermaid. An explicit `rerenderMermaid()` never reads the cache (it refreshes it), so it still redraws after the web fonts load or after a global `mermaid.initialize()`.
+
 ## Syntax highlight
 
 When using static Markdown, you are responsible to provide the code block with a related language.
@@ -1621,6 +2028,33 @@ When using variable binding you can optionally use `language` pipe to specify th
 ```html
 <markdown [data]="markdown | language : 'typescript'"></markdown>
 ```
+
+## Long documents
+
+`<markdown>` renders long documents without one long main-thread task: a large rendered document (16 KB of HTML or more)
+is inserted in three batches of top-level elements, one frame apart (the top of the document first, then the rest in
+two halves), and the plugins (highlighting, clipboard buttons) work in chunks. `headings`, `metadata` and `ready` are emitted once the whole document is in place. Nothing needs to be
+configured.
+
+The browser still has to lay out and paint the whole document. For very long documents, you can let it skip the blocks
+that are off screen with `content-visibility` (opt-in, in your global styles):
+
+```css
+markdown.long-document > * {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+```
+
+```html
+<markdown class="long-document" [src]="'docs/handbook.md'"></markdown>
+```
+
+On a 5000-line document it lowered the total blocking time by about a third (Chromium 478 → 274 ms, Firefox 700 →
+468 ms). Caveats: until a
+block has been rendered once, its height is the 500px estimate, so the scrollbar size and position can shift while
+scrolling, and a jump to an anchor far down the page (`#section`) can land slightly off before the blocks above it are
+laid out. The off-screen content stays in the DOM (find-in-page and accessibility still see it).
 
 ## SSR / prerendering
 
