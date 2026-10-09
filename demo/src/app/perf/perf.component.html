@@ -1,0 +1,27 @@
+<section class="perf">
+  <h1>Performance</h1>
+  <p class="perf-summary">
+    {{ lines }} generated lines · katex {{ katex ? 'on' : 'off' }} · mermaid {{ mermaid ? 'on' : 'off' }} · clipboard
+    {{ clipboard ? 'on' : 'off' }} · emoji {{ emoji ? 'on' : 'off' }} · line numbers {{ prism ? 'on' : 'off' }}
+    @if (repeat > 1) {
+      · rendered {{ repeat }} times
+    }
+    @if (readyIn() !== null) {
+      · <strong>ready in {{ readyIn() }} ms</strong>
+    } @else {
+      · rendering…
+    }
+  </p>
+
+  @if (shown()) {
+    <markdown
+      [data]="markdown"
+      [katex]="katex"
+      [mermaid]="mermaid"
+      [mermaidOptions]="mermaidOptions()"
+      [clipboard]="clipboard"
+      [emoji]="emoji"
+      [lineNumbers]="prism"
+      (ready)="onReady()" />
+  }
+</section>

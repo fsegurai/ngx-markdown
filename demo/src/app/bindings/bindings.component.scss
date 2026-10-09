@@ -1,0 +1,25 @@
+@use '../shared/styles/layout';
+
+:host {
+  display: block;
+}
+
+@include layout.split;
+
+textarea {
+  min-height: 360px;
+}
+
+.load-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.front-matter-metadata {
+  overflow-x: auto;
+  padding: 12px 16px;
+  border-radius: 4px;
+  background: rgba(127, 127, 127, 0.12);
+  font-size: 13px;
+}

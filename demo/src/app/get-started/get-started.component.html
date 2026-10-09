@@ -1,0 +1,7 @@
+<app-scrollspy-nav-layout [headings]="headings()">
+  <h1 id="getting-started">Get Started</h1>
+  @if (readme(); as readme) {
+    <ngx-markdown [data]="readme" [emoji]="true" [headingIds]="true"
+              (headings)="onHeadings($event)" (error)="onRenderError($event)" />
+  }
+</app-scrollspy-nav-layout>

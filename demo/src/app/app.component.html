@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <h1 class="lib-title">&#64;fsegurai/ngx-markdown</h1>
+    <span class="spacer"></span>
+    <button (click)="toggleTheme()" mat-icon-button type="button">
+      <mat-icon>
+        <img [hidden]="theme() === 'light'" src="icon-light-on.svg" alt="Light theme">
+        <img [hidden]="theme() === 'dark'" src="icon-light-off.svg" alt="Dark theme">
+      </mat-icon>
+    </button>
+    <a href="https://github.com/fsegurai/ngx-markdown" mat-icon-button>
+      <img class="github-icon" src="icon-github.svg" alt="GitHub">
+    </a>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<nav #tabHeader [tabPanel]="tabPanel" backgroundColor="primary" disableRipple fitInkBarToContent
+     mat-stretch-tabs="false" mat-tab-nav-bar>
+  @for (route of routes; track route) {
+    <!-- biome-ignore lint/a11y/useValidAnchor: routerLink renders the href at runtime -->
+    <a #tabLink="routerLinkActive" [active]="tabLink.isActive"
+       [routerLink]="route.path"
+       mat-tab-link
+       routerLinkActive>
+      <div class="tab-label">
+        <img src="icon-{{route.path}}.svg" alt="{{ route.data?.['label'] }}">
+        <span>{{ route.data?.['label'] }}</span>
+      </div>
+    </a>
+  }
+</nav>
+
+<mat-tab-nav-panel #tabPanel (animationend)="onRouteAnimationEnd($event)" class="outlet-wrapper">
+  <router-outlet #outlet="outlet" />
+</mat-tab-nav-panel>
