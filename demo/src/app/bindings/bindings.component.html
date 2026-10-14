@@ -1,0 +1,169 @@
+<app-scrollspy-nav-layout [headings]="headings()">
+  <h1>Bindings</h1>
+
+  <section>
+    <h2 id="remote-url">Remote Url</h2>
+
+    <markdown>
+      Using component with `src` property to fetch remote markdown file `app/bindings/remote/demo.md`
+    </markdown>
+
+    <markdown [src]="'app/bindings/remote/demo.md'" />
+
+    <markdown> Using component with static `python` code block</markdown>
+
+    <markdown [data]="demoPython$ | async | language : 'python'" />
+
+    <markdown> Using directive with `src` property to fetch remote html file `app/bindings/remote/demo.html`</markdown>
+
+    <div [src]="'app/bindings/remote/demo.html'" markdown></div>
+
+    <markdown> Using directive with `src` property to fetch remote C++ file `app/bindings/remote/demo.cpp`</markdown>
+
+    <div [src]="'app/bindings/remote/demo.cpp'" markdown></div>
+  </section>
+
+  <section>
+    <h2 id="variable-binding">Variable Binding</h2>
+
+    <markdown>
+      Using component or directive with `data` property allow to bind a variable that will update the DOM when value
+      changes
+    </markdown>
+
+    <div class="split">
+      <mat-form-field appearance="fill" color="accent" class="split-item">
+        <textarea cdkTextareaAutosize="true" [(ngModel)]="markdown" matInput></textarea>
+      </mat-form-field>
+
+      <markdown [data]="markdown" class="split-item" />
+    </div>
+
+    <markdown>
+      Using `language` pipe you can specify the language of the variable content for synthax highlights
+    </markdown>
+
+    <markdown [src]="'app/bindings/remote/language-pipe.html'" />
+  </section>
+
+  <section>
+    <h2 id="load-and-errors">Loading and Errors</h2>
+
+    <markdown ngPreserveWhitespaces>
+      The `markdown` component emits `load` (the loaded `src` content), `ready` (once rendered) and `error`. `error`
+      emits a `MarkdownError` (`Error | HttpErrorResponse | string`): a failed `src` request emits the
+      `HttpErrorResponse`, which is not an `Error`.
+
+      ```typescript
+      onError(error: MarkdownError): void &#123;
+        const message = error instanceof HttpErrorResponse ? `HTTP $&#123;error.status&#125;` : String(error);
+      &#125;
+      ```
+
+      `data` and `src` follow these rules:
+      - a non-empty `data` wins over `src` (with a one-time warning);
+      - `data = ''` together with a `src` loads the `src`; `data = ''` alone clears the output;
+      - only the latest request is rendered: clearing `data` and `src` cancels a request still in flight and empties
+        the output.
+
+      Try it below: load a file, a missing file, or clear both.
+    </markdown>
+
+    <div class="load-actions">
+      <button (click)="loadSrc('app/bindings/remote/demo.md')" mat-stroked-button type="button">Load demo.md</button>
+      <button (click)="loadSrc('app/bindings/remote/missing.md')" mat-stroked-button type="button">
+        Load a missing file
+      </button>
+      <button (click)="loadSrc(null)" mat-stroked-button type="button">Clear</button>
+    </div>
+    <p aria-live="polite" class="load-status">{{ loadStatus() }}</p>
+
+    <markdown (error)="onLoadError($event)" (load)="loadStatus.set('load: ' + $event.length + ' characters')"
+              (ready)="onLoadReady()" [data]="''" [src]="loadedSrc()" />
+
+    <markdown ngPreserveWhitespaces>
+      `MarkdownService.reload()` renders every component again, including the content transcluded between the
+      `&lt;markdown>` tags (see [Re-render](/re-render)).
+    </markdown>
+  </section>
+
+  <section>
+    <h2 id="relative-links">Relative Links</h2>
+
+    <markdown ngPreserveWhitespaces>
+      By default, relative URLs in the content resolve against the page, as in 21.x. With `srcRelativeLink`, the
+      relative links and images of a `src` file resolve against the file itself, so the Markdown works as it does on
+      GitHub:
+
+      ```html
+      &lt;markdown src="app/bindings/remote/relative/guide.md" srcRelativeLink />
+      ```
+    </markdown>
+
+    <markdown class="relative-src" [src]="'app/bindings/remote/relative/guide.md'" srcRelativeLink />
+
+    <markdown ngPreserveWhitespaces>
+      `baseUrl` sets the base URL explicitly, for `data` too (and wins over `srcRelativeLink`). End a folder with `/`:
+      `docs/guide` is a file, so URLs resolve against `docs/`. Absolute, protocol-relative (`//`), fragment (`#`),
+      `mailto:`, `data:`, `/routerLink:` and `/localFile:` URLs are left untouched.
+
+      ```html
+      &lt;markdown [data]="markdown" baseUrl="app/bindings/remote/relative/" />
+      ```
+    </markdown>
+
+    <markdown class="relative-base-url" [data]="relativeMarkdown" baseUrl="app/bindings/remote/relative/" />
+  </section>
+
+  <section>
+    <h2 id="front-matter">Front-matter</h2>
+
+    <markdown ngPreserveWhitespaces>
+      A block between `---` lines (YAML) or `+++` lines (TOML) at the very start of the content is front-matter. By
+      default it is rendered as Markdown, as in 21.x (a horizontal rule, then a heading). With `frontMatter`, it is
+      stripped before parsing, and the `metadata` output emits its parsed `data` and its `raw` text on each render:
+
+      ```html
+      &lt;markdown src="app/bindings/remote/front-matter.md" frontMatter (metadata)="metadata.set($event)" />
+      ```
+
+      `data` holds a safe subset: strings, numbers, booleans, `null`, `[a, b]` arrays and `- item` lists. Any other
+      value stays a raw string; nothing is evaluated.
+    </markdown>
+
+    <markdown (metadata)="frontMatterMetadata.set($event)" [src]="'app/bindings/remote/front-matter.md'"
+              class="front-matter-src" frontMatter />
+
+    <p class="front-matter-caption">Emitted <code>metadata</code>:</p>
+    <pre class="front-matter-metadata">{{ frontMatterMetadata() | json }}</pre>
+  </section>
+
+  <section>
+    <h2 id="pipe-usage">Pipe Usage</h2>
+
+    <markdown>
+      Using `markdown` pipe to transform markdown to HTML allow you to chain pipe transformations and will update the
+      DOM when value changes. It is important to note that, because the `marked` parsing method returns a `Promise`, it
+      requires the use of the `async` pipe.
+    </markdown>
+
+    <markdown [src]="'app/bindings/remote/markdown-pipe.html'" />
+
+    <markdown>
+      In the following example using the synthax above, `typescriptMarkdown` property does not contain any `back-ticks`
+      to set the content language but will be chain with `language` pipe instead to specify synthax highlights language
+      along with `markdown` pipe for conversion
+    </markdown>
+
+    <div class="split">
+      <mat-form-field appearance="fill" color="accent" class="split-item">
+        <textarea cdkTextareaAutosize="true" [(ngModel)]="typescriptMarkdown" matInput></textarea>
+      </mat-form-field>
+
+      <div
+              [innerHTML]="typescriptMarkdown | language : 'typescript' | markdown | async"
+              class="split-item"
+      ></div>
+    </div>
+  </section>
+</app-scrollspy-nav-layout>

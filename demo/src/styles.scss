@@ -1,0 +1,157 @@
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-size: 15px;
+}
+
+blockquote {
+  overflow: auto;
+}
+
+p, ul {
+  line-height: 1.5;
+}
+
+pre {
+  &::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+}
+
+section {
+  margin-top: 40px;
+}
+
+table {
+  width: 100%;
+
+  th {
+    color: rgba(0, 0, 0, .54);
+    font-size: 12px;
+    font-weight: 500;
+    height: 56px;
+  }
+
+  th[align=""],
+  th:not([align]) {
+    text-align: left;
+  }
+
+  td {
+    font-size: 15px;
+    height: 48px;
+  }
+
+  td,
+  th {
+    padding: 0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(0, 0, 0, .12);
+  }
+}
+
+input,
+textarea {
+  font-family: monospace !important;
+  font-size: 14px !important;
+  line-height: 1.25 !important;
+}
+
+// An auto-sized textarea is grown to fit its content, so its own scroller has nothing to keep in place. On every
+// input, the CDK autosize measures it in Firefox by collapsing it (`height: 0`) and restoring it in the same task,
+// which nudges its scrollTop back and forth; Firefox scroll anchoring then makes zero-distance adjustments inside the
+// textarea until it disables itself with a console warning. Opting the textarea out of anchoring touches only that
+// scroller (`overflow-anchor` is not inherited); the page keeps its own anchoring.
+textarea.cdk-textarea-autosize {
+  overflow-anchor: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+// Enter animation for routed pages. Routed components are inserted next to the
+// router outlet, outside AppComponent's style encapsulation, so this rule is global.
+.outlet-wrapper > :not(router-outlet) {
+  display: block;
+  animation: route-enter 550ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+// Markdown content is rendered asynchronously ([src] loads, async parse), so it usually lands
+// halfway through the page animation above and appears to pop in. Animate the rendered blocks
+// themselves when they are inserted. The playground re-renders on every keystroke, so skip it there.
+.outlet-wrapper markdown > * {
+  animation: route-enter 450ms cubic-bezier(0.35, 0, 0.25, 1) both;
+}
+
+app-playground markdown > * {
+  animation: none;
+}
+
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Export button added by ngx-markdown to each rendered Mermaid diagram (`mermaidExport`)
+.markdown-mermaid-export-button {
+  padding: 4px 8px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+// Images the lightbox opens (`lightbox` input); the viewer is themed with the `--markdown-lightbox-*` properties
+.markdown-lightbox-trigger {
+  cursor: zoom-in;
+}
+
+.markdown-lightbox-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+// Error box shown by ngx-markdown in place of a Mermaid diagram that failed to render
+.mermaid-error {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--mat-sys-error, #ba1a1a);
+  border-radius: 4px;
+  color: var(--mat-sys-error, #ba1a1a);
+  font-family: monospace;
+  white-space: pre-wrap;
+}

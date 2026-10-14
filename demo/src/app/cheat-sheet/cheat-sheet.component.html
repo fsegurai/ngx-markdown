@@ -1,0 +1,84 @@
+<app-scrollspy-nav-layout [headings]="headings()">
+  <h1>Cheat Sheet</h1>
+
+  <markdown>
+    The following examples are intended as a quick markdown reference and showcase. It is based on Adam Pritchard work
+    of [Markdown Cheat Sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
+  </markdown>
+
+  <section>
+    <h2 id="headers">Headers</h2>
+    <pre class="language-none">{{ headers$ | async }}</pre>
+    <markdown [data]="headers$ | async" />
+  </section>
+
+  <section>
+    <h2 id="emphasis">Emphasis</h2>
+    <pre class="language-none">{{ emphasis$ | async }}</pre>
+    <markdown [data]="emphasis$ | async" />
+  </section>
+
+  <section>
+    <h2 id="lists">Lists</h2>
+    <p>
+      In this example, leading and trailing spaces are shown with with dots (⋅)
+    </p>
+    <pre class="language-none">{{ listsDot$ | async }}</pre>
+    <markdown [data]="lists$ | async" />
+  </section>
+
+  <section>
+    <h2 id="links">Links</h2>
+    <pre class="language-none">{{ links$ | async }}</pre>
+    <markdown [data]="links$ | async"
+              [routerLinkOptions]="{
+                internalBrowserHandler: true,
+                externalBrowserHandler: true,
+              }"
+              [disableRouterLinkHandler]="false" />
+
+    <markdown ngPreserveWhitespaces>
+      #### Link handling
+
+      With `routerLinkOptions`, clicks on links in the rendered content are handled by ngx-markdown:
+      - the `global` and `paths` `NavigationExtras` are passed to `router.navigate` for `/routerLink:` links and
+        internal paths;
+      - external and `/localFile:` links open in a new tab with `noopener,noreferrer`, so the opened page cannot reach
+        `window.opener`;
+      - Ctrl/Meta/Shift/Alt clicks and middle clicks are left to the browser, so "open in a new tab" works as on a plain
+        page;
+      - `javascript:`, `data:` and `vbscript:` links are never followed (an `[ngx-markdown]` warning is logged), unless
+        `disableRouterLinkHandler` is set.
+    </markdown>
+  </section>
+
+  <section>
+    <h2 id="images">Images</h2>
+    <pre class="language-none">{{ images$ | async }}</pre>
+    <markdown [data]="images$ | async" />
+  </section>
+
+  <section>
+    <h2 id="code-and-synthax">Code and Syntax Highlighting</h2>
+    <pre class="language-none">{{ codeAndSyntaxHighlighting$ | async }}</pre>
+    <markdown [data]="codeAndSyntaxHighlighting$ | async" />
+  </section>
+
+  <section>
+    <h2 id="tables">Tables</h2>
+    <pre class="language-none">{{ tables$ | async }}</pre>
+    <markdown [data]="tables$ | async" />
+  </section>
+
+  <section>
+    <h2 id="blockquotes">Blockquotes</h2>
+    <pre class="language-none">{{ blockquotes$ | async }}</pre>
+    <markdown [data]="blockquotes$ | async" />
+  </section>
+
+  <section>
+    <h2 id="horizontal-rule">Horizontal Rule</h2>
+    <pre class="language-none">{{ horizontalRule$ | async }}</pre>
+    <markdown [data]="horizontalRule$ | async" />
+  </section>
+</app-scrollspy-nav-layout>

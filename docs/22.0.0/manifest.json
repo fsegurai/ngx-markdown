@@ -1,0 +1,950 @@
+[
+  {
+    "label": "Documentation Home",
+    "description": "Documentation for @fsegurai/ngx-markdown 22.0.0, an Angular library that renders Markdown with marked and highlights code with Prism.js.",
+    "route": "content/README",
+    "tags": ["documentation", "overview", "angular"],
+    "order": 0,
+    "breadcrumbTitle": "Home",
+    "keywords": ["markdown", "marked", "prism", "standalone component"],
+    "breadcrumb": [
+      {
+        "label": "Home",
+        "route": "content/README"
+      }
+    ]
+  },
+  {
+    "label": "Getting Started",
+    "route": "content/getting-started",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      }
+    ],
+    "order": 1,
+    "children": [
+      {
+        "label": "Getting Started",
+        "description": "Install @fsegurai/ngx-markdown, render your first Markdown, and configure the library.",
+        "route": "content/getting-started/README",
+        "tags": ["getting-started", "overview"],
+        "order": 1,
+        "breadcrumbTitle": "Getting Started",
+        "breadcrumb": [
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started"
+          },
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started/README"
+          }
+        ]
+      },
+      {
+        "label": "Installation",
+        "description": "Install @fsegurai/ngx-markdown, marked and the optional plugin libraries, and load their scripts and styles.",
+        "route": "content/getting-started/installation",
+        "tags": ["getting-started", "installation"],
+        "order": 1,
+        "keywords": ["npm", "bun", "peer dependencies", "angular.json"],
+        "breadcrumb": [
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started"
+          },
+          {
+            "label": "Installation",
+            "route": "content/getting-started/installation"
+          }
+        ]
+      },
+      {
+        "label": "Quick Start",
+        "description": "Render Markdown from a variable, a remote file or projected content with the standalone MarkdownComponent.",
+        "route": "content/getting-started/quick-start",
+        "tags": ["getting-started", "tutorial"],
+        "order": 2,
+        "keywords": ["MarkdownComponent", "MarkdownPipe", "first render"],
+        "breadcrumb": [
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started"
+          },
+          {
+            "label": "Quick Start",
+            "route": "content/getting-started/quick-start"
+          }
+        ]
+      },
+      {
+        "label": "Configuration",
+        "description": "Configure sanitizing, Marked options, Marked extensions, source caching and plugins with provideMarkdown().",
+        "route": "content/getting-started/configuration",
+        "tags": ["getting-started", "configuration"],
+        "order": 3,
+        "keywords": ["provideMarkdown", "MarkdownConfig", "withPrism", "plugins"],
+        "breadcrumb": [
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started"
+          },
+          {
+            "label": "Configuration",
+            "route": "content/getting-started/configuration"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Features",
+    "route": "content/features",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      }
+    ],
+    "order": 2,
+    "children": [
+      {
+        "label": "Markdown Component",
+        "description": "Render Markdown from data, a remote src or projected content with the standalone MarkdownComponent.",
+        "route": "content/features/markdown-component",
+        "tags": ["features", "component"],
+        "order": 1,
+        "keywords": ["MarkdownComponent", "data", "src", "transclusion", "ready"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Markdown Component",
+            "route": "content/features/markdown-component"
+          }
+        ]
+      },
+      {
+        "label": "Features",
+        "description": "What each building block and plugin of @fsegurai/ngx-markdown does, with the inputs that control it.",
+        "route": "content/features/README",
+        "tags": ["features", "overview"],
+        "order": 2,
+        "breadcrumbTitle": "Features",
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Features",
+            "route": "content/features/README"
+          }
+        ]
+      },
+      {
+        "label": "Markdown Pipe",
+        "description": "Use the markdown pipe to bind parsed Markdown to innerHTML and the language pipe to wrap code in a fence.",
+        "route": "content/features/markdown-pipe",
+        "tags": ["features", "pipe"],
+        "order": 2,
+        "keywords": ["MarkdownPipe", "LanguagePipe", "innerHTML", "async"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Markdown Pipe",
+            "route": "content/features/markdown-pipe"
+          }
+        ]
+      },
+      {
+        "label": "Markdown Service",
+        "description": "Parse, render, re-render, reload and highlight Markdown from code with the root-provided MarkdownService.",
+        "route": "content/features/markdown-service",
+        "tags": ["features", "service"],
+        "order": 3,
+        "keywords": ["MarkdownService", "parse", "render", "reload", "cleanup"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Markdown Service",
+            "route": "content/features/markdown-service"
+          }
+        ]
+      },
+      {
+        "label": "Sanitization",
+        "description": "How rendered HTML is sanitized by default and how to switch to a custom sanitizer or turn it off.",
+        "route": "content/features/sanitization",
+        "tags": ["features", "security"],
+        "order": 4,
+        "keywords": ["SANITIZE", "SecurityContext", "DOMPurify", "disableSanitizer"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Sanitization",
+            "route": "content/features/sanitization"
+          }
+        ]
+      },
+      {
+        "label": "Syntax Highlighting",
+        "description": "Highlight code blocks with Prism.js through withPrism(), including line numbers, line highlight and command line.",
+        "route": "content/features/syntax-highlighting",
+        "tags": ["features", "plugins", "highlighting"],
+        "order": 5,
+        "keywords": ["withPrism", "Prism.js", "line numbers", "command line"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Syntax Highlighting",
+            "route": "content/features/syntax-highlighting"
+          }
+        ]
+      },
+      {
+        "label": "Copy to Clipboard",
+        "description": "Add a copy button to every code block with withClipboard(), and customize the button or react to copy events.",
+        "route": "content/features/clipboard",
+        "tags": ["features", "plugins", "clipboard"],
+        "order": 6,
+        "keywords": ["withClipboard", "ClipboardJS", "copy button", "ClipboardButtonComponent"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Copy to Clipboard",
+            "route": "content/features/clipboard"
+          }
+        ]
+      },
+      {
+        "label": "Emoji",
+        "description": "Convert emoji shortcodes such as :heart: to Unicode with Emoji-Toolkit and the withEmoji() plugin.",
+        "route": "content/features/emoji",
+        "tags": ["features", "plugins", "emoji"],
+        "order": 7,
+        "keywords": ["withEmoji", "emoji-toolkit", "joypixels", "shortcodes"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Emoji",
+            "route": "content/features/emoji"
+          }
+        ]
+      },
+      {
+        "label": "Math with KaTeX",
+        "description": "Render $…$ and $$…$$ math while parsing with KaTeX and the withKatex() plugin.",
+        "route": "content/features/katex",
+        "tags": ["features", "plugins", "math"],
+        "order": 8,
+        "keywords": ["withKatex", "KaTeX", "LaTeX", "KatexOptions"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Math with KaTeX",
+            "route": "content/features/katex"
+          }
+        ]
+      },
+      {
+        "label": "Mermaid Diagrams",
+        "description": "Draw mermaid code blocks as diagrams with withMermaid(), loaded on demand or as a global script.",
+        "route": "content/features/mermaid",
+        "tags": ["features", "plugins", "diagrams"],
+        "order": 9,
+        "keywords": ["withMermaid", "Mermaid", "MermaidRenderError", "mermaidOptions", "lazy", "lazyMargin"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Mermaid Diagrams",
+            "route": "content/features/mermaid"
+          }
+        ]
+      },
+      {
+        "label": "Mermaid SVG Export",
+        "description": "Add a button that downloads each rendered Mermaid diagram as an SVG file with withMermaidExport().",
+        "route": "content/features/mermaid-export",
+        "tags": ["features", "plugins", "diagrams"],
+        "order": 10,
+        "keywords": ["withMermaidExport", "SVG download", "MermaidExportButtonComponent"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Mermaid SVG Export",
+            "route": "content/features/mermaid-export"
+          }
+        ]
+      },
+      {
+        "label": "Image Lightbox",
+        "description": "Open the images of rendered Markdown in a built-in dialog viewer with the dependency-free withLightbox() plugin.",
+        "route": "content/features/lightbox",
+        "tags": ["features", "plugins", "images"],
+        "order": 11,
+        "keywords": ["withLightbox", "MarkdownLightboxComponent", "imageClick", "dialog"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Image Lightbox",
+            "route": "content/features/lightbox"
+          }
+        ]
+      },
+      {
+        "label": "Marked Extended",
+        "description": "Plug @fsegurai/marked-extended packages (tabs, alerts, code groups, footnotes) into ngx-markdown with withMarkedExtended().",
+        "route": "content/features/marked-extended",
+        "tags": ["features", "plugins", "extensions"],
+        "order": 12,
+        "keywords": ["withMarkedExtended", "marked-extended", "extendedEvent", "attach runtime"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Marked Extended",
+            "route": "content/features/marked-extended"
+          }
+        ]
+      },
+      {
+        "label": "Front-matter",
+        "description": "Strip a YAML or TOML front-matter block from Markdown and read its data with the core frontMatter plugin.",
+        "route": "content/features/front-matter",
+        "tags": ["features", "content"],
+        "order": 13,
+        "keywords": ["frontMatter", "metadata", "YAML", "TOML", "extractFrontMatter"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Front-matter",
+            "route": "content/features/front-matter"
+          }
+        ]
+      },
+      {
+        "label": "Headings and TOC",
+        "description": "Read the rendered headings to build a table of contents, and give headings GitHub-style ids with headingIds.",
+        "route": "content/features/headings",
+        "tags": ["features", "content"],
+        "order": 14,
+        "keywords": ["headings", "table of contents", "headingIds", "MarkdownHeading"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Headings and TOC",
+            "route": "content/features/headings"
+          }
+        ]
+      },
+      {
+        "label": "Relative URLs",
+        "description": "Resolve relative links and images against the src file or a base URL with srcRelativeLink and baseUrl.",
+        "route": "content/features/relative-urls",
+        "tags": ["features", "content", "links"],
+        "order": 15,
+        "keywords": ["baseUrl", "srcRelativeLink", "images", "resolve"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Relative URLs",
+            "route": "content/features/relative-urls"
+          }
+        ]
+      },
+      {
+        "label": "Link Handling",
+        "description": "Route internal links with the Angular Router and open external links in a new tab with routerLinkOptions.",
+        "route": "content/features/link-handling",
+        "tags": ["features", "content", "links"],
+        "order": 16,
+        "keywords": ["routerLinkOptions", "Router", "external links", "disableRouterLinkHandler"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Link Handling",
+            "route": "content/features/link-handling"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Guides",
+    "route": "content/guides",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      }
+    ],
+    "order": 3,
+    "children": [
+      {
+        "label": "Migrating from 21 to 22",
+        "description": "Step-by-step checklist to upgrade @fsegurai/ngx-markdown from 21.x to 22 and its plugin features.",
+        "route": "content/guides/migrating-from-21",
+        "tags": ["guides", "migration"],
+        "order": 1,
+        "keywords": ["upgrade", "MarkdownModule", "breaking changes", "withX"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Migrating from 21 to 22",
+            "route": "content/guides/migrating-from-21"
+          }
+        ]
+      },
+      {
+        "label": "Marked Options and Extensions",
+        "description": "Configure Marked with MARKED_OPTIONS and register plain Marked extensions with MARKED_EXTENSIONS.",
+        "route": "content/guides/marked-options-and-extensions",
+        "tags": ["guides", "configuration"],
+        "order": 2,
+        "keywords": ["MARKED_OPTIONS", "MARKED_EXTENSIONS", "marked-gfm-heading-id", "gfm"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Marked Options and Extensions",
+            "route": "content/guides/marked-options-and-extensions"
+          }
+        ]
+      },
+      {
+        "label": "Custom Renderer",
+        "description": "Change the HTML of Markdown tokens with a MarkedRenderer in MARKED_OPTIONS or through MarkdownService.renderer.",
+        "route": "content/guides/custom-renderer",
+        "tags": ["guides", "rendering"],
+        "order": 3,
+        "keywords": ["MarkedRenderer", "MarkedToken", "renderer override", "blockquote"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Custom Renderer",
+            "route": "content/guides/custom-renderer"
+          }
+        ]
+      },
+      {
+        "label": "Guides",
+        "description": "Task-oriented guides for @fsegurai/ngx-markdown, from migrating to 22 to writing your own plugin.",
+        "route": "content/guides/README",
+        "tags": ["guides", "overview"],
+        "order": 3,
+        "breadcrumbTitle": "Guides",
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Guides",
+            "route": "content/guides/README"
+          }
+        ]
+      },
+      {
+        "label": "Writing a Plugin",
+        "description": "Build your own hook-based Markdown plugin with MarkdownPlugin and withMarkdownPlugin(), then enable it per component.",
+        "route": "content/guides/writing-a-plugin",
+        "tags": ["guides", "plugins"],
+        "order": 4,
+        "keywords": ["MarkdownPlugin", "withMarkdownPlugin", "hooks", "render hook"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Writing a Plugin",
+            "route": "content/guides/writing-a-plugin"
+          }
+        ]
+      },
+      {
+        "label": "Follow a Light/Dark Theme",
+        "description": "Redraw Mermaid diagrams when the app theme changes, without parsing the Markdown again.",
+        "route": "content/guides/mermaid-theme-switching",
+        "tags": ["guides", "diagrams", "theming"],
+        "order": 5,
+        "keywords": ["mermaidOptions", "rerenderMermaid", "dark mode", "computed"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Follow a Light/Dark Theme",
+            "route": "content/guides/mermaid-theme-switching"
+          }
+        ]
+      },
+      {
+        "label": "SSR and Prerendering",
+        "description": "Use @fsegurai/ngx-markdown with server-side rendering, static prerendering and client hydration.",
+        "route": "content/guides/ssr-and-prerendering",
+        "tags": ["guides", "ssr"],
+        "order": 6,
+        "keywords": ["server-side rendering", "prerender", "hydration", "PendingTasks"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "SSR and Prerendering",
+            "route": "content/guides/ssr-and-prerendering"
+          }
+        ]
+      },
+      {
+        "label": "Long Documents",
+        "description": "How large documents are parsed and rendered without blocking the main thread (time-sliced parse, progressive insertion, incremental updates of edited content), the opt-in contentVisibility option for very long pages, lazy Mermaid diagrams and math-heavy documents.",
+        "route": "content/guides/long-documents",
+        "tags": ["guides", "performance"],
+        "order": 7,
+        "keywords": [
+          "content-visibility",
+          "contentVisibility",
+          "chunked rendering",
+          "main thread",
+          "time slicing",
+          "timeSlicing",
+          "incremental updates",
+          "incrementalUpdates",
+          "editor",
+          "lazy",
+          "Mermaid",
+          "KaTeX",
+          "line numbers"
+        ],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Long Documents",
+            "route": "content/guides/long-documents"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "API",
+    "route": "content/api",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      }
+    ],
+    "order": 4,
+    "children": [
+      {
+        "label": "provideMarkdown",
+        "description": "Signature of provideMarkdown(), every MarkdownConfig field, and the injection tokens it provides.",
+        "route": "content/api/provide-markdown",
+        "tags": ["api", "configuration"],
+        "order": 1,
+        "keywords": [
+          "provideMarkdown",
+          "MarkdownConfig",
+          "SANITIZE",
+          "MARKED_OPTIONS",
+          "MARKDOWN_CACHE_SRC",
+          "MARKDOWN_CONTENT_VISIBILITY"
+        ],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "provideMarkdown",
+            "route": "content/api/provide-markdown"
+          }
+        ]
+      },
+      {
+        "label": "MarkdownComponent",
+        "description": "Selectors, inputs and outputs of the standalone MarkdownComponent.",
+        "route": "content/api/markdown-component",
+        "tags": ["api", "component"],
+        "order": 2,
+        "keywords": ["inputs", "outputs", "MarkdownError", "MarkdownRouterLinkOptions"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "MarkdownComponent",
+            "route": "content/api/markdown-component"
+          }
+        ]
+      },
+      {
+        "label": "Pipes",
+        "description": "Signatures of the markdown and language pipes and the MarkdownPipeOptions type.",
+        "route": "content/api/pipes",
+        "tags": ["api", "pipe"],
+        "order": 3,
+        "keywords": ["MarkdownPipe", "LanguagePipe", "MarkdownPipeOptions", "transform"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "Pipes",
+            "route": "content/api/pipes"
+          }
+        ]
+      },
+      {
+        "label": "API Reference",
+        "description": "Exact inputs, outputs, methods, provider functions, injection tokens and types exported by @fsegurai/ngx-markdown.",
+        "route": "content/api/README",
+        "tags": ["api", "overview"],
+        "order": 4,
+        "breadcrumbTitle": "API",
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "API",
+            "route": "content/api/README"
+          }
+        ]
+      },
+      {
+        "label": "MarkdownService",
+        "description": "Methods and properties of MarkdownService, and the ParseOptions and RenderOptions types.",
+        "route": "content/api/markdown-service",
+        "tags": ["api", "service"],
+        "order": 4,
+        "keywords": ["parse", "render", "rerenderMermaid", "ParseOptions", "RenderOptions"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "MarkdownService",
+            "route": "content/api/markdown-service"
+          }
+        ]
+      },
+      {
+        "label": "Plugin Features",
+        "description": "The withX() plugin feature functions, their option types, and the exported plugin objects and names.",
+        "route": "content/api/plugin-features",
+        "tags": ["api", "plugins"],
+        "order": 5,
+        "keywords": ["withPrism", "withClipboard", "withKatex", "withMermaid", "withLightbox", "withMarkedExtended"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "Plugin Features",
+            "route": "content/api/plugin-features"
+          }
+        ]
+      },
+      {
+        "label": "Plugin API",
+        "description": "The MarkdownPlugin interface, hook contexts, withMarkdownPlugin() and the MARKDOWN_PLUGINS token.",
+        "route": "content/api/plugin-api",
+        "tags": ["api", "plugins"],
+        "order": 6,
+        "keywords": ["MarkdownPlugin", "MarkdownRenderContext", "withMarkdownPlugin", "MarkdownPluginToggles"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "Plugin API",
+            "route": "content/api/plugin-api"
+          }
+        ]
+      },
+      {
+        "label": "Types",
+        "description": "Exported event payloads, front-matter, heading, Marked and Mermaid types of @fsegurai/ngx-markdown.",
+        "route": "content/api/types",
+        "tags": ["api", "types"],
+        "order": 7,
+        "keywords": ["MarkdownCopyEvent", "MarkdownFrontMatter", "MarkdownHeading", "MermaidAPI", "MarkedToken"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "Types",
+            "route": "content/api/types"
+          }
+        ]
+      },
+      {
+        "label": "Errors",
+        "description": "Error message constants exported by @fsegurai/ngx-markdown and the MermaidRenderError class.",
+        "route": "content/api/errors",
+        "tags": ["api", "errors"],
+        "order": 8,
+        "keywords": ["ERROR_KATEX_NOT_LOADED", "ERROR_MERMAID_NOT_LOADED", "MermaidRenderError", "error messages"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "Errors",
+            "route": "content/api/errors"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Examples",
+    "route": "content/examples",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      }
+    ],
+    "order": 5,
+    "children": [
+      {
+        "label": "App-wide Setup",
+        "description": "An app.config.ts that provides every ngx-markdown plugin, Marked options and a Marked extension.",
+        "route": "content/examples/app-wide-setup",
+        "tags": ["examples", "configuration"],
+        "order": 1,
+        "keywords": ["app.config.ts", "ApplicationConfig", "all plugins"],
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "App-wide Setup",
+            "route": "content/examples/app-wide-setup"
+          }
+        ]
+      },
+      {
+        "label": "Docs Page with TOC",
+        "description": "A documentation page that loads a Markdown file, reads its front-matter and builds a table of contents.",
+        "route": "content/examples/docs-page-with-toc",
+        "tags": ["examples", "content"],
+        "order": 2,
+        "keywords": ["table of contents", "metadata", "srcRelativeLink", "headings output"],
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "Docs Page with TOC",
+            "route": "content/examples/docs-page-with-toc"
+          }
+        ]
+      },
+      {
+        "label": "Page-scoped Configuration",
+        "description": "Give one page its own MarkdownService and plugins, here with marked-extended packages, without affecting other pages.",
+        "route": "content/examples/page-scoped-configuration",
+        "tags": ["examples", "configuration", "extensions"],
+        "order": 3,
+        "keywords": ["component providers", "withMarkedExtended", "nested provideMarkdown"],
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "Page-scoped Configuration",
+            "route": "content/examples/page-scoped-configuration"
+          }
+        ]
+      },
+      {
+        "label": "Pipe with Callbacks",
+        "description": "Use the markdown pipe with clipboard, front-matter and heading callbacks instead of component outputs.",
+        "route": "content/examples/pipe-with-callbacks",
+        "tags": ["examples", "pipe"],
+        "order": 4,
+        "keywords": ["onCopied", "onFrontMatter", "onHeadings", "MarkdownPipeOptions"],
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "Pipe with Callbacks",
+            "route": "content/examples/pipe-with-callbacks"
+          }
+        ]
+      },
+      {
+        "label": "Examples",
+        "description": "Complete, copyable examples of @fsegurai/ngx-markdown setups and pages.",
+        "route": "content/examples/README",
+        "tags": ["examples", "overview"],
+        "order": 5,
+        "breadcrumbTitle": "Examples",
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "Examples",
+            "route": "content/examples/README"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Help",
+    "route": "content/help",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Help",
+        "route": "content/help"
+      }
+    ],
+    "order": 6,
+    "children": [
+      {
+        "label": "FAQ",
+        "description": "Frequently asked questions about @fsegurai/ngx-markdown.",
+        "route": "content/help/faq",
+        "tags": ["help", "faq"],
+        "order": 1,
+        "keywords": ["questions", "NgModule", "zoneless", "directive"],
+        "breadcrumb": [
+          {
+            "label": "Help",
+            "route": "content/help"
+          },
+          {
+            "label": "FAQ",
+            "route": "content/help/faq"
+          }
+        ]
+      },
+      {
+        "label": "Troubleshooting",
+        "description": "Fixes for code not highlighting, plugins doing nothing, missing heading ids, Mermaid errors and SSR problems.",
+        "route": "content/help/troubleshooting",
+        "tags": ["help", "troubleshooting"],
+        "order": 2,
+        "keywords": ["not highlighting", "plugin warning", "Mermaid error", "id removed"],
+        "breadcrumb": [
+          {
+            "label": "Help",
+            "route": "content/help"
+          },
+          {
+            "label": "Troubleshooting",
+            "route": "content/help/troubleshooting"
+          }
+        ]
+      },
+      {
+        "label": "Help",
+        "description": "Answers to common questions and fixes for common problems with @fsegurai/ngx-markdown.",
+        "route": "content/help/README",
+        "tags": ["help", "overview"],
+        "order": 6,
+        "breadcrumbTitle": "Help",
+        "breadcrumb": [
+          {
+            "label": "Help",
+            "route": "content/help"
+          },
+          {
+            "label": "Help",
+            "route": "content/help/README"
+          }
+        ]
+      }
+    ]
+  }
+]

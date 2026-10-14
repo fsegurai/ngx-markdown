@@ -1,0 +1,661 @@
+[
+  {
+    "label": "Documentation Home",
+    "description": "Documentation for @fsegurai/ngx-markdown 19.1.0, an Angular 19 library that renders Markdown with marked and highlights code with Prism.js.",
+    "route": "content/README",
+    "tags": ["documentation", "overview", "angular"],
+    "headings": ["Quick path", "Sections", "Version"],
+    "excerpt": " renders Markdown in Angular applications.",
+    "breadcrumb": [
+      {
+        "label": "Home",
+        "route": "content/README"
+      }
+    ]
+  },
+  {
+    "label": "API Reference",
+    "description": "Exact inputs, outputs, methods, provider functions, injection tokens and types exported by @fsegurai/ngx-markdown 19.1.0.",
+    "route": "content/api/README",
+    "tags": ["api", "overview"],
+    "excerpt": "Everything below is exported from .",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "API",
+        "route": "content/api/README"
+      }
+    ]
+  },
+  {
+    "label": "Errors",
+    "description": "The camelCase error message constants thrown by @fsegurai/ngx-markdown 19.1.0 and what causes each one.",
+    "route": "content/api/errors",
+    "tags": ["api", "errors"],
+    "excerpt": "Errors\n\nErrors are thrown as . Inside a render error becomes an unhandled promise\nrejection for every content source; only HTTP failures reach the...",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "Errors",
+        "route": "content/api/errors"
+      }
+    ]
+  },
+  {
+    "label": "MarkdownComponent",
+    "description": "Selectors, inputs, outputs and the public render() method of MarkdownComponent, plus the default ClipboardButtonComponent.",
+    "route": "content/api/markdown-component",
+    "tags": ["api", "component"],
+    "headings": ["Content inputs", "Plugin inputs", "Outputs", "Methods", "ClipboardButtonComponent"],
+    "excerpt": "Selectors: , , . Standalone, default change detection.",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "MarkdownComponent",
+        "route": "content/api/markdown-component"
+      }
+    ]
+  },
+  {
+    "label": "MarkdownService",
+    "description": "Methods, properties and option types of MarkdownService in @fsegurai/ngx-markdown 19.1.0.",
+    "route": "content/api/markdown-service",
+    "tags": ["api", "service"],
+    "headings": ["Methods", "Properties", "ParseOptions", "RenderOptions", "ExtendedRenderer"],
+    "excerpt": "with . is injected optionally and needed only for .",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "MarkdownService",
+        "route": "content/api/markdown-service"
+      }
+    ]
+  },
+  {
+    "label": "Pipes",
+    "description": "Signatures of the markdown and language pipes and the MarkdownPipeOptions type.",
+    "route": "content/api/pipes",
+    "tags": ["api", "pipe"],
+    "headings": ["MarkdownPipe (`markdown`)", "LanguagePipe (`language`)"],
+    "excerpt": "Pipes\n\nBoth pipes are standalone.\n\nMarkdownPipe ( )\n\n \n\n| Input | Result |\n|-------|--------|\n| / | |\n| non-string | logged with , value returned as...",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "Pipes",
+        "route": "content/api/pipes"
+      }
+    ]
+  },
+  {
+    "label": "provideMarkdown and Tokens",
+    "description": "provideMarkdown(), MarkdownModule, MarkdownModuleConfig and every injection token.",
+    "route": "content/api/provide-markdown",
+    "tags": ["api", "configuration"],
+    "headings": ["provideMarkdown", "MarkdownModuleConfig", "Injection tokens"],
+    "excerpt": "provideMarkdown and Tokens\n\nprovideMarkdown\n\n \n\nReturns , each provider from the config ( , , ,\n ), , and .\n\nMarkdownModuleConfig\n\n \n\nA is or with...",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "provideMarkdown and Tokens",
+        "route": "content/api/provide-markdown"
+      }
+    ]
+  },
+  {
+    "label": "Types",
+    "description": "Option interfaces, re-exported marked types, the MermaidAPI namespace and the PrismPlugin enum.",
+    "route": "content/api/types",
+    "tags": ["api", "types"],
+    "headings": [
+      "MarkdownRouterLinkOptions",
+      "ClipboardOptions",
+      "KatexOptions",
+      "MermaidAPI",
+      "Re-exported from marked",
+      "PrismPlugin"
+    ],
+    "excerpt": " and are applied to Router navigation in 19.x; see Link Handling.",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "Types",
+        "route": "content/api/types"
+      }
+    ]
+  },
+  {
+    "label": "Examples",
+    "description": "Complete, copyable examples of @fsegurai/ngx-markdown 19.1.0 setups and pages.",
+    "route": "content/examples/README",
+    "tags": ["examples", "overview"],
+    "excerpt": "| App-wide Setup | A standalone app with every token configured, as in the demo.",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "Examples",
+        "route": "content/examples/README"
+      }
+    ]
+  },
+  {
+    "label": "App-wide Setup",
+    "description": "A standalone application that configures every ngx-markdown token, modeled on the 19.1.0 demo.",
+    "route": "content/examples/app-wide-setup",
+    "tags": ["examples", "configuration"],
+    "excerpt": "The demo application's configuration, trimmed to the Markdown parts.",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "App-wide Setup",
+        "route": "content/examples/app-wide-setup"
+      }
+    ]
+  },
+  {
+    "label": "Custom Copy Button",
+    "description": "Replace the default clipboard button with your own component or an ng-template.",
+    "route": "content/examples/custom-copy-button",
+    "tags": ["examples", "plugins"],
+    "headings": ["From a component", "From a template", "How copying works"],
+    "excerpt": "You do not write copy logic: clipboard.",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "Custom Copy Button",
+        "route": "content/examples/custom-copy-button"
+      }
+    ]
+  },
+  {
+    "label": "NgModule Setup",
+    "description": "Configure an NgModule application with MarkdownModule.forRoot() and forChild(), or with provideMarkdown() and standalone imports.",
+    "route": "content/examples/ngmodule-setup",
+    "tags": ["examples", "ngmodule"],
+    "headings": ["With MarkdownModule", "Same app with standalone pieces"],
+    "excerpt": "Both work in 19.x. The standalone version also keeps working after 21.0.",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "NgModule Setup",
+        "route": "content/examples/ngmodule-setup"
+      }
+    ]
+  },
+  {
+    "label": "Code Snippets with Pipes",
+    "description": "Show highlighted code from a TypeScript string with the language and markdown pipes, including plugin options.",
+    "route": "content/examples/pipe-with-language",
+    "tags": ["examples", "pipe"],
+    "excerpt": "Prism with , plus the line numbers plugin files for .",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "Code Snippets with Pipes",
+        "route": "content/examples/pipe-with-language"
+      }
+    ]
+  },
+  {
+    "label": "Features",
+    "description": "What each building block and plugin of @fsegurai/ngx-markdown 19.1.0 does, with the inputs that control it.",
+    "route": "content/features/README",
+    "tags": ["features", "overview"],
+    "headings": ["Building blocks", "Plugins"],
+    "excerpt": "| Markdown Component | : , , projected content, outputs.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Features",
+        "route": "content/features/README"
+      }
+    ]
+  },
+  {
+    "label": "Copy to Clipboard",
+    "description": "Add a copy button to every code block with clipboard.js, and replace the default button with your own component or template.",
+    "route": "content/features/clipboard",
+    "tags": ["features", "plugins"],
+    "headings": ["What it adds", "Default button options", "Your own button", "With the pipe"],
+    "excerpt": "Copy to Clipboard\n\n \n\nNeeds loaded as a global script ( ); otherwise rendering\nthrows .\n\nWhat it adds\n\nEach is wrapped in a that also holds a . The...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Copy to Clipboard",
+        "route": "content/features/clipboard"
+      }
+    ]
+  },
+  {
+    "label": "Emoji",
+    "description": "Convert emoji shortcodes such as :heart: to Unicode with emoji-toolkit.",
+    "route": "content/features/emoji",
+    "tags": ["features", "plugins"],
+    "headings": ["How it works"],
+    "excerpt": "Emoji\n\n \n\nNeeds as a global script. Without it, parsing throws\n .\n\nHow it works\n\nBefore marked runs, the whole Markdown string goes through . That...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Emoji",
+        "route": "content/features/emoji"
+      }
+    ]
+  },
+  {
+    "label": "Math with KaTeX",
+    "description": "Render math expressions with KaTeX and its Auto-Render extension, using per-component KatexOptions.",
+    "route": "content/features/katex",
+    "tags": ["features", "plugins"],
+    "headings": ["How it works", "Delimiters", "KatexOptions"],
+    "excerpt": "from . Without the scripts, rendering throws .",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Math with KaTeX",
+        "route": "content/features/katex"
+      }
+    ]
+  },
+  {
+    "label": "Link Handling",
+    "description": "Route internal Markdown links through the Angular Router and open external links in a new tab with routerLinkOptions.",
+    "route": "content/features/link-handling",
+    "tags": ["features", "links"],
+    "headings": ["Handlers", "Which links are which", "NavigationExtras per path"],
+    "excerpt": "By default, links in rendered Markdown behave like plain HTML links. Set to intercept clicks.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Link Handling",
+        "route": "content/features/link-handling"
+      }
+    ]
+  },
+  {
+    "label": "Markdown Component",
+    "description": "Render Markdown from a string, a URL or projected content with the standalone MarkdownComponent.",
+    "route": "content/features/markdown-component",
+    "tags": ["features", "component"],
+    "headings": ["Three content sources", "Outputs", "Rendering options", "When it renders again", "SSR"],
+    "excerpt": "Markdown Component\n\n matches , and the attribute. There is no separate\ndirective: is the same component.\n\nThree content sources\n\n| Source | Usage |...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Markdown Component",
+        "route": "content/features/markdown-component"
+      }
+    ]
+  },
+  {
+    "label": "Markdown and Language Pipes",
+    "description": "Turn template strings into HTML with the markdown pipe, and wrap code in a fenced block with the language pipe.",
+    "route": "content/features/markdown-pipe",
+    "tags": ["features", "pipe"],
+    "headings": ["markdown", "MarkdownPipeOptions", "language", "Component or pipe?"],
+    "excerpt": " is and resolves to , so the pipe is always needed.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Markdown and Language Pipes",
+        "route": "content/features/markdown-pipe"
+      }
+    ]
+  },
+  {
+    "label": "Markdown Service",
+    "description": "Parse, render, highlight and reload Markdown from TypeScript with MarkdownService.",
+    "route": "content/features/markdown-service",
+    "tags": ["features", "service"],
+    "headings": ["What it does", "Re-render after a setting change", "Clipboard needs a ViewContainerRef"],
+    "excerpt": " token it needs. It is not in 19.x.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Markdown Service",
+        "route": "content/features/markdown-service"
+      }
+    ]
+  },
+  {
+    "label": "Mermaid Diagrams",
+    "description": "Turn mermaid code blocks into diagrams with Mermaid 11, configured app-wide with MERMAID_OPTIONS or per component.",
+    "route": "content/features/mermaid",
+    "tags": ["features", "plugins"],
+    "headings": ["How it works", "Configuration", "Changing the theme"],
+    "excerpt": " node_modules/mermaid/dist/mermaid.min.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Mermaid Diagrams",
+        "route": "content/features/mermaid"
+      }
+    ]
+  },
+  {
+    "label": "Sanitization",
+    "description": "How @fsegurai/ngx-markdown 19.1.0 sanitizes rendered HTML with Angular's DomSanitizer, and how to change or skip it.",
+    "route": "content/features/sanitization",
+    "tags": ["features", "security"],
+    "headings": ["Change it app-wide", "Skip it for one render", "What sanitizing removes", "`parseInline()`"],
+    "excerpt": "Sanitization\n\nSanitizing is on by default: the HTML produced by marked goes through Angular's\n before it reaches the DOM.\n\nChange it app-wide\n\n \n\n...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Sanitization",
+        "route": "content/features/sanitization"
+      }
+    ]
+  },
+  {
+    "label": "Syntax Highlighting",
+    "description": "Highlight fenced code blocks with Prism.js, plus the line numbers, line highlight and command line Prism plugins.",
+    "route": "content/features/syntax-highlighting",
+    "tags": ["features", "plugins"],
+    "headings": ["Setup", "Choosing the language", "Prism plugins"],
+    "excerpt": "Syntax Highlighting\n\nHighlighting has no toggle. Every render calls on the rendered element when the global\n exists; without it, the code silently...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Syntax Highlighting",
+        "route": "content/features/syntax-highlighting"
+      }
+    ]
+  },
+  {
+    "label": "Getting Started",
+    "description": "Install @fsegurai/ngx-markdown 19.1.0, render your first Markdown, and configure the library.",
+    "route": "content/getting-started/README",
+    "tags": ["getting-started", "overview"],
+    "excerpt": "Three steps take you from zero to a configured Markdown renderer.",
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      },
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started/README"
+      }
+    ]
+  },
+  {
+    "label": "Configuration",
+    "description": "Configure marked options, extensions, plugin defaults and sanitizing once with provideMarkdown() and its token providers.",
+    "route": "content/getting-started/configuration",
+    "tags": ["getting-started", "configuration"],
+    "headings": ["Options", "Precedence", "HttpClient", "NgModule apps", "Next step"],
+    "excerpt": "Configuration\n\n takes a . Every property except and is an\nAngular provider for one injection token, so values can come from or from a with .\n is a...",
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      },
+      {
+        "label": "Configuration",
+        "route": "content/getting-started/configuration"
+      }
+    ]
+  },
+  {
+    "label": "Installation",
+    "description": "Install @fsegurai/ngx-markdown 19.1.0 with marked 15, then add only the optional plugin libraries you need as global scripts.",
+    "route": "content/getting-started/installation",
+    "tags": ["getting-started", "installation"],
+    "headings": ["Requirements", "Optional plugins", "Next step"],
+    "excerpt": "That is all you need to render Markdown. Every plugin below is optional.",
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      },
+      {
+        "label": "Installation",
+        "route": "content/getting-started/installation"
+      }
+    ]
+  },
+  {
+    "label": "Quick Start",
+    "description": "Register provideMarkdown() and HttpClient, then render Markdown with the markdown component or the markdown pipe.",
+    "route": "content/getting-started/quick-start",
+    "tags": ["getting-started", "tutorial"],
+    "headings": ["1. Register the providers", "2. Render Markdown", "3. Or use the pipe", "Next step"],
+    "excerpt": "( does the same). Add too if you load files with .",
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      },
+      {
+        "label": "Quick Start",
+        "route": "content/getting-started/quick-start"
+      }
+    ]
+  },
+  {
+    "label": "Guides",
+    "description": "Task-oriented guides for @fsegurai/ngx-markdown 19.1.0, from upgrading off 19.0 to custom renderers and server rendering.",
+    "route": "content/guides/README",
+    "tags": ["guides", "overview"],
+    "excerpt": "| Upgrading from 19.0 | Move to 19.1.0 and its -based internals.",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Guides",
+        "route": "content/guides/README"
+      }
+    ]
+  },
+  {
+    "label": "Custom Renderer",
+    "description": "Override how marked renders tokens, app-wide with MARKED_OPTIONS or at runtime through MarkdownService.renderer.",
+    "route": "content/guides/custom-renderer",
+    "tags": ["guides", "customization"],
+    "headings": ["App-wide with MARKED_OPTIONS", "At runtime with MarkdownService", "Things to know"],
+    "excerpt": "Custom Renderer\n\nTwo places accept a renderer. Both use (marked's ) and the types (marked's\n ), re-exported by the library.\n\nApp-wide with...",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Custom Renderer",
+        "route": "content/guides/custom-renderer"
+      }
+    ]
+  },
+  {
+    "label": "Marked Options and Extensions",
+    "description": "Provide marked options with MARKED_OPTIONS, including factories with dependencies, and marked extensions as a plain array.",
+    "route": "content/guides/marked-options-and-extensions",
+    "tags": ["guides", "configuration"],
+    "headings": ["Options", "Extensions", "Things to know"],
+    "excerpt": "The value is a marked (re-exported by the library).",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Marked Options and Extensions",
+        "route": "content/guides/marked-options-and-extensions"
+      }
+    ]
+  },
+  {
+    "label": "SSR and Prerendering",
+    "description": "What @fsegurai/ngx-markdown 19.1.0 does on the server, and the limits to plan for with SSR and prerendering.",
+    "route": "content/guides/ssr-and-prerendering",
+    "tags": ["guides", "ssr"],
+    "headings": ["What runs where", "Limits"],
+    "excerpt": "19.x has no dedicated server-rendering support.",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "SSR and Prerendering",
+        "route": "content/guides/ssr-and-prerendering"
+      }
+    ]
+  },
+  {
+    "label": "Upgrading from 19.0",
+    "description": "Move an application from @fsegurai/ngx-markdown 19.0.0 to 19.1.0; templates keep working, code that touched component internals may not.",
+    "route": "content/guides/upgrading-from-19-0",
+    "tags": ["guides", "upgrade"],
+    "headings": ["Checklist", "What changed", "Next step"],
+    "excerpt": "Upgrading from 19.0\n\n19.1.0 keeps every peer and optional dependency range of 19.0.0. Templates and configs work\nunchanged; the internals moved from...",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Upgrading from 19.0",
+        "route": "content/guides/upgrading-from-19-0"
+      }
+    ]
+  },
+  {
+    "label": "Help",
+    "description": "Release notes, answers to common questions and fixes for common problems with @fsegurai/ngx-markdown 19.1.0.",
+    "route": "content/help/README",
+    "tags": ["help", "overview"],
+    "excerpt": "| What's New in 19.1.0 | You want to know what this release changed.",
+    "breadcrumb": [
+      {
+        "label": "Help",
+        "route": "content/help"
+      },
+      {
+        "label": "Help",
+        "route": "content/help/README"
+      }
+    ]
+  },
+  {
+    "label": "FAQ",
+    "description": "Frequently asked questions about @fsegurai/ngx-markdown 19.1.0.",
+    "route": "content/help/faq",
+    "tags": ["help", "faq"],
+    "excerpt": "FAQ\n\nDo I need ?\nYes. It provides both and the token it injects ( does\nthe same). Call it once, with no arguments for the defaults.\n\n or ?\nBoth are...",
+    "breadcrumb": [
+      {
+        "label": "Help",
+        "route": "content/help"
+      },
+      {
+        "label": "FAQ",
+        "route": "content/help/faq"
+      }
+    ]
+  },
+  {
+    "label": "Troubleshooting",
+    "description": "Fixes for common problems with @fsegurai/ngx-markdown 19.1.0, from missing plugin scripts to unhighlighted code.",
+    "route": "content/help/troubleshooting",
+    "tags": ["help", "troubleshooting"],
+    "excerpt": "| | was not called. | Add (or ) to the application providers.",
+    "breadcrumb": [
+      {
+        "label": "Help",
+        "route": "content/help"
+      },
+      {
+        "label": "Troubleshooting",
+        "route": "content/help/troubleshooting"
+      }
+    ]
+  },
+  {
+    "label": "What's New in 19.1.0",
+    "description": "Release notes for @fsegurai/ngx-markdown 19.1.0, a maintenance release that modernizes injection and adds the ngx-markdown selector.",
+    "route": "content/help/whats-new",
+    "tags": ["help", "changelog", "release-notes"],
+    "headings": ["Library changes", "Fixes", "Changes", "Upgrade checklist", "Source of these notes"],
+    "excerpt": "What's New in 19.1.0\n\nReleased 2024-12-06. A maintenance release for Angular 19. The CHANGELOG lists only project, workflow, README and\ndemo work;...",
+    "breadcrumb": [
+      {
+        "label": "Help",
+        "route": "content/help"
+      },
+      {
+        "label": "What's New in 19.1.0",
+        "route": "content/help/whats-new"
+      }
+    ]
+  }
+]

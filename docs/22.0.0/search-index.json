@@ -1,0 +1,868 @@
+[
+  {
+    "label": "Documentation Home",
+    "description": "Documentation for @fsegurai/ngx-markdown 22.0.0, an Angular library that renders Markdown with marked and highlights code with Prism.js.",
+    "route": "content/README",
+    "tags": ["documentation", "overview", "angular"],
+    "headings": ["Quick path", "Sections", "Version"],
+    "excerpt": " renders Markdown in Angular applications.",
+    "breadcrumb": [
+      {
+        "label": "Home",
+        "route": "content/README"
+      }
+    ]
+  },
+  {
+    "label": "API Reference",
+    "description": "Exact inputs, outputs, methods, provider functions, injection tokens and types exported by @fsegurai/ngx-markdown.",
+    "route": "content/api/README",
+    "tags": ["api", "overview"],
+    "excerpt": "Everything below is exported from .",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "API",
+        "route": "content/api/README"
+      }
+    ]
+  },
+  {
+    "label": "Errors",
+    "description": "Error message constants exported by @fsegurai/ngx-markdown and the MermaidRenderError class.",
+    "route": "content/api/errors",
+    "tags": ["api", "errors"],
+    "headings": ["MermaidRenderError"],
+    "excerpt": "Every message starts with . Compare with the constant.",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "Errors",
+        "route": "content/api/errors"
+      }
+    ]
+  },
+  {
+    "label": "MarkdownComponent",
+    "description": "Selectors, inputs and outputs of the standalone MarkdownComponent.",
+    "route": "content/api/markdown-component",
+    "tags": ["api", "component"],
+    "headings": ["Content inputs", "Plugin inputs", "Outputs", "MarkdownRouterLinkOptions"],
+    "excerpt": "MarkdownComponent\n\nSelectors: , , . Standalone, .\n\nContent inputs\n\n| Input | Type | Default | Description...",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "MarkdownComponent",
+        "route": "content/api/markdown-component"
+      }
+    ]
+  },
+  {
+    "label": "MarkdownService",
+    "description": "Methods and properties of MarkdownService, and the ParseOptions and RenderOptions types.",
+    "route": "content/api/markdown-service",
+    "tags": ["api", "service"],
+    "headings": ["Methods", "ParseOptions", "RenderOptions"],
+    "excerpt": "MarkdownService\n\n .\n\nMethods\n\n| Member | Signature | Description |\n|--------|-----------|-------------|\n| | | Parses (and sanitizes) Markdown to...",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "MarkdownService",
+        "route": "content/api/markdown-service"
+      }
+    ]
+  },
+  {
+    "label": "Pipes",
+    "description": "Signatures of the markdown and language pipes and the MarkdownPipeOptions type.",
+    "route": "content/api/pipes",
+    "tags": ["api", "pipe"],
+    "headings": ["MarkdownPipe (`markdown`)", "LanguagePipe (`language`)"],
+    "excerpt": "Resolves to for , and non-string values (the last logs an error).",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "Pipes",
+        "route": "content/api/pipes"
+      }
+    ]
+  },
+  {
+    "label": "Plugin API",
+    "description": "The MarkdownPlugin interface, hook contexts, withMarkdownPlugin() and the MARKDOWN_PLUGINS token.",
+    "route": "content/api/plugin-api",
+    "tags": ["api", "plugins"],
+    "headings": [
+      "withMarkdownPlugin",
+      "Contexts",
+      "Incremental plugins",
+      "MarkdownTokenizerExtension\\<O\\>",
+      "Registration"
+    ],
+    "excerpt": "Plugin API\n\nwithMarkdownPlugin\n\n \n\nMarkdownPlugin\\ \n\n| Member | Type |\n|--------|------|\n| | (a later registration with the same name replaces it)...",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "Plugin API",
+        "route": "content/api/plugin-api"
+      }
+    ]
+  },
+  {
+    "label": "Plugin Features",
+    "description": "The withX() plugin feature functions, their option types, and the exported plugin objects and names.",
+    "route": "content/api/plugin-features",
+    "tags": ["api", "plugins"],
+    "headings": [
+      "PrismOptions",
+      "ClipboardOptions",
+      "KatexOptions",
+      "MermaidPluginOptions",
+      "MermaidExportOptions",
+      "LightboxOptions",
+      "Marked Extended types"
+    ],
+    "excerpt": "Plugin Features\n\nEach function returns a for .\n\n| Function | Plugin object | Name | Default on |\n|----------|---------------|------|------------|\n| |...",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "Plugin Features",
+        "route": "content/api/plugin-features"
+      }
+    ]
+  },
+  {
+    "label": "provideMarkdown",
+    "description": "Signature of provideMarkdown(), every MarkdownConfig field, and the injection tokens it provides.",
+    "route": "content/api/provide-markdown",
+    "tags": ["api", "configuration"],
+    "headings": ["MarkdownConfig", "Injection tokens"],
+    "excerpt": "Provides and the configuration in the current injector.",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "provideMarkdown",
+        "route": "content/api/provide-markdown"
+      }
+    ]
+  },
+  {
+    "label": "Types",
+    "description": "Exported event payloads, front-matter, heading, Marked and Mermaid types of @fsegurai/ngx-markdown.",
+    "route": "content/api/types",
+    "tags": ["api", "types"],
+    "headings": ["Event payloads", "Front-matter", "Headings", "Marked", "Mermaid"],
+    "excerpt": "Types\n\nEvent payloads\n\n| Type | Fields |\n|------|--------|\n| | |\n| | , , , |\n| | , , , |\n| | , , |\n| | , , |\n| | , , , , |\n| | , , |\n\nButton inputs:...",
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      },
+      {
+        "label": "Types",
+        "route": "content/api/types"
+      }
+    ]
+  },
+  {
+    "label": "Examples",
+    "description": "Complete, copyable examples of @fsegurai/ngx-markdown setups and pages.",
+    "route": "content/examples/README",
+    "tags": ["examples", "overview"],
+    "excerpt": "| App-wide Setup | Every plugin provided once in .",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "Examples",
+        "route": "content/examples/README"
+      }
+    ]
+  },
+  {
+    "label": "App-wide Setup",
+    "description": "An app.config.ts that provides every ngx-markdown plugin, Marked options and a Marked extension.",
+    "route": "content/examples/app-wide-setup",
+    "tags": ["examples", "configuration"],
+    "excerpt": "Adapted from the demo application.",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "App-wide Setup",
+        "route": "content/examples/app-wide-setup"
+      }
+    ]
+  },
+  {
+    "label": "Docs Page with TOC",
+    "description": "A documentation page that loads a Markdown file, reads its front-matter and builds a table of contents.",
+    "route": "content/examples/docs-page-with-toc",
+    "tags": ["examples", "content"],
+    "excerpt": "With the default sanitizer, heading s are removed, so the links rely on .",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "Docs Page with TOC",
+        "route": "content/examples/docs-page-with-toc"
+      }
+    ]
+  },
+  {
+    "label": "Page-scoped Configuration",
+    "description": "Give one page its own MarkdownService and plugins, here with marked-extended packages, without affecting other pages.",
+    "route": "content/examples/page-scoped-configuration",
+    "tags": ["examples", "configuration", "extensions"],
+    "excerpt": "A in a component's creates a for that subtree.",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "Page-scoped Configuration",
+        "route": "content/examples/page-scoped-configuration"
+      }
+    ]
+  },
+  {
+    "label": "Pipe with Callbacks",
+    "description": "Use the markdown pipe with clipboard, front-matter and heading callbacks instead of component outputs.",
+    "route": "content/examples/pipe-with-callbacks",
+    "tags": ["examples", "pipe"],
+    "excerpt": "The pipe has no outputs, so pass callbacks in its options. Its post-render step runs on this component's host element.",
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      },
+      {
+        "label": "Pipe with Callbacks",
+        "route": "content/examples/pipe-with-callbacks"
+      }
+    ]
+  },
+  {
+    "label": "Features",
+    "description": "What each building block and plugin of @fsegurai/ngx-markdown does, with the inputs that control it.",
+    "route": "content/features/README",
+    "tags": ["features", "overview"],
+    "headings": ["Rendering", "Plugins", "Content helpers (core, nothing to provide)"],
+    "excerpt": "| Markdown Component | : , , projected content, events.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Features",
+        "route": "content/features/README"
+      }
+    ]
+  },
+  {
+    "label": "Copy to Clipboard",
+    "description": "Add a copy button to every code block with withClipboard(), and customize the button or react to copy events.",
+    "route": "content/features/clipboard",
+    "tags": ["features", "plugins", "clipboard"],
+    "headings": ["Options", "Styling", "Custom button inputs", "Events"],
+    "excerpt": "Copy to Clipboard\n\nNeeds the package script (global ) and the feature:\n\n \n\n \n\nOptions\n\n| Option ( ) | Input | Default | What it does...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Copy to Clipboard",
+        "route": "content/features/clipboard"
+      }
+    ]
+  },
+  {
+    "label": "Emoji",
+    "description": "Convert emoji shortcodes such as :heart: to Unicode with Emoji-Toolkit and the withEmoji() plugin.",
+    "route": "content/features/emoji",
+    "tags": ["features", "plugins", "emoji"],
+    "excerpt": "Emoji\n\nNeeds the Emoji-Toolkit script (global ) and the feature, which has no options:\n\n \n\n \n\n| Converted | Left as written...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Emoji",
+        "route": "content/features/emoji"
+      }
+    ]
+  },
+  {
+    "label": "Front-matter",
+    "description": "Strip a YAML or TOML front-matter block from Markdown and read its data with the core frontMatter plugin.",
+    "route": "content/features/front-matter",
+    "tags": ["features", "content"],
+    "headings": ["Rules", "Pipe, service and helper"],
+    "excerpt": "By default a front-matter block is rendered as Markdown.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Front-matter",
+        "route": "content/features/front-matter"
+      }
+    ]
+  },
+  {
+    "label": "Headings and TOC",
+    "description": "Read the rendered headings to build a table of contents, and give headings GitHub-style ids with headingIds.",
+    "route": "content/features/headings",
+    "tags": ["features", "content"],
+    "headings": ["MarkdownHeading", "Ids"],
+    "excerpt": "Headings and TOC\n\n emits the headings of the content in document order on every render, before :\n\n \n\n \n\nMarkdownHeading\n\n| Field | Value...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Headings and TOC",
+        "route": "content/features/headings"
+      }
+    ]
+  },
+  {
+    "label": "Math with KaTeX",
+    "description": "Render $…$ and $$…$$ math while parsing with KaTeX and the withKatex() plugin.",
+    "route": "content/features/katex",
+    "tags": ["features", "plugins", "math"],
+    "headings": ["Syntax", "Options", "Errors, SSR and security"],
+    "excerpt": "Math with KaTeX\n\nNeeds the KaTeX script and CSS (global ) and the feature:\n\n \n\n \n\nSyntax\n\n| Write | Renders |\n|-------|---------|\n| | Inline math |\n|...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Math with KaTeX",
+        "route": "content/features/katex"
+      }
+    ]
+  },
+  {
+    "label": "Image Lightbox",
+    "description": "Open the images of rendered Markdown in a built-in dialog viewer with the dependency-free withLightbox() plugin.",
+    "route": "content/features/lightbox",
+    "tags": ["features", "plugins", "images"],
+    "headings": ["Options (`LightboxOptions`)", "Use another viewer", "Theming"],
+    "excerpt": "No dependency: the viewer is a native opened with .",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Image Lightbox",
+        "route": "content/features/lightbox"
+      }
+    ]
+  },
+  {
+    "label": "Link Handling",
+    "description": "Route internal links with the Angular Router and open external links in a new tab with routerLinkOptions.",
+    "route": "content/features/link-handling",
+    "tags": ["features", "content", "links"],
+    "excerpt": " handles clicks on the links of its content.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Link Handling",
+        "route": "content/features/link-handling"
+      }
+    ]
+  },
+  {
+    "label": "Markdown Component",
+    "description": "Render Markdown from data, a remote src or projected content with the standalone MarkdownComponent.",
+    "route": "content/features/markdown-component",
+    "tags": ["features", "component"],
+    "headings": ["Where the content comes from", "What triggers a render", "Events", "Long documents"],
+    "excerpt": " attribute (so works like a directive).",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Markdown Component",
+        "route": "content/features/markdown-component"
+      }
+    ]
+  },
+  {
+    "label": "Markdown Pipe",
+    "description": "Use the markdown pipe to bind parsed Markdown to innerHTML and the language pipe to wrap code in a fence.",
+    "route": "content/features/markdown-pipe",
+    "tags": ["features", "pipe"],
+    "headings": ["markdown", "language"],
+    "excerpt": "Markdown Pipe\n\nmarkdown\n\n turns a string into asynchronously, so it is always followed by :\n\n \n\nIts options are , which is (the same options as\n and...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Markdown Pipe",
+        "route": "content/features/markdown-pipe"
+      }
+    ]
+  },
+  {
+    "label": "Markdown Service",
+    "description": "Parse, render, re-render, reload and highlight Markdown from code with the root-provided MarkdownService.",
+    "route": "content/features/markdown-service",
+    "tags": ["features", "service"],
+    "headings": ["Parse then render", "Other methods", "Caches"],
+    "excerpt": "Markdown Service\n\n is . Each instance parses with its own instance, so\n and the configured renderer never change the global object.\n\n \n\nParse then...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Markdown Service",
+        "route": "content/features/markdown-service"
+      }
+    ]
+  },
+  {
+    "label": "Marked Extended",
+    "description": "Plug @fsegurai/marked-extended packages (tabs, alerts, code groups, footnotes) into ngx-markdown with withMarkedExtended().",
+    "route": "content/features/marked-extended",
+    "tags": ["features", "plugins", "extensions"],
+    "headings": ["A feature", "Behavior", "Per component"],
+    "excerpt": "Marked Extended\n\n integrates the\n 19.0.0-beta.0+ packages.\nngx-markdown has no dependency on them: install the ones you use and pass their objects...",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Marked Extended",
+        "route": "content/features/marked-extended"
+      }
+    ]
+  },
+  {
+    "label": "Mermaid SVG Export",
+    "description": "Add a button that downloads each rendered Mermaid diagram as an SVG file with withMermaidExport().",
+    "route": "content/features/mermaid-export",
+    "tags": ["features", "plugins", "diagrams"],
+    "excerpt": "Requires the Mermaid plugin; the export runs after it.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Mermaid SVG Export",
+        "route": "content/features/mermaid-export"
+      }
+    ]
+  },
+  {
+    "label": "Mermaid Diagrams",
+    "description": "Draw mermaid code blocks as diagrams with withMermaid(), loaded on demand or as a global script.",
+    "route": "content/features/mermaid",
+    "tags": ["features", "plugins", "diagrams"],
+    "headings": [
+      "Options",
+      "Rendering and errors",
+      "Lazy diagrams (opt-in)",
+      "Re-rendering with new options",
+      "Mermaid 12 defaults",
+      "Security",
+      "Build warnings"
+    ],
+    "excerpt": "Install and provide the feature.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Mermaid Diagrams",
+        "route": "content/features/mermaid"
+      }
+    ]
+  },
+  {
+    "label": "Relative URLs",
+    "description": "Resolve relative links and images against the src file or a base URL with srcRelativeLink and baseUrl.",
+    "route": "content/features/relative-urls",
+    "tags": ["features", "content", "links"],
+    "excerpt": "By default relative URLs resolve against the page.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Relative URLs",
+        "route": "content/features/relative-urls"
+      }
+    ]
+  },
+  {
+    "label": "Sanitization",
+    "description": "How rendered HTML is sanitized by default and how to switch to a custom sanitizer or turn it off.",
+    "route": "content/features/sanitization",
+    "tags": ["features", "security"],
+    "headings": ["Things the sanitizer changes", "Related tokens"],
+    "excerpt": "Sanitization\n\nRendered HTML is sanitized by default with Angular's and , even without\n .\n\n \n\nA sanitize function replaces Angular's sanitizer....",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Sanitization",
+        "route": "content/features/sanitization"
+      }
+    ]
+  },
+  {
+    "label": "Syntax Highlighting",
+    "description": "Highlight code blocks with Prism.js through withPrism(), including line numbers, line highlight and command line.",
+    "route": "content/features/syntax-highlighting",
+    "tags": ["features", "plugins", "highlighting"],
+    "headings": [
+      "How it highlights",
+      "Prism plugins (line numbers, highlight, command line)",
+      "Choosing the language",
+      "Highlighting without the plugin"
+    ],
+    "excerpt": "The Prism plugin highlights every code block with the global . It is enabled by default once provided.",
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      },
+      {
+        "label": "Syntax Highlighting",
+        "route": "content/features/syntax-highlighting"
+      }
+    ]
+  },
+  {
+    "label": "Getting Started",
+    "description": "Install @fsegurai/ngx-markdown, render your first Markdown, and configure the library.",
+    "route": "content/getting-started/README",
+    "tags": ["getting-started", "overview"],
+    "excerpt": "Three steps take you from zero to a configured Markdown renderer.",
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      },
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started/README"
+      }
+    ]
+  },
+  {
+    "label": "Configuration",
+    "description": "Configure sanitizing, Marked options, Marked extensions, source caching and plugins with provideMarkdown().",
+    "route": "content/getting-started/configuration",
+    "tags": ["getting-started", "configuration"],
+    "headings": ["Plugins are two-step", "Without provideMarkdown()", "Next step"],
+    "excerpt": "Configuration\n\nEverything app-wide goes through :\n\n \n\n| Option | Default | What it does |\n|--------|---------|--------------|\n| | | The plugin...",
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      },
+      {
+        "label": "Configuration",
+        "route": "content/getting-started/configuration"
+      }
+    ]
+  },
+  {
+    "label": "Installation",
+    "description": "Install @fsegurai/ngx-markdown, marked and the optional plugin libraries, and load their scripts and styles.",
+    "route": "content/getting-started/installation",
+    "tags": ["getting-started", "installation"],
+    "headings": ["Requirements", "Browser support", "Optional libraries", "Next step"],
+    "excerpt": "Installation\n\nInstall the library and :\n\n \n\nRequirements\n\n| Peer | Version | Required |\n|------|---------|----------|\n| , , , | | Yes |\n| | | Yes |\n|...",
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      },
+      {
+        "label": "Installation",
+        "route": "content/getting-started/installation"
+      }
+    ]
+  },
+  {
+    "label": "Quick Start",
+    "description": "Render Markdown from a variable, a remote file or projected content with the standalone MarkdownComponent.",
+    "route": "content/getting-started/quick-start",
+    "tags": ["getting-started", "tutorial"],
+    "headings": ["1. Provide the configuration", "2. Import the component", "3. Or use the pipe", "Next step"],
+    "excerpt": "Quick Start\n\nProvide the configuration\n\n is optional for the defaults, but it is where every plugin is turned on, so add it once:\n\n \n\nImport the...",
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      },
+      {
+        "label": "Quick Start",
+        "route": "content/getting-started/quick-start"
+      }
+    ]
+  },
+  {
+    "label": "Guides",
+    "description": "Task-oriented guides for @fsegurai/ngx-markdown, from migrating to 22 to writing your own plugin.",
+    "route": "content/guides/README",
+    "tags": ["guides", "overview"],
+    "excerpt": "| Migrating from 21 to 22 | Upgrade an existing app: removed , plugin features, async render.",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Guides",
+        "route": "content/guides/README"
+      }
+    ]
+  },
+  {
+    "label": "Custom Renderer",
+    "description": "Change the HTML of Markdown tokens with a MarkedRenderer in MARKED_OPTIONS or through MarkdownService.renderer.",
+    "route": "content/guides/custom-renderer",
+    "tags": ["guides", "rendering"],
+    "headings": ["App-wide with a factory", "At runtime on the service"],
+    "excerpt": "Custom Renderer\n\nTwo places take a renderer:\n\nApp-wide, in the of .\nAt runtime, on .\n\nApp-wide with a factory\n\n \n\nTo wrap the default output, call...",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Custom Renderer",
+        "route": "content/guides/custom-renderer"
+      }
+    ]
+  },
+  {
+    "label": "Long Documents",
+    "description": "How large documents are parsed and rendered without blocking the main thread (time-sliced parse, progressive insertion, incremental updates of edited content), the opt-in contentVisibility option for very long pages, lazy Mermaid diagrams and math-heavy documents.",
+    "route": "content/guides/long-documents",
+    "tags": ["guides", "performance"],
+    "headings": [
+      "Time-sliced parse",
+      "Incremental updates",
+      "Opt-in: skip off-screen layout",
+      "Opt-in: lazy Mermaid diagrams",
+      "Math-heavy documents",
+      "Line numbers"
+    ],
+    "excerpt": "Long Documents\n\nNothing needs configuring:\n\nTime-sliced parse. In the browser, content of 16 KiB or more is parsed and sanitized in slices of about 8...",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Long Documents",
+        "route": "content/guides/long-documents"
+      }
+    ]
+  },
+  {
+    "label": "Marked Options and Extensions",
+    "description": "Configure Marked with MARKED_OPTIONS and register plain Marked extensions with MARKED_EXTENSIONS.",
+    "route": "content/guides/marked-options-and-extensions",
+    "tags": ["guides", "configuration"],
+    "headings": ["Marked options", "Marked extensions", "Extension or plugin?"],
+    "excerpt": "A single parse can also pass in its .",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Marked Options and Extensions",
+        "route": "content/guides/marked-options-and-extensions"
+      }
+    ]
+  },
+  {
+    "label": "Follow a Light/Dark Theme",
+    "description": "Redraw Mermaid diagrams when the app theme changes, without parsing the Markdown again.",
+    "route": "content/guides/mermaid-theme-switching",
+    "tags": ["guides", "diagrams", "theming"],
+    "headings": ["What happens on a change", "Without the component"],
+    "excerpt": " is the one rendering input that is tracked.",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Follow a Light/Dark Theme",
+        "route": "content/guides/mermaid-theme-switching"
+      }
+    ]
+  },
+  {
+    "label": "Migrating from 21 to 22",
+    "description": "Step-by-step checklist to upgrade @fsegurai/ngx-markdown from 21.x to 22 and its plugin features.",
+    "route": "content/guides/migrating-from-21",
+    "tags": ["guides", "migration"],
+    "headings": [
+      "Checklist",
+      "MarkdownModule is removed",
+      "Plugins need their feature",
+      "Other behavior changes",
+      "Incremental updates and time slicing"
+    ],
+    "excerpt": "Migrating from 21 to 22\n\nChecklist\n\n[ ] Angular , TypeScript , .\n[ ] Replace with and the standalone imports.\n[ ] Install each optional peer you use...",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Migrating from 21 to 22",
+        "route": "content/guides/migrating-from-21"
+      }
+    ]
+  },
+  {
+    "label": "SSR and Prerendering",
+    "description": "Use @fsegurai/ngx-markdown with server-side rendering, static prerendering and client hydration.",
+    "route": "content/guides/ssr-and-prerendering",
+    "tags": ["guides", "ssr"],
+    "excerpt": "SSR and Prerendering\n\nThe library is SSR-safe: server rendering, static prerendering ( ) and \nwork without extra setup: hydrates with , and...",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "SSR and Prerendering",
+        "route": "content/guides/ssr-and-prerendering"
+      }
+    ]
+  },
+  {
+    "label": "Writing a Plugin",
+    "description": "Build your own hook-based Markdown plugin with MarkdownPlugin and withMarkdownPlugin(), then enable it per component.",
+    "route": "content/guides/writing-a-plugin",
+    "tags": ["guides", "plugins"],
+    "headings": ["Example: external links in a new tab", "Hook order", "Ordering and options", "Context"],
+    "excerpt": "A plugin is a plain object. Every hook is optional.",
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      },
+      {
+        "label": "Writing a Plugin",
+        "route": "content/guides/writing-a-plugin"
+      }
+    ]
+  },
+  {
+    "label": "Help",
+    "description": "Answers to common questions and fixes for common problems with @fsegurai/ngx-markdown.",
+    "route": "content/help/README",
+    "tags": ["help", "overview"],
+    "excerpt": "| FAQ | You have a question about how something works.",
+    "breadcrumb": [
+      {
+        "label": "Help",
+        "route": "content/help"
+      },
+      {
+        "label": "Help",
+        "route": "content/help/README"
+      }
+    ]
+  },
+  {
+    "label": "FAQ",
+    "description": "Frequently asked questions about @fsegurai/ngx-markdown.",
+    "route": "content/help/faq",
+    "tags": ["help", "faq"],
+    "excerpt": "FAQ\n\nDo I need ?\nNot for the defaults: is provided in root and sanitizing is on. You need it for plugins and options.\n\nIs there an NgModule?\nNo. was...",
+    "breadcrumb": [
+      {
+        "label": "Help",
+        "route": "content/help"
+      },
+      {
+        "label": "FAQ",
+        "route": "content/help/faq"
+      }
+    ]
+  },
+  {
+    "label": "Troubleshooting",
+    "description": "Fixes for code not highlighting, plugins doing nothing, missing heading ids, Mermaid errors and SSR problems.",
+    "route": "content/help/troubleshooting",
+    "tags": ["help", "troubleshooting"],
+    "excerpt": "Troubleshooting\n\n| Symptom | Cause | Fix |\n|---------|-------|-----|\n| Code is not highlighted | missing, or Prism / the language component not...",
+    "breadcrumb": [
+      {
+        "label": "Help",
+        "route": "content/help"
+      },
+      {
+        "label": "Troubleshooting",
+        "route": "content/help/troubleshooting"
+      }
+    ]
+  }
+]

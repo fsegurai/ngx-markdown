@@ -1,0 +1,950 @@
+<app-scrollspy-nav-layout [headings]="headings()">
+  <h1>Plugins</h1>
+
+  <markdown>
+    <!-- Before to use any plugin, make sure you've installed the required libraries by following the [installation](https://fsegurai.github.io/ngx-markdown/get-started#installation) section of the __Get Started__ page. -->
+    Before to use any plugin, make sure you've installed the required libraries by following the
+    [installation](/get-started#installation) section of the __Get Started__ page.
+  </markdown>
+
+  <markdown ngPreserveWhitespaces>
+    Each plugin is provided once, with its `withX()` feature in the `plugins` of `provideMarkdown()` (its global options
+    go there), then enabled per component with its input (`[katex]`, `[mermaid]`, `[clipboard]`…) or the `[plugins]`
+    record. A plugin whose feature is missing does nothing, even when a component enables it: in development a
+    `[ngx-markdown]` warning names the `withX()` to add.
+
+    ```typescript
+    // app.config.ts
+    providers: [
+      provideMarkdown(&#123;
+        plugins: [
+          withEmoji(),
+          withPrism(),
+          withKatex(&#123; throwOnError: false &#125;),
+          withMermaid(&#123; loader: () => import('mermaid').then((m) => m.default) &#125;),
+          withMermaidExport(),
+          withClipboard(&#123; buttonComponent: ClipboardButtonComponent &#125;),
+          withLightbox(),
+        ],
+      &#125;),
+    ],
+    ```
+
+    ```html
+    &lt;markdown [data]="markdown" katex mermaid clipboard />
+    &lt;markdown [data]="markdown" [plugins]="&#123; katex: true, mermaid: true &#125;" />
+    ```
+  </markdown>
+
+  <!-- PLUGINS - Emoji -->
+  <section>
+    <h2 id="emoji">Emoji plugin</h2>
+
+    <markdown [emoji]="true" ngPreserveWhitespaces>
+      #### Emoji-Toolkit file to include
+      ```javascript
+      node_modules/emoji-toolkit/lib/js/joypixels.min.js
+      ```
+
+      #### Feature
+      `provideMarkdown(&#123; plugins: [withEmoji()] &#125;)`
+
+      #### Directive
+      `emoji` - activate emoji plugin
+
+      ### Example
+    </markdown>
+
+    <markdown>
+      Using `emoji` input property on `markdown` component, directive or pipe allows you to convert shortnames to native
+      unicode emojis.
+    </markdown>
+
+    <markdown [src]="'app/plugins/remote/emoji.html'" />
+
+    <markdown>
+      The example below illustrate `emoji` directive in action.
+    </markdown>
+
+    <div class="split">
+      <mat-form-field appearance="fill" color="accent" class="split-item">
+        <textarea cdkTextareaAutosize="true" [(ngModel)]="emojiMarkdown" matInput></textarea>
+      </mat-form-field>
+
+      <markdown [data]="emojiMarkdown" [emoji]="true" class="split-item" />
+    </div>
+
+    <markdown [emoji]="true">
+      > :blue_book: You can refer to this [Emoji Cheat
+      Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md) for a complete list of _shortnames_.
+    </markdown>
+  </section>
+
+  <!-- PLUGINS - Line Numbers -->
+  <section>
+    <h2 id="line-numbers">Line Numbers plugin</h2>
+
+    <markdown ngPreserveWhitespaces>
+      #### Prism files to include
+      ```javascript
+      node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css
+      node_modules/prismjs/plugins/line-numbers/prism-line-numbers.js
+      ```
+
+      #### Feature
+      `provideMarkdown(&#123; plugins: [withPrism()] &#125;)` highlights the code of every component (Prism itself, its
+      Line Numbers, Line Highlight and Command Line plugins); `withPrism(&#123; lineNumbers: true &#125;)` sets their
+      options for the whole application, under the inputs below.
+
+      #### Directive
+      `lineNumbers` - activate line numbers plugin
+
+      #### Attributes
+      `start` - offset number for the first display line
+
+      ### Example
+    </markdown>
+
+    <markdown>
+      Using `lineNumbers` input property on `markdown` component, directive or pipe allows you to add line number at the
+      beginning of each lines of code block.
+    </markdown>
+
+    <markdown [src]="'app/plugins/remote/line-numbers.html'" />
+
+    <markdown>
+      The example below uses `lineNumbers` directive which uses default line offset of 1.
+    </markdown>
+
+    <markdown [lineNumbers]="true" ngPreserveWhitespaces>
+      ```javascript
+      var result = square(2);
+
+      function square(number) &#123;
+        return number * number;
+      &#125;
+      ```
+    </markdown>
+
+    <markdown>
+      Optionally you can use `start` to specify the offset number for the first display line.
+    </markdown>
+
+    <markdown>
+      In the example below line offset is set to 5 using `start` input property.
+    </markdown>
+
+    <markdown [start]="5" [lineNumbers]="true" ngPreserveWhitespaces>
+      ```javascript
+      var result = root(2);
+
+      function root(x, n) &#123;
+        try &#123;
+          var negate = n % 2 == 1 && x &lt; 0;
+
+          if (negate) x = -x;
+
+          var possible = Math.pow(x, 1 / n);
+          n = Math.pow(possible, n);
+
+          if (Math.abs(x - n) &lt; 1 && (x > 0 == n > 0)) &#123;
+            return negate ? -possible : possible;
+          &#125;
+        &#125; catch (e) &#123; &#125;
+      &#125;
+      ```
+    </markdown>
+
+    <markdown>
+      `start` accepts `0`, to count lines from zero. A value that is not an integer is ignored, with a one-time
+      `[ngx-markdown]` warning.
+    </markdown>
+
+    <markdown [start]="0" [lineNumbers]="true" ngPreserveWhitespaces>
+      ```javascript
+      const first = items[0];
+      const second = items[1];
+      ```
+    </markdown>
+  </section>
+
+  <!-- PLUGINS - Line Highlight -->
+  <section>
+    <h2 id="line-highlight">Line Highlight plugin</h2>
+
+    <markdown ngPreserveWhitespaces>
+      #### Prism files to include
+      ```javascript
+      node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css
+      node_modules/prismjs/plugins/line-highlight/prism-line-highlight.js
+      ```
+      #### Directive
+      `lineHighlight` - activate line highlight plugin
+
+      #### Attributes
+      `line` - lines to highlight (i.e.: 6, 11-15)<br>
+      `lineOffset` - starting offset for line numbers<br>
+
+      ### Example
+    </markdown>
+
+    <markdown ngPreserveWhitespaces>
+      You can highlight different lines by adding `lineHighlight` directive on the `markdown` component/directive.
+
+      Use `line` input property to specify the line(s) to highlight and optionally there is a `lineOffset` property to
+      specify the starting line of code your snippet represents.
+    </markdown>
+
+    <markdown [src]="'app/plugins/remote/line-highlight.html'" />
+
+    <markdown>
+      `line` must be comma-separated line numbers or ranges (e.g. `'6, 10-19'`, or an array of them), and `lineOffset`
+      an integer (`0` included). A malformed value is ignored, with a one-time `[ngx-markdown]` warning, instead of being
+      written to the `data-line` attribute.
+    </markdown>
+
+    <markdown>
+      In the example below `line` 6 and 10 to 19 are highlighted using a `lineOffset` of 5.
+    </markdown>
+
+    <markdown [lineOffset]="5" [line]="'6, 10-19'" [lineHighlight]="true" ngPreserveWhitespaces>
+      ```javascript
+      var result = root(2);
+
+      function root(x, n) &#123;
+        try &#123;
+          var negate = n % 2 == 1 && x &lt; 0;
+
+          if (negate) x = -x;
+
+          var possible = Math.pow(x, 1 / n);
+          n = Math.pow(possible, n);
+
+          if (Math.abs(x - n) &lt; 1 && (x > 0 == n > 0)) &#123;
+            return negate ? -possible : possible;
+          &#125;
+        &#125; catch (e) &#123; &#125;
+      &#125;
+      ```
+    </markdown>
+  </section>
+
+  <!-- PLUGINS - CommandLine -->
+  <section>
+    <h2 id="command-line">Command Line plugin</h2>
+
+    <markdown [emoji]="true" ngPreserveWhitespaces>
+      #### Prism file(s) to include
+      ```javascript
+      node_modules/prismjs/plugins/command-line/prism-command-line.css
+      node_modules/prismjs/plugins/command-line/prism-command-line.min.js
+      ```
+
+      #### Directive
+      `commandLine` - activate command-line display
+
+      #### Attributes
+      `host` - host name<br>
+      `output` - lines to be presented as output (optional)<br>
+      `filterOutput` - prefix to automatically present lines as output (optional)<br>
+      `prompt` - data prompt<br>
+      `user` - user name<br>
+
+      ### Example
+    </markdown>
+
+    <markdown ngPreserveWhitespaces>
+      Root user without output
+
+      ```html
+      &lt;markdown
+        commandLine
+        [user]="'root'"
+        [host]="'localhost'"
+        [src]="'path/to/file.bash'">
+      &lt;/markdown>
+      ```
+    </markdown>
+
+    <markdown [host]="'localhost'"
+      [src]="'app/plugins/remote/root-user-without-output.bash'"
+      [user]="'root'"
+      [commandLine]="true" />
+
+    <markdown ngPreserveWhitespaces>
+      Non-Root User With Output
+
+      ```html
+      &lt;markdown
+        commandLine
+        [user]="'chris'"
+        [host]="'remotehost'"
+        [output]="'2, 4-8'"
+        [src]="'path/to/file.bash'">
+      &lt;/markdown>
+      ```
+    </markdown>
+
+    <markdown [host]="'remotehost'"
+              [output]="'2, 4-8'"
+              [src]="'app/plugins/remote/non-root-user-with-output.bash'"
+              [user]="'chris'"
+              [commandLine]="true" />
+
+    <markdown ngPreserveWhitespaces>
+      Windows PowerShell With Output
+
+      ```html
+      &lt;markdown
+        commandLine
+        [prompt]="'PS C:\Users\Chris>'"
+        [output]="'2-19'"
+        [src]="'path/to/file.bash'">
+      &lt;/markdown>
+      ```
+    </markdown>
+
+    <markdown [output]="'2-19'"
+      [prompt]="'PS C:\Users\Chris>'"
+      [src]="'app/plugins/remote/windows-powershell-with-output.powershell'"
+      [commandLine]="true" />
+
+    <markdown ngPreserveWhitespaces>
+      Windows PowerShell With Filter Output
+
+      ```html
+      &lt;markdown
+        commandLine
+        [prompt]="'PS C:\Users\Chris>'"
+        [filterOutput]="'(out)'">
+        ```powershell
+        Get-Date
+        (out)
+        (out)Sunday, November 7, 2021 8:19:21 PM
+        (out)
+        `​``
+      &lt;/markdown>
+      ```
+    </markdown>
+
+    <markdown [filterOutput]="'(out)'"
+      [prompt]="'PS C:\Users\Chris>'"
+      [src]="'app/plugins/remote/windows-powershell-with-filter-output.powershell'"
+      [commandLine]="true" />
+  </section>
+
+  <!-- PLUGINS - Katex -->
+  <section>
+    <h2 id="katex">KaTeX plugin</h2>
+
+    <markdown ngPreserveWhitespaces>
+      #### KaTeX files to include
+      ```javascript
+      node_modules/katex/dist/katex.min.css
+      node_modules/katex/dist/katex.min.js
+      ```
+
+      #### Feature
+      `provideMarkdown(&#123; plugins: [withKatex(options?)] &#125;)`
+
+      #### Directive
+      `katex` - render `$…$` (inline) and `$$…$$` (display) math with KaTeX while the Markdown is parsed
+
+      #### Attributes
+      `katexOptions` - [KaTeX options](https://katex.org/docs/options.html), plus `nonStandard`, merged over the
+      options of `withKatex()`<br>
+
+      #### Supported syntax
+      - `$…$` - inline math: the opening `$` starts the text or follows a space, an opening bracket or a quote, and the
+        closing `$` is followed by a space, punctuation, a closing bracket or the end, so `$5 and $10` stays text
+      - `$$…$$` - display math, inline or on lines of its own
+      - `\$` - a literal dollar; math in code spans and code blocks is left untouched
+
+      > Upgrading from 21.x: the Auto-Render extension is no longer used. Remove its script from your `angular.json`;
+      > `\(…\)`, `\[…\]` and its `delimiters` option are not supported, and math inside raw HTML blocks is not
+      > rendered.
+
+      ### Example
+    </markdown>
+
+    <markdown>
+      You can render KaTex expression by adding `katex` directive on the `markdown` component/directive.
+    </markdown>
+
+    <markdown [src]="'app/plugins/remote/katex.html'" />
+
+    <markdown [emoji]="true" ngPreserveWhitespaces>
+      The example below illustrate `katex` directive in action.
+
+      > :bulb: Math is rendered while the Markdown is parsed, so `_`, `*` and `\` inside `$…$` are never turned into emphasis or escapes. Write `\$` for a literal dollar; math in code spans and code blocks is left untouched.
+    </markdown>
+
+    <div class="split">
+      <mat-form-field appearance="fill" color="accent" class="split-item">
+        <textarea cdkTextareaAutosize="true" [(ngModel)]="katexMarkdown" matInput></textarea>
+      </mat-form-field>
+
+      <markdown [data]="katexMarkdown" class="split-item" [katex]="true" />
+    </div>
+
+    <markdown ngPreserveWhitespaces>
+      Optionally, you can specify [KaTeX options](https://katex.org/docs/options.html) using the `katexOptions`
+      property, or for the whole application with `withKatex(options)`.
+
+      **example.component.ts**
+      ```typescript
+      import &#123; KatexOptions &#125; from '&#64;fsegurai/ngx-markdown';
+
+      public options: KatexOptions = &#123;
+        throwOnError: false,
+        errorColor: '#cc0000',
+        macros: &#123; '\\RR': '\\mathbb&#123;R&#125;' &#125;,
+      &#125;;
+      ```
+
+      **example.component.html**
+    </markdown>
+
+    <markdown [src]="'app/plugins/remote/katex-options.html'" />
+
+    <markdown ngPreserveWhitespaces>
+      #### Global options
+
+      `withKatex(options)` sets the options of the whole application; the `katexOptions` input of a component is
+      merged over them.
+
+      ```typescript
+      // app.config.ts
+      providers: [
+        provideMarkdown(&#123;
+          plugins: [withKatex(&#123; throwOnError: false, macros: &#123; '\\RR': '\\mathbb&#123;R&#125;' &#125; &#125;)],
+        &#125;),
+      ],
+      ```
+
+      #### Math glued to text: `nonStandard`
+
+      By default `a$x^2$b` stays text, so prices and shell variables are not turned into math. `nonStandard: true`
+      renders every `$…$`, wherever it is.
+    </markdown>
+
+    <div class="split">
+      <markdown [data]="'Default: a$x^2$b'" class="split-item" [katex]="true" />
+      <markdown [data]="'nonStandard: a$x^2$b'" class="split-item" [katex]="true"
+                [katexOptions]="katexNonStandardOptions" />
+    </div>
+
+    <markdown [emoji]="true" ngPreserveWhitespaces>
+      #### Server-side rendering and sanitization
+
+      Math is also rendered on the server when the global `katex` is available there; otherwise the server leaves the
+      source text. The KaTeX output is inserted after the HTML sanitizer, through `&lt;span class="ngx-katex-…">`
+      placeholders that a custom `sanitize` function must keep.
+
+      > :warning: The `trust` option enables `\href`, `\url`, `\includegraphics` and the `\html*` commands, whose
+      > output is not sanitized: keep it `false` (the default) for untrusted content.
+    </markdown>
+  </section>
+
+  <!-- PLUGINS - Mermaid -->
+  <section>
+    <h2 id="mermaid">Mermaid plugin</h2>
+
+    <markdown ngPreserveWhitespaces>
+      #### Loading Mermaid
+      Provide the plugin with `withMermaid()`, and load Mermaid on demand with its `loader` option, as this demo does:
+      only the pages with a diagram download it, as a lazy chunk (list Mermaid's CommonJS dependencies in
+      `allowedCommonJsDependencies`).
+
+      ```typescript
+      // app.config.ts
+      provideMarkdown(&#123;
+        plugins: [withMermaid(&#123; loader: () => import('mermaid').then((m) => m.default) &#125;)],
+      &#125;),
+      ```
+
+      Alternatively, add `node_modules/mermaid/dist/mermaid.min.js` to the `scripts` of your `angular.json`: simpler,
+      but every page downloads it (about 5.5 MB).
+
+      #### Directive
+      `mermaid` - activate mermaid plugin
+
+      #### Attributes
+      `mermaidOptions` - mermaid [configuration
+      options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties)<br>
+
+      #### Outputs
+      `ready` - emitted once every diagram is drawn<br>
+      `error` - emits a `MermaidRenderError` listing each failed diagram (`failures`: `element`, `error`)<br>
+
+      ### Example
+    </markdown>
+
+    <markdown>
+      Using `mermaid` input property on `markdown` component, directive or pipe allows you to use
+      [mermaid](https://mermaid-js.github.io/) syntax to generate diagrams and flowcharts.
+    </markdown>
+
+    <markdown [src]="'app/plugins/remote/mermaid.html'" />
+
+    <markdown>
+      The example below illustrate `mermaid` directive in action.
+    </markdown>
+
+    <div class="split">
+      <mat-form-field appearance="fill" color="accent" class="split-item">
+        <textarea cdkTextareaAutosize="true" [(ngModel)]="mermaidMarkdown" matInput></textarea>
+      </mat-form-field>
+
+      <markdown [data]="mermaidMarkdown" [mermaidOptions]="mermaidOptions()" class="centered"
+                [mermaid]="true" />
+    </div>
+
+    <markdown ngPreserveWhitespaces>
+      #### Global configuration
+
+      You can provide a global configuration for mermaid [configuration
+      options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) to use across your
+      application with the `config` of `withMermaid()` in your application providers. The `mermaidOptions` of a
+      component are merged over it, key by key. Components then import the standalone `MarkdownComponent`.
+
+      ```typescript
+      // app.config.ts
+      providers: [
+        provideMarkdown(&#123;
+          plugins: [
+            withMermaid(&#123;
+              config: &#123;
+                darkMode: true,
+                look: 'handDrawn',
+                ...
+              &#125;,
+            &#125;),
+          ],
+        &#125;),
+      ],
+
+      // your component
+      imports: [MarkdownComponent],
+      ```
+
+      #### Component configuration
+
+      Additionally, you can specify mermaid [configuration
+      options](https://mermaid.js.org/config/schema-docs/config.html#mermaid-config-properties) on component directly
+      using `mermaidOptions` property.
+
+      **example.component.ts**
+      ```typescript
+      import &#123; MermaidAPI &#125; from '&#64;fsegurai/ngx-markdown';
+
+      public options: MermaidAPI.MermaidConfig = &#123;
+        darkMode: true,
+        look: 'handDrawn',
+        ...
+      &#125;;
+      ```
+
+      **example.component.html**
+    </markdown>
+
+    <markdown [src]="'app/plugins/remote/mermaid-options.html'" />
+
+    <markdown ngPreserveWhitespaces>
+      #### Following a light/dark theme
+
+      `mermaidOptions` is the one rendering input that is tracked: when its value changes after the first render, only
+      the Mermaid diagrams are rendered again, from their kept sources (the Markdown is not parsed again). Bind it to a
+      signal or a `computed` derived from your theme, as this demo does: toggle the theme in the toolbar and the diagram
+      above follows it.
+
+      ```typescript
+      protected readonly mermaidOptions = computed&lt;MermaidAPI.MermaidConfig>(() =>
+        this.theme() === 'dark' ? &#123; theme: 'dark', darkMode: true &#125; : &#123; theme: 'default', darkMode: false &#125;,
+      );
+      ```
+
+      Outside of a component, `MarkdownService.rerenderMermaid(element, &#123; mermaidOptions &#125;)` does the same for an
+      element you rendered: it returns a Promise that rejects with a `MermaidRenderError`.
+
+      #### Errors
+
+      Each diagram is rendered on its own: a diagram that fails shows a `.mermaid-error` box with the error message
+      (style it with that class), the others still render, and the component emits `error` instead of `ready`.
+    </markdown>
+
+    <markdown [emoji]="true">
+      > :construction: The second diagram below is invalid **on purpose**, to show the error box. Its error is also
+      logged in the console.
+    </markdown>
+
+    <markdown [data]="mermaidErrorMarkdown" [mermaidOptions]="mermaidOptions()" [mermaid]="true"
+              [mermaidExport]="true" (mermaidExported)="onMermaidExported($event)"
+              (mermaidExportError)="onMermaidExportError($event)"
+              (error)="onMermaidError($event)" (ready)="mermaidStatus.set('ready: every diagram rendered')" />
+    <p aria-live="polite" class="mermaid-status">{{ mermaidStatus() }}</p>
+    <p aria-live="polite" class="mermaid-last-export">{{ lastExport() }}</p>
+
+    <markdown ngPreserveWhitespaces>
+      ```typescript
+      onMermaidError(error: MarkdownError): void &#123;
+        if (error instanceof MermaidRenderError) &#123;
+          console.log(`$&#123;error.failures.length&#125; diagram(s) failed`, error.failures);
+        &#125;
+      &#125;
+      ```
+
+      #### SVG export
+
+      With `withMermaidExport()` in the `plugins` and `[mermaidExport]="true"`, every rendered diagram (not the error boxes) gets an `SVG` button that downloads
+      it as `diagram-&lt;n&gt;.svg`, as in the example above. The `(mermaidExported)` output reports each download and
+      `(mermaidExportError)` a failure. `mermaidExportButtonComponent`, `mermaidExportButtonTemplate` and
+      `mermaidExportFilenamePrefix` customize it; the buttons are recreated when the diagrams are re-rendered.
+
+      Each `mermaid.render()` call has 30 seconds to settle; change it with `withMermaid(&#123; renderTimeout &#125;)` (in
+      milliseconds, `0` disables it), for instance for large ELK layouts.
+
+      #### Mermaid 12 appearance
+
+      Mermaid 12 defaults to the ELK layout and, for most diagrams, the `redux-color` theme and the `neo` look. To
+      restore the classic look, pin `&#123; layout: 'dagre', look: 'classic', theme: 'default' &#125;` in the `config`
+      of `withMermaid()` (this demo pins `layout: 'dagre'` and keeps a `handDrawn` look).
+    </markdown>
+
+    <markdown [emoji]="true">
+      > :blue_book: You can refer to this [Mermaid](https://mermaid-js.github.io/) documentation for complete usage
+      syntax.
+    </markdown>
+  </section>
+
+  <!-- PLUGINS - Clipboard -->
+  <section>
+    <h2 id="clipboard">Clipboard plugin</h2>
+
+    <markdown ngPreserveWhitespaces>
+      #### Clipboard file(s) to include
+      ```javascript
+      node_modules/clipboard/dist/clipboard.min.js
+      ```
+
+      #### Feature
+      `provideMarkdown(&#123; plugins: [withClipboard(options?)] &#125;)`
+
+      #### Directive
+      `clipboard` - activate copy-to-clipboard plugin
+
+      #### Attributes
+      `clipboardButtonComponent` - component `Type&lt;any>` to use as copy-to-clipboard button<br>
+      `clipboardButtonTemplate` - template reference `TemplateRef&lt;T>` to use as copy-to-clipboard button<br>
+      `clipboardButtonTextCopy` - text to display on the copy button<br>
+      `clipboardButtonTextCopied` - text to display on the copied button<br>
+      `clipboardLanguageButton` - enable language copy button taken as a reference from the code block<br>
+
+      #### Outputs
+      `copied` - emits `&#123; text, language?, element &#125;` when the code block was copied<br>
+      `copyError` - emits `&#123; error, language?, element &#125;` when the copy failed<br>
+
+      #### CSS Selectors
+      `markdown-clipboard-toolbar` - toolbar wrapper<br>
+      `markdown-clipboard-toolbar.hover` - toolbar wrapper during mouse hover<br>
+      `markdown-clipboard-button` - default button<br>
+      `markdown-clipboard-button.copied` - default button during "copied" state<br>
+
+      ### Example
+    </markdown>
+
+    <markdown [clipboard]="true" ngPreserveWhitespaces>
+      #### Default button
+
+      The `clipboard` plugin provide an unstyled default button with a default behavior out of the box if no alternative
+      is used.
+
+      ```javascript
+      const example = 'the default clipboard button with default behavior';
+      ```
+    </markdown>
+
+    <markdown class="btn-clipboard-toolbar" [clipboard]="true" ngPreserveWhitespaces>
+      #### Customize toolbar
+
+      The clipboard button is placed inside a wrapper element that can be customize using the
+      `.markdown-clipboard-toolbar` CSS selector in your global `styles.css/scss` file.
+
+      This allows to override the default positioning of the clipboard button and play with the visibility of the button
+      using the `.hover` CSS selector that is applied on the toolbar when the mouse cursor enters and leaves the code
+      block element.
+
+      ```css
+      .markdown-clipboard-toolbar &#123;
+        top: 16px;
+        right: 16px;
+        opacity: 0;
+        transition: opacity 250ms ease-out;
+      &#125;
+
+      .markdown-clipboard-toolbar.hover &#123;
+        opacity: 1;
+      &#125;
+      ```
+    </markdown>
+
+    <markdown class="btn-clipboard-default" [clipboard]="true" ngPreserveWhitespaces>
+      #### Customize default button
+
+      The default button can be customized using the `.markdown-clipboard-button` CSS selector in your global
+      `styles.css/scss` file. You can also customized the "copied" state happening after the button is clicked using the
+      `.copied` CSS selector.
+
+      ```css
+      .markdown-clipboard-button &#123;
+        background-color: rgba(255, 255, 255, 0.07);
+        border: none;
+        border-radius: 4px;
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 11px;
+        padding: 4px 0;
+        width: 50px;
+        transition: all 250ms ease-out;
+      &#125;
+
+      .markdown-clipboard-button:hover &#123;
+        background-color: rgba(255, 255, 255, 0.14);
+      &#125;
+
+      .markdown-clipboard-button:active &#123;
+        transform: scale(0.95);
+      &#125;
+
+      .markdown-clipboard-button.copied &#123;
+        background-color: rgba(0, 255, 0, 0.1);
+        color: #00ff00;
+      &#125;
+      ```
+    </markdown>
+
+    <markdown class="btn-clipboard-default" [clipboard]="true" clipboardButtonTextCopy="Copy me!"
+              clipboardButtonTextCopied="Copied!" ngPreserveWhitespaces>
+      #### Customize button text copy and button text copied
+
+      The default button text can be customized using the `clipboardButtonTextCopy` and `clipboardButtonTextCopied`
+      input properties on the `markdown` component, directive or pipe.
+
+      ```javascript
+      const example = 'the default clipboard button with custom text';
+      ```
+    </markdown>
+
+    <markdown class="btn-clipboard-default" [clipboard]="true" clipboardButtonTextCopy="Copy code!"
+              clipboardButtonTextCopied="Code copied!" ngPreserveWhitespaces>
+      ```cpp
+      #include &#60;iostream&#62;
+
+      int main() &#123;
+        std::cout &lt;&lt; "Hello, World!";
+        return 0;
+      &#125;
+      ```
+    </markdown>
+
+    <markdown class="btn-clipboard-default" [clipboard]="true" [clipboardLanguageButton]="true" [emoji]="true"
+              (copied)="onCopied($event)" (copyError)="onCopyError($event)" ngPreserveWhitespaces>
+      #### Language button
+
+      To enable language button, use the `[clipboardLanguageButton]="true"` input property on the `markdown` component,
+      directive or pipe. The default button is then labelled with the `language-xxx` class of the code block, alone
+      (`ts` for `class="language-ts line-numbers"`), or `Copy` when it has no language.
+
+      #### Copy events
+
+      The `(copied)` and `(copyError)` outputs of this example report each copy below the code blocks, whatever the
+      button (default, component or template).
+
+      ```html
+      &lt;markdown clipboard (copied)="onCopied($event)" (copyError)="onCopyError($event)">&lt;/markdown>
+      ```
+
+      ```typescript
+      onCopied(&#123; text, language &#125;: MarkdownCopyEvent): void &#123; ... &#125;
+      onCopyError(&#123; error &#125;: MarkdownCopyErrorEvent): void &#123; console.warn(error.message); &#125;
+      ```
+
+      ``` python
+      s = "Python syntax highlighting"
+      print s
+      ```
+
+      ``` javascript
+      const message = "JavaScript syntax highlighting";
+      alert(message);
+
+      const regexp = /foo/g;
+
+      function findSequence(goal) &#123;
+        function find(start, history) &#123;
+          if (start == goal) &#123;
+            return history;
+          &#125; else if (start > goal) &#123;
+            return null;
+          &#125; else &#123;
+            return find(start + 5, "(" + history + " + 5)") ||
+            find(start * 3, "(" + history + " * 3)");
+          &#125;
+        &#125;
+        return find(1, "1");
+      &#125;
+      ```
+
+      ```
+      No language indicated, so no syntax highlighting.
+      But let's throw in the default button behavior.
+      ```
+    </markdown>
+    <p aria-live="polite" class="clipboard-last-copy">{{ lastCopy() }}</p>
+
+    <markdown [clipboardButtonComponent]="clipboardButton" [clipboard]="true" ngPreserveWhitespaces>
+      #### Using global configuration
+
+      You can provide a custom component to use globally across your application with the options of
+      `withClipboard()` in your application providers. Components then import the standalone `MarkdownComponent`.
+
+      ```typescript
+      // app.config.ts
+      providers: [
+        provideMarkdown(&#123;
+          plugins: [withClipboard(&#123; buttonComponent: ClipboardButtonComponent &#125;)],
+        &#125;),
+      ],
+
+      // your component
+      imports: [MarkdownComponent],
+      ```
+
+      A button set on an instance (`clipboardButtonComponent` or `clipboardButtonTemplate`) replaces the global button
+      for that instance. This page provides its own `provideMarkdown()` (with `withClipboard()` and no button
+      component) in the component `providers`, so its other examples show the default button.
+    </markdown>
+
+    <markdown [clipboardButtonComponent]="clipboardButton" [clipboard]="true" ngNonBindable ngPreserveWhitespaces>
+      #### Using a component
+
+      You can also provide your custom component using the `clipboardButtonComponent` input property when using the
+      `clipboard` directive.
+
+      ```typescript
+      import &#123; Component &#125; from '&#64;angular/core';
+
+      &#64;Component(&#123;
+        selector: 'app-clipboard-button',
+        template: `&lt;button (click)="onClick()">Copy&lt;/button>`,
+      &#125;)
+      export class ClipboardButtonComponent &#123;
+        onClick() &#123;
+          alert('Copied to clipboard!');
+        &#125;
+      &#125;
+      ```
+
+      ```typescript
+      import &#123; ClipboardButtonComponent &#125; from './clipboard-button-component';
+
+      &#64;Component(&#123; ... &#125;)
+      export class ExampleComponent &#123;
+        readonly clipboardButton = ClipboardButtonComponent;
+      &#125;
+      ```
+
+      ```html
+      &lt;markdown clipboard [clipboardButtonComponent]="clipboardButton">&lt;/markdown>
+      ```
+
+      #### Inputs of a custom component
+
+      A custom button component gets the `language`, `code`, `buttonTextCopy` and `buttonTextCopied` inputs
+      (`ClipboardButtonInputs`) that it declares; undeclared ones are never set. The button of this demo declares
+      `language` and uses it in its label (hover it above).
+
+      ```typescript
+      export class ClipboardButtonComponent &#123;
+        readonly language = input&lt;string>();
+        readonly code = input&lt;string>('');
+      &#125;
+      ```
+    </markdown>
+
+    <ng-template #buttonTemplate>
+      <button (click)="onCopyToClipboard()" aria-label="Copy to clipboard" class="btn-clipboard" type="button">
+        <svg aria-hidden="true" style="width:16px;height:16px" viewBox="0 0 24 24">
+          <path
+            d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V5H19V19H5V5H7V7Z"
+            fill="#fff"/>
+        </svg>
+      </button>
+    </ng-template>
+
+    <markdown [clipboardButtonTemplate]="buttonTemplate" [clipboard]="true" ngPreserveWhitespaces>
+      #### Using ng-template
+
+      Alternatively, the `clipboard` directive can be used in conjonction with `ng-template` to provide a custom button
+      implementation via the `clipboardButtonTemplate` input property on the `markdown` component.
+
+      ```html
+      &lt;ng-template #buttonTemplate>
+      &lt;button (click)="onCopyToClipboard()">...&lt;/button>
+      &lt;/ng-template>
+
+      &lt;markdown clipboard [clipboardButtonTemplate]="buttonTemplate">&lt;/markdown>
+      ```
+    </markdown>
+  </section>
+
+  <!-- PLUGINS - Lightbox -->
+  <section>
+    <h2 id="lightbox">Lightbox</h2>
+
+    <markdown ngPreserveWhitespaces>
+      #### Feature
+      `provideMarkdown(&#123; plugins: [withLightbox(options?)] &#125;)`
+
+      #### Directive
+      `lightbox` - open the content images in a built-in, dependency-free `&lt;dialog>` viewer
+
+      #### Attributes
+      `lightboxOptions` - `&#123; wrap?, dialogLabel?, closeLabel?, previousLabel?, nextLabel? &#125;`, merged over
+      the options of `withLightbox()`<br>
+
+      #### Outputs
+      `imageClick` - emits `&#123; image, index, images, preventDefault() &#125;` when an image is activated; calling
+      `preventDefault()` keeps the built-in viewer closed, so another viewer can open instead<br>
+
+      ### Example
+
+      Click an image, or focus it with Tab and press Enter. Arrow keys browse, Esc or a click on the backdrop closes.
+    </markdown>
+
+    <label class="lightbox-custom-viewer">
+      <input type="checkbox" [checked]="customViewer()" (change)="customViewer.set(!customViewer())" />
+      Handle the click myself (<code>preventDefault()</code>)
+    </label>
+
+    <markdown class="lightbox-gallery" [data]="lightboxMarkdown" [lightbox]="true" (imageClick)="onImageClick($event)" />
+    <p aria-live="polite" class="lightbox-last-click">{{ lastImageClick() }}</p>
+
+    <markdown ngPreserveWhitespaces>
+      ```html
+      &lt;markdown [data]="markdown" lightbox (imageClick)="onImageClick($event)" />
+      ```
+
+      ```typescript
+      onImageClick(event: MarkdownImageClickEvent): void &#123;
+        if (this.customViewer()) &#123;
+          event.preventDefault(); // open LightGallery, PhotoSwipe... instead
+        &#125;
+      &#125;
+      ```
+
+      Linked images, and images inside Mermaid or KaTeX output, are never opened. Theme the viewer with the
+      `--markdown-lightbox-*` CSS custom properties (see the README).
+    </markdown>
+  </section>
+</app-scrollspy-nav-layout>
