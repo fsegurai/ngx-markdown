@@ -40,6 +40,7 @@
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [Plugins](#plugins)
+  - [Marked Extended integration](#marked-extended-integration)
 - [Renderer](#renderer)
 - [Re-renderer Markdown](#re-render-markdown)
 - [Syntax highlight](#syntax-highlight)
@@ -63,6 +64,20 @@ npm install @fsegurai/ngx-markdown marked@^18.0.0 --save
 > one explicitly (see the sections below) only when you use it. The optional plugins are tested with
 > `katex ^0.19`, `mermaid ^12` and `emoji-toolkit ^11`. Mermaid 12 requires **Node.js ≥ 22.12** for build tooling and
 > a modern browser (e.g. Safari 17.4+). The `dist` paths used below for KaTeX, Mermaid and Emoji-Toolkit are unchanged.
+
+**Browser support** — the browsers of Angular 22's default browserslist, "Baseline widely available" (on 2026-05-07):
+Chrome and Edge 119+, Firefox 119+, Safari and iOS Safari 17+, and the current Chrome and Firefox for Android. Newer
+browser features are used when present, with these fallbacks:
+
+| Feature | Where it is missing |
+|---------|---------------------|
+| `scheduler.yield()` (yields of the time-sliced parse and the chunked plugins) | A `MessageChannel` message, else `setTimeout(0)` |
+| `requestAnimationFrame` (progressive insertion) | The same yields, without frame alignment (also in a hidden tab) |
+| `content-visibility: auto` (`contentVisibility`) | Ignored: every block is rendered, as without the option |
+| `IntersectionObserver` (Mermaid `lazy`) | Every diagram is drawn at once |
+| `scrollMargin` of `IntersectionObserver` (Mermaid `lazy` in a scrolling element) | A diagram inside a scrolling element is drawn once it is visible there |
+| `HTMLDialogElement.showModal()` (lightbox) | The dialog opens with its `open` attribute (not modal) |
+| Static `ClipboardJS.copy` (older ClipboardJS releases) | One ClipboardJS instance per button, created on its first click |
 
 ### Syntax highlighting
 
@@ -606,7 +621,7 @@ Each `.mermaid` element is rendered on its own with `mermaid.render()`:
 
 ```html
 <div class="mermaid">
-  <div class="mermaid-error" role="alert">Mermaid diagram error: Parse error on line 2: ...</div>
+  <div class="mermaid-error" role="status">Mermaid diagram error: Parse error on line 2: ...</div>
 </div>
 ```
 
@@ -704,6 +719,35 @@ The timeout is a tradeoff:
   with `0`, if your diagrams need longer; without a timeout, a diagram that never settles holds every later diagram
   of the page.
 
+#### Lazy diagrams (opt-in)
+Each diagram costs Mermaid one long task (70–90 ms for a small flowchart in Chromium), even when it is far below the
+fold. With `lazy`, a diagram is drawn only when it comes near the viewport (an `IntersectionObserver`):
+
+```typescript
+provideMarkdown({ plugins: [withMermaid({ loader: () => import('mermaid'), lazy: true })] })
+```
+
+```html
+<!-- or per component -->
+<markdown [data]="markdown" mermaid [plugins]="{ mermaid: { lazy: true } }" />
+```
+
+- **`ready`** emits once the diagrams near the viewport at render time are drawn; the others are drawn as the reader
+  scrolls, and emit nothing. Angular's stability (`whenStable()`, SSR) does not wait for them either. A diagram drawn
+  later that fails shows its `.mermaid-error` box and is logged (it is not emitted on `error`).
+- **`lazyMargin`** (default `'100% 0px'`, one viewport above and below) is the observer's `rootMargin` and
+  `scrollMargin`. Browsers without `scrollMargin` draw a diagram inside a scrolling element only once it is visible
+  there.
+- **Waiting diagrams** keep their source text, with the `mermaid-pending` class and `aria-busy="true"`. They are drawn
+  before they come into view, and browsers keep the scroll position when a diagram above the viewport grows (scroll
+  anchoring). To reserve space anyway: `.mermaid.mermaid-pending { min-height: 240px; }`.
+- **Cache**: a diagram the service already drew (same source and options) is drawn at once, wherever it is.
+- **Print**: every waiting diagram is drawn on `beforeprint`. Mermaid draws asynchronously, so a print started right
+  after the render can still show some of them as text: keep `lazy` off for content that is printed at once.
+- **Unchanged**: the export buttons, the lightbox (it skips diagrams), `[mermaidOptions]` re-renders (the diagrams far
+  from the viewport are redrawn when they come near it) and the server render (nothing is drawn). Without
+  `IntersectionObserver`, every diagram is drawn at once. With `loader`, Mermaid is loaded only once a diagram needs it.
+
 #### Security
 The default `securityLevel` is set explicitly to `'strict'` (also Mermaid's own default): Mermaid encodes HTML in
 labels, disables `click` callbacks and sanitizes the SVG with DOMPurify. `antiscript` and `sandbox` also sanitize.
@@ -784,6 +828,8 @@ This allows overriding the default positioning of the clipboard button and play 
 #### Customize default button
 
 To customize the default button styling, use the `.markdown-clipboard-button` CSS selector in your global `styles.css/scss` file. You can also customize the "copied" state shown after a successful copy using the `.copied` CSS selector.
+
+Screen readers hear the result of every copy, whatever the button (default, custom component or template): one visually hidden polite `role="status"` region at the end of `<body>` (`.markdown-clipboard-status`) announces `statusTextCopied` (`Copied to clipboard`) or `statusTextCopyFailed` (`Copy failed`), both options of `withClipboard()`, so a custom button needs no live region of its own.
 
 #### Using global configuration
 
@@ -939,7 +985,10 @@ viewer is a native `<dialog>` opened with `showModal()`, so it sits in the top l
   the image on close. The viewer is the exported `MarkdownLightboxComponent`, created on the first opening and destroyed
   with the content, which closes it.
 - **Options:** `lightboxOptions` (`LightboxOptions`): `wrap` (`true`), and the `aria-label`s `dialogLabel`
-  (`Image viewer`), `closeLabel` (`Close`), `previousLabel` (`Previous image`) and `nextLabel` (`Next image`).
+  (`Image viewer`), `closeLabel` (`Close`), `previousLabel` (`Previous image`) and `nextLabel` (`Next image`), and
+  `openLabel` (`Open image 2 of 5`; a string or `(index, total) => string`): the `aria-label` of an image trigger with
+  no alt text, `title` or label of its own. Every trigger gets `aria-haspopup="dialog"`. A viewer caption equal to the
+  alt text of its image is hidden from assistive technology, so it is not read twice.
 - **Global options:** `provideMarkdown({ plugins: [withLightbox({ wrap: false })] })`.
   The `lightboxOptions` input is merged over them, and its unset (`undefined`) values never override them. Enabling the
   lightbox stays per component.
@@ -1038,6 +1087,14 @@ export class HomeComponent { }
    [Emoji support](#emoji-support)).
 9. **`cacheSrc`:** `src` responses can now be cached per service with `provideMarkdown({ cacheSrc: true })`. It is
    opt-in, so every load still fetches unless you enable it (see [Caches](#caches)).
+10. **Incremental updates (on by default):** when `data` or `src` changes, the top-level blocks whose HTML did not
+    change keep their DOM nodes. DOM edits made in a `(ready)` handler must be idempotent (a kept node already has
+    them), and a node reference may be kept or replaced. Opt out with `provideMarkdown({ incrementalUpdates: false })`
+    (see [Long documents](#long-documents)).
+11. **Time slicing (on by default):** in the browser, content of 16 KiB or more is parsed over several tasks, so its
+    HTML arrives after later tasks. Wait for `ready` (or `ApplicationRef.whenStable()`, `fixture.whenStable()` in
+    tests) before reading the DOM. Opt out with `provideMarkdown({ timeSlicing: false })`.
+12. **Superseded pipe values:** a `markdown` pipe value replaced while its parse is still running resolves to `''`.
 
 KaTeX is also rendered while parsing now (the Auto-Render script is no longer used): see
 [Math rendering](#math-rendering).
@@ -1498,6 +1555,8 @@ readonly headings = signal<MarkdownHeading[]>([]);
 
 Using `markdown` pipe to transform Markdown to HTML allow you to chain pipe transformations and will update the DOM when value changes. It is important to note that, because the `marked` parsing method returns a `Promise`, it requires the use of the `async` pipe.
 
+For long or frequently edited documents prefer `<markdown [data]>`: the pipe parses long values in time slices, but `[innerHTML]` inserts the whole HTML at once and replaces all of it on every change, while the component inserts it in batches and updates only the changed blocks (see [Long documents](#long-documents)).
+
 ```html
 <!-- chain `language` pipe with `markdown` pipe to convert typescriptMarkdown variable content -->
 <div [innerHTML]="typescriptMarkdown | language : 'typescript' | markdown | async"></div>
@@ -1701,6 +1760,11 @@ provideMarkdown({
   languages of the code blocks before the highlighting marks the blocks without one `language-none`. Without
   `withPrism()`, nothing is highlighted at render time and the Prism inputs do nothing.
 - `MarkdownService.highlight(element)` keeps working on its own (with or without `withPrism()`).
+- Code blocks of `@fsegurai/marked-extended-code`: the per-block class tokens override the Prism options for their
+  block, a `figcaption` title shows in the clipboard toolbar, and `withClipboard({ skipRemovedLines })` (default
+  `true`) leaves the removed diff lines out of the copied text (see
+  [Marked Extended integration](#marked-extended-integration)). A custom button component also gets a `title` input,
+  and `copied`/`copyError` carry the `title`.
 
 
 ### Mermaid and Mermaid export plugins
@@ -1714,6 +1778,7 @@ provideMarkdown({
       loader: () => import('mermaid'), // or the `mermaid` global of its script build when left out
       config: { theme: 'neutral' }, // the `mermaid.initialize()` configuration
       renderTimeout: 30000, // per `mermaid.render()` call (and the load); 0 or Infinity disables it
+      lazy: false, // true: draw each diagram when it comes near the viewport (`lazyMargin`, default '100% 0px')
     }),
     withMermaidExport({ filenamePrefix: 'chart' }), // requires withMermaid()
   ],
@@ -1727,13 +1792,15 @@ provideMarkdown({
 ```
 
 - `withMermaid(options)` takes `MermaidPluginOptions`: `config` (merged over `{ startOnLoad: false, securityLevel:
-  'strict' }`), `loader`, `renderTimeout`. `config` is merged **key by key** across the layers (`withMermaid()`, the
+  'strict' }`), `loader`, `renderTimeout`, `lazy`, `lazyMargin`. `config` is merged **key by key** across the layers (`withMermaid()`, the
   record, then `[mermaidOptions]`), so a per-component `{ theme: 'dark' }` keeps the other keys of the global one.
 - `[mermaid]` and `[mermaidExport]` are unset by default (the record decides); `false` disables the plugin even when
   the record enables it. A `[mermaidOptions]` change re-renders the diagrams alone (no parse), whether `[mermaid]` or the
   record enabled Mermaid; so does `MarkdownService.rerenderMermaid(element, options, viewContainerRef)`, which runs the
   `rerender` hooks of both plugins (it throws `ERROR_MERMAID_NOT_PROVIDED` without `withMermaid()`).
-- `withMermaidExport(options)` takes `buttonComponent` and `filenamePrefix`; the `mermaidExport*` inputs are merged over
+- `withMermaidExport(options)` takes `buttonComponent`, `filenamePrefix` and `buttonLabel` (`(index, filename) => string`,
+  the accessible name of the default button, `Download <filename> (SVG)` by default; ` (SVG)` is appended to a label
+  without "SVG", WCAG 2.5.3); the `mermaidExport*` inputs are merged over
   them (a per-component button replaces the global one), and `mermaidExported`/`mermaidExportError` are emitted however
   the export is enabled. The export only adds buttons where Mermaid is enabled too, and needs a `ViewContainerRef`
   (`ERROR_MERMAID_EXPORT_VIEW_CONTAINER_REQUIRED`: the render rejects before any diagram is drawn).
@@ -1741,6 +1808,76 @@ provideMarkdown({
   does not run when Mermaid's checks fail, so a failed `rerenderMermaid()` leaves the existing buttons in place. A
   plugin that fails (e.g. `withClipboard()` without ClipboardJS) does not stop the diagrams. When several plugins fail,
   the first one in plugin order wins.
+
+### Marked Extended integration
+
+[`@fsegurai/marked-extended-*`](https://github.com/fsegurai/marked-extensions) 19.0.0-beta.0+ (tabs,
+alerts, accordions, code blocks, footnotes…) plugs in with `withMarkedExtended(features, options?)`. ngx-markdown has **no dependency** on those
+packages: install the ones you use and pass their objects in.
+
+```typescript
+import { provideMarkdown, withMarkedExtended, withPrism } from '@fsegurai/ngx-markdown';
+import markedExtendedAlert from '@fsegurai/marked-extended-alert';
+import markedExtendedCode, { attachCode, wrapLines } from '@fsegurai/marked-extended-code';
+import markedExtendedTabs, { attachTabs } from '@fsegurai/marked-extended-tabs';
+
+provideMarkdown({
+  plugins: [
+    withPrism(),
+    withMarkedExtended([
+      { name: 'alert', extension: markedExtendedAlert() },
+      { name: 'tabs', extension: markedExtendedTabs(), attach: attachTabs, options: { persistSelection: true } },
+      // Lines are wrapped after Prism (see below), so the runtime does not wrap them itself
+      { name: 'code', extension: markedExtendedCode(), attach: attachCode, options: { lineClasses: false }, afterHighlight: wrapLines },
+    ]),
+  ],
+});
+```
+
+```html
+<markdown [data]="markdown" (extendedEvent)="onExtendedEvent($event)"></markdown>
+<markdown [data]="markdown" [plugins]="{ markedExtended: false }"></markdown>
+<markdown [data]="markdown" [plugins]="{ markedExtended: { runtimes: { tabs: false } } }"></markdown>
+```
+
+- **A feature** is `{ name?, extension?, attach?, options?, afterHighlight? }`: `extension` is a Marked extension (or an
+  array of them), `attach` the package runtime (`attachX`), `options` what `attach` receives, and `name` the key of the
+  `runtimes` option (defaults to the `runtimeName` of `attach`). A bare runtime is a feature too, e.g. the bundle's
+  `attachAll`: `withMarkedExtended([attachAll], { runtimes: { attachAll: { tabs: { persistSelection: true } } } })`
+  (register the extensions with their own features, without `attach`).
+- **Parse:** the extensions apply to every parse the plugin is enabled in, in `marked.use()` order: their `extensions`
+  (tokenizers and renderers), `walkTokens`, `renderer` and `tokenizer` overrides (e.g. the `list` tokenizer of
+  `@fsegurai/marked-extended-lists`, for alphabetic and Roman numbering), `async`, `hooks.preprocess`, and
+  `hooks.postprocess` (which runs **before** the sanitizer). The overrides apply to that parse only, never to
+  `MARKED_EXTENSIONS` or other parses. Other fields (other hooks, Marked options) are not applied; a dev-mode warning
+  lists them.
+- **Sanitizer-safe:** the 19 markup only uses classes, `aria-*`, `role`, `hidden` and `open`, so it survives
+  Angular's sanitizer (the default `SecurityContext.HTML`): no `disableSanitizer` and no `bypassSecurityTrustHtml`.
+  The runtimes then restore the behaviour in the browser.
+- **Runtimes (browser only):** each `attach` runs once the HTML is in the element, with `runtimes[name]` when set,
+  else the feature `options` (`false` leaves the runtime out). When the same element is rendered again, the runtime is
+  refreshed (`attachX.refresh(root)`, or `handle.refresh()`); it is disposed and attached again when it cannot refresh
+  or its options changed (compared by value: a new object with the same values, such as a template object literal,
+  refreshes). `MarkdownService.cleanup()` and the destroy of `<markdown>` dispose it. Nothing runs on the
+  server; the extensions still apply to the parse.
+- **Events:** the `marked-extended:<pkg>:<event>` events of the content are emitted by the `(extendedEvent)` output as
+  `{ type, detail, event }`. The output is emitted during the dispatch, so `event.preventDefault()` cancels a
+  cancelable event (e.g. `marked-extended:tabs:before-switch`). A DOM listener cannot match a prefix: the known names
+  are listed in `MARKED_EXTENDED_EVENTS`, and `withMarkedExtended(features, { events: ['…'] })` adds others.
+- **Code blocks with Prism:** `withPrism()` reads the class tokens of each marked-extended `<pre>` (`mx-code-ln`,
+  `mx-code-start-N`, `mx-code-highlight-…`, `mx-code-mark-…`): they override the Prism options (`lineNumbers`, `start`,
+  `line`, `lineOffset`) **for that block only**, and a block without tokens keeps the global and per-component
+  options. A block with its own numbering (`mx-code-ln`) and no ranges highlights no line: the global `line` and
+  `lineOffset` count against the numbering it replaces. The `afterHighlight` function of a feature runs on each block right after Prism highlights it (inside the
+  chunked loop), or on the plain blocks when Prism is disabled, not provided or not loaded: pass `wrapLines` there, and
+  `lineClasses: false` to `attachCode`, since highlighting would undo a wrapping done before it.
+- **Clipboard:** with `withClipboard()`, a titled block (`<figure class="mx-code">` with a `<figcaption>`) shows its
+  title in the toolbar (`.markdown-clipboard-title`), and the removed lines of a diff (`del={…}`, `// [!code --]`) are
+  not copied (`skipRemovedLines`, default `true`).
+- Enabled by default once provided: `[plugins]="{ markedExtended: false }"` disables it per component, and an options
+  object (`runtimes`, `events`) is merged over the `withMarkedExtended()` options (`runtimes` key by key).
+
+> :blue_book: Refer to the `@fsegurai/ngx-markdown` [Marked Extended demo](https://fsegurai.github.io/ngx-markdown/marked-extended) for live examples of every package, with Angular's sanitizer on.
 
 ### Migrating to 22: plugins
 
@@ -1836,9 +1973,13 @@ export interface MarkdownPlugin<O extends object> {
   preprocess?(markdown: string, ctx: MarkdownParseContext<O>): string;
   markedExtensions?(ctx: MarkdownParseContext<O>): MarkedExtension[];
   readonly tokenizerExtensions?: readonly MarkdownTokenizerExtension<O>[];
+  postprocess?(html: string, ctx: MarkdownParseContext<O>): string; // before the sanitizer
   postSanitize?(html: string, ctx: MarkdownParseContext<O>): string;
   render?(element: HTMLElement, ctx: MarkdownRenderContext<O>): MarkdownRenderResult;
   rerender?(element: HTMLElement, ctx: MarkdownRenderContext<O>): MarkdownRenderResult;
+  afterHighlight?(code: HTMLElement, ctx: MarkdownRenderContext<O>): void; // each code block, once highlighted
+  readonly highlightsCode?: boolean; // its render hook highlights the code and calls ctx.afterHighlight (Prism)
+  readonly incremental?: boolean; // its render hook can run on new top-level nodes alone (ctx.nodes); see below
   cleanup?(element: HTMLElement): void;
 }
 ```
@@ -1852,20 +1993,41 @@ does not move it: `enforce` wins; a requirement cycle keeps registration order).
 2. `markedExtensions`: the Marked extensions of the parse, called once per parse. Their `walkTokens` run before those of
    `MARKED_EXTENSIONS` and of the Marked options; `async: true` makes the parse asynchronous; `renderer` methods run
    before the configured renderer (`MARKED_OPTIONS`, `MARKED_EXTENSIONS`, `MarkdownService.renderer`) and fall back to it
-   when they return `false` (the heading ids and `onHeadings` see their output). Other fields (`tokenizer`, `hooks`,
-   `extensions`…) are ignored, with a dev-mode warning.
+   when they return `false` (the heading ids and `onHeadings` see their output); `tokenizer` methods (`list`,
+   `heading`…) run before the configured tokenizer (`MARKED_OPTIONS`, `MARKED_EXTENSIONS`, Marked's own) and fall back
+   to it when they return `false`, with `this.lexer` of the parse, as with Marked's `use`. Both apply to that parse only,
+   a later plugin's first. Other fields (`hooks`, `extensions`…) are ignored, with a dev-mode warning.
    `tokenizerExtensions` (`{ name, level, start?, tokenizer, renderer?, childTokens? }`, as in Marked's `extensions`)
    are registered once per service, but only work in the parses the plugin is enabled in; each function gets the
-   parse context as its last argument (`tokenizer(src, tokens, ctx)`, `renderer(token, ctx)`).
-3. Marked parses, then the core sanitizes the HTML (`sanitize`).
+   parse context as its last argument (`tokenizer(src, tokens, ctx)`, `renderer(token, ctx)`). Without `tokenizer`
+   and `level`, it is a renderer extension for tokens of type `name` made elsewhere (e.g. by a `walkTokens`).
+3. Marked parses, `postprocess` transforms its HTML (like a Marked `hooks.postprocess`), then the core sanitizes it
+   (`sanitize`).
 4. `postSanitize`: the sanitized HTML. What it inserts is **not** sanitized: escape it.
 5. `render`: the element holding the inserted HTML, once per render. It may return a cleanup function (or a Promise of
    one). The hooks start one after another, with an abort check before each, and run concurrently; `render()` (and the
    `ready` output) waits for them. Each hook is isolated: one that throws synchronously stops neither the others nor
    their `signal`; `render()` never throws, it rejects with the first error in plugin order (thrown or rejected) once
    every started hook has settled. Only the plugins that `require` a plugin whose hook threw do not start.
+   `afterHighlight(code, ctx)`: called in the browser for each code block (`pre > code`) once it is highlighted: by
+   the plugin that highlights code (`highlightsCode: true`, i.e. Prism, right after each block, inside its chunked
+   loop), or, when none is enabled in the render, by the runner itself on the plain blocks, after a yield, in chunks.
+   It stops once the render is aborted; an error is reported (`console.error`) without stopping the others. E.g. a
+   line wrapping that highlighting would undo. A highlighting plugin calls `ctx.afterHighlight(code)` after each block,
+   or `ctx.afterHighlightAll()` when it highlighted nothing block by block.
 6. Cleanup: before the next render of the element, on `MarkdownService.cleanup()` and when `<markdown>` is destroyed,
    the cleanup functions run (last first), then each plugin's `cleanup(element)`.
+
+Incremental updates: when every enabled plugin with a `render` hook declares `incremental: true` (every built-in plugin
+does), a
+`data`/`src` change of `<markdown>` that leaves some top-level blocks unchanged keeps their nodes, and `render` runs
+with `ctx.nodes` set to the new top-level nodes alone. Such a hook enhances only those nodes and their descendants (e.g.
+`node.querySelectorAll('pre > code')`, which also finds the code of a top-level `<pre>`), may read the whole element,
+and never adds, removes or moves top-level nodes (wrapping one, as the clipboard does with a top-level `<pre>`, is fine).
+`ctx.nodes` is empty when an update only removed nodes. The cleanups of an update run when a later update removes one of
+its nodes (its nodes are then replaced together) and on the cleanup of the element. `ctx.onCleanup(fn, node)` ties a
+cleanup to one node (e.g. its button view): it runs when an update removes that node, or on the cleanup of the element.
+Without `incremental`, every change is a whole render.
 
 Two more fields: `validate(ctx)` runs for every enabled plugin before any `preprocess` hook (throw there when the parse
 cannot run, e.g. a missing library: no other hook, and no `onFrontMatter`, has run), and `exclusiveOptions` lists groups
@@ -1878,8 +2040,8 @@ cleanup of the other plugins), e.g. `MarkdownService.rerenderMermaid()`.
 Each hook gets a context: `options` (merged as above), `platform` (`'browser'` or `'server'`), `injector` (the injector
 of the `MarkdownService`), `state` (a fresh object per parse, shared by the parse hooks and tokenizer extensions of that
 parse, and per render) and `serviceState` (one object per plugin and service, e.g. for a cache). The `render` context adds `signal` (aborted when the render is superseded or the element cleaned up),
-`viewContainerRef`, `onCleanup(fn)` (registers a cleanup at once, e.g. before asynchronous work: it still runs when
-the hook later rejects) and `isEnabled(name)` (whether another plugin is enabled in the same render).
+`viewContainerRef`, `onCleanup(fn, node?)` (registers a cleanup at once, e.g. before asynchronous work: it still runs
+when the hook later rejects; with `node`, it belongs to that node and runs when an incremental update removes it) and `isEnabled(name)` (whether another plugin is enabled in the same render).
 
 Example: open the external links of the content in a new tab.
 
@@ -2031,34 +2193,102 @@ When using variable binding you can optionally use `language` pipe to specify th
 
 ## Long documents
 
-`<markdown>` renders long documents without one long main-thread task: a large rendered document (16 KB of HTML or more)
-is inserted in three batches of top-level elements, one frame apart (the top of the document first, then the rest in
-two halves), and the plugins (highlighting, clipboard buttons) work in chunks. `headings`, `metadata` and `ready` are emitted once the whole document is in place. Nothing needs to be
-configured.
+`<markdown>` renders long documents without one long main-thread task. Nothing needs to be configured:
 
-The browser still has to lay out and paint the whole document. For very long documents, you can let it skip the blocks
-that are off screen with `content-visibility` (opt-in, in your global styles):
+- **Time-sliced parse:** in the browser, content of 16 KiB or more is parsed and sanitized in slices of about 8 ms,
+  yielding to the browser in between, instead of one task of 100–200 ms. Marked's steps run one by one (the block
+  lexing, then the inline lexing of each block, `walkTokens` and the rendering of each top-level block), and Angular's
+  HTML sanitizer runs on chunks of the HTML that end where every tag is closed. The HTML, the headings and the front
+  matter are those of `MarkdownService.parse()`, and a newer content stops the parse of the previous one.
+- **Progressive insertion:** a large rendered document (16 KB of HTML or more) is inserted in three batches of top-level
+  elements, one frame apart (the top of the document first, then the rest in two halves).
+- **Chunked plugins:** highlighting and clipboard buttons work in chunks.
+- **Incremental updates:** when `data` or `src` changes (an editor preview, a playground), only the top-level blocks
+  whose HTML changed are replaced (see below).
 
-```css
-markdown.long-document > * {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 500px;
-}
-```
+`headings`, `metadata` and `ready` are emitted once the whole document is in place.
+
+The time-sliced parse falls back to a whole parse on the server, for an asynchronous parse (an `async` Marked
+extension), with Marked's `silent` option, and with extensions that replace `hooks.provideLexer` or
+`hooks.provideParser`. The sanitizer runs whole with a sanitize function (e.g. DOMPurify) or a `postprocess` hook.
+Marked extensions that keep state between parses and reset it in a hook (e.g. `marked-gfm-heading-id`, the marked-extended
+footnotes) stay correct: when another parse runs between two slices of such a parse, that parse starts again, whole.
+Turn it off with `provideMarkdown({ timeSlicing: false })`. The `markdown` pipe parses in time slices too (it is
+asynchronous already; a new value stops the parse of the previous one, whose Promise resolves to `''`), and
+`MarkdownService.parse()` stays synchronous.
+
+On a 5000-line document (median of 9 runs, alternated with the previous build) it lowered the total blocking time from
+435 to 383 ms in Chromium and from 816 to 685 ms in Firefox with Angular's HTML sanitizer, and from 410 to 187 ms in
+Chromium without a sanitizer, without delaying `ready`. The long tasks left are the layout and paint of the inserted
+content, which `contentVisibility` reduces.
+
+**Incremental updates.** When `data` or `src` changes, the new content is still parsed whole (reference links,
+footnotes, heading ids and front matter always see the whole document), then compared with the content on screen, top-level
+block by top-level block. Unchanged HTML (with the same inputs) is not written again and no plugin runs again. Otherwise
+only the top-level nodes between the first and the last block that differ are replaced: the others keep their DOM nodes
+and what the plugins did on them (Prism highlighting, line numbers, copy buttons, drawn diagrams and their export
+buttons, lightbox images, marked-extended runtime state such as a selected tab), and the plugins run on the new nodes
+alone; what they did on the removed nodes is released. The DOM
+is the one a whole render gives, and `headings`, `metadata` and `ready` are emitted as usual. A whole render is used
+when a plugin with a `render` hook that is not `incremental` is enabled (every built-in plugin is incremental or has no
+render hook), when
+a rendering input changed since the last render, when the plugins of the content on screen have not finished (or
+failed), when more than half of the blocks changed, on `MarkdownService.reload()` and on the server. Turn it off with
+`provideMarkdown({ incrementalUpdates: false })` (`MARKDOWN_INCREMENTAL_UPDATES`).
+
+Editing a 5000-line document with Prism, KaTeX and emoji (a paragraph typed near the middle, 8 edits, median of 3 runs)
+took 49 ms from the change to `ready` with no long task in Chromium (255 ms and 1280 ms of total blocking time when
+rendered whole), and 225 ms with 917 ms of blocking time in Firefox (496 and 3385 ms whole; 181 and 468 ms with
+`contentVisibility`). Firefox lays out the whole document after any change to it.
+
+The `markdown` pipe binds its HTML with `[innerHTML]`, which sets it at once (one long layout task) and replaces
+everything on each change: use `<markdown [data]>` for long or edited documents.
+
+The browser still has to lay out and paint the whole document. For very long documents, turn on `contentVisibility`:
+the top-level blocks (headings excepted) get `content-visibility: auto`, so the browser skips the style, layout and
+paint of the blocks that are off screen.
 
 ```html
-<markdown class="long-document" [src]="'docs/handbook.md'"></markdown>
+<markdown contentVisibility [src]="'docs/handbook.md'"></markdown>
 ```
 
-On a 5000-line document it lowered the total blocking time by about a third (Chromium 478 → 274 ms, Firefox 700 →
-468 ms). Caveats: until a
-block has been rendered once, its height is the 500px estimate, so the scrollbar size and position can shift while
-scrolling, and a jump to an anchor far down the page (`#section`) can land slightly off before the blocks above it are
-laid out. The off-screen content stays in the DOM (find-in-page and accessibility still see it).
+```typescript
+// or for every <markdown> of the app ([contentVisibility]="false" still turns it off for one)
+provideMarkdown({ contentVisibility: true });
+```
+
+On a 5000-line document it lowered the total blocking time from 425 to 170 ms in Chromium and from 800 to 567 ms in
+Firefox, and the longest task from 275 to 157 ms in Chromium (median of 7 runs, Angular's HTML sanitizer on). It is
+opt-in because each block becomes a container, on screen or not:
+
+- **Overflow is clipped:** paint containment clips what overflows a block (a box shadow, a list marker hanging outside a
+  list without padding, a focus ring). Headings are left out, so a heading anchor icon placed outside the heading still
+  shows.
+- **Margins of nested elements** no longer collapse through the block (e.g. the margin of the first paragraph in a
+  `<blockquote>` stays inside it).
+- **Estimated heights:** until a block has been shown once, its height is an 80px estimate (then its real height is
+  kept), so the scrollbar size can shift while scrolling, and a jump far down the page (`scrollIntoView()`, a
+  `#section` link) can land up to a few hundred pixels off, because the blocks around the target get their real height
+  only once they are shown. A second `scrollIntoView()` after a frame lands exactly. Override the estimate with any
+  rule (the built-in one has no specificity), e.g. `markdown > * { contain-intrinsic-block-size: auto 120px; }` for
+  content with taller blocks.
+
+Unaffected: the content stays in the DOM, so find-in-page, text selection and accessibility still see it; printing
+renders every block; Mermaid, KaTeX, Prism, the clipboard buttons and the lightbox work as usual. The rule ships with the
+component (`.markdown-content-visibility`, a class on the host, exported as `CONTENT_VISIBILITY_CLASS`), so nothing has
+to be added to your styles; the class also scopes an override of the estimate to the components that have it on, e.g.
+`markdown.markdown-content-visibility > * { contain-intrinsic-block-size: auto 120px; }`.
 
 ## SSR / prerendering
 
 The library is SSR-safe: it works with server-side rendering, static prerendering (`outputMode: "static"`) and client hydration (`provideClientHydration()`). Browser-only work (syntax highlighting, clipboard, Mermaid, emoji) runs only in the browser (KaTeX math is rendered on the server only when `katex` is available there, see Math rendering), and the markdown component and pipe register pending tasks, so the server waits for the rendered markdown before it serializes the page.
+
+**Hydration and transcluded content.** On the server, a `<markdown>` with transcluded content (`<markdown># Title</markdown>`)
+replaces its projected text with the rendered HTML, so it also keeps the Markdown source in a `data-markdown-transclusion`
+attribute of its host (the source is in the page twice). The hydrated client renders that source and removes the
+attribute, instead of parsing the rendered HTML again as Markdown, and Angular hydrates the component without
+`ngSkipHydration`. `[data]` and `[src]` need nothing: the client renders them again (with `[src]`, Angular's HTTP transfer
+cache answers the request made on the server).
 
 When you use `[src]` during SSR or prerendering, keep `HttpClient` on its default Fetch backend (the default since Angular 22). The Angular build serves the application's own assets to the prerenderer through `fetch`, so the XHR backend (`withXhr()`) cannot load them.
 
