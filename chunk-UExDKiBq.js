@@ -1,0 +1,1 @@
+import{a as C,o as v}from"./chunk-dhDlWSMr.js";import"./main-7PGP3Y6F.js";export{v as createArchitectureServices};

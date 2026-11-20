@@ -65,6 +65,19 @@ npm install @fsegurai/ngx-markdown marked@^18.0.0 --save
 > `katex ^0.19`, `mermaid ^12` and `emoji-toolkit ^11`. Mermaid 12 requires **Node.js ≥ 22.12** for build tooling and
 > a modern browser (e.g. Safari 17.4+). The `dist` paths used below for KaTeX, Mermaid and Emoji-Toolkit are unchanged.
 
+**Versions** — the library's major version follows Angular's; the latest release is **22.1.0**.
+
+| ngx-markdown | Angular | marked | `@fsegurai/marked-extended-*` (optional) |
+|--------------|---------|--------|------------------------------------------|
+| 22.1.x       | `^22`   | `^18`  | 18.1.0                                   |
+| 22.0.x       | `^22`   | `^18`  | 19.0.0-beta.0                            |
+| 21.x         | `^21`   | `^18`  | —                                        |
+
+> :warning: **Upgrading from 22.0 to 22.1:** `src` now loads with `fetch` instead of `HttpClient`. If your app relies on
+> HTTP interceptors, on `HttpErrorResponse` in `(error)`, or on `HttpClient` for relative `src` URLs during
+> server-side rendering, add `provideMarkdown({ loader: HttpClient })`. See
+> [Remote file configuration](#remote-file-configuration).
+
 **Browser support** — the browsers of Angular 22's default browserslist, "Baseline widely available" (on 2026-05-07):
 Chrome and Edge 119+, Firefox 119+, Safari and iOS Safari 17+, and the current Chrome and Firefox for Android. Newer
 browser features are used when present, with these fallbacks:
@@ -1022,8 +1035,7 @@ onImageClick(event: MarkdownImageClickEvent): void {
 - **Service:** `RenderOptions.lightbox` and `lightboxOptions` (with an `onImageClick` callback) bind it in
   `MarkdownService.render()`; a `ViewContainerRef` is required (`ERROR_LIGHTBOX_VIEW_CONTAINER_REQUIRED`). Nothing
   happens on the server.
-- **Pipe:** not supported. The pipe has no outputs, and its post-render step runs on the whole template of its host
-  component, so use the `markdown` component for a lightbox.
+- **Pipe:** not supported. The pipe has no outputs, so use the `markdown` component for a lightbox.
 
 ## Configuration
 
@@ -1123,16 +1135,35 @@ export class AppModule { }
 
 ### Remote file configuration
 
-The `[src]` attribute loads remote files with Angular's `HttpClient`, which is injectable by default since Angular 21, so no extra setup is required.
+Since 22.1.0, the `[src]` attribute loads remote files with `fetch` by default: no setup is required, and the library
+does not reference Angular's `HttpClient`, so it stays out of the bundle of an app that does not use it.
 
-Only call `provideHttpClient(...)` when you need to configure it (interceptors, etc.). The `loader` option of `provideMarkdown()` is optional:
+To load `src` files with `HttpClient` instead (its interceptors, e.g. auth headers or base URLs, its backend and its
+server-side handling), opt in with the `loader` option:
 
-```diff
+```typescript
 providers: [
-+  provideHttpClient(withInterceptors([myInterceptor])), // optional
-+  provideMarkdown(),
+  provideHttpClient(withInterceptors([authInterceptor])), // optional: configures HttpClient
+  provideMarkdown({ loader: HttpClient }),
 ],
 ```
+
+With the default `fetch` loader:
+
+- The request is cancelled (`AbortController`) when `src` changes or the component is destroyed, and the application
+  is not stable until it settles, so server-side rendering waits for it.
+- A failed request emits a `MarkdownSourceError` through the `error` output (`status`, `statusText`, `url`; `status` is
+  `0` for a network error, with the failure as `cause`). With `loader: HttpClient`, it is an `HttpErrorResponse`.
+- In the browser, a relative `src` resolves against the document base URL, as before.
+- On the server, a relative `src` resolves against the request URL and the base href (as Angular's server
+  `HttpClient` does); when there is no HTTP request URL (e.g. prerendering without one), the load fails with a
+  `MarkdownSourceError` that says to use an absolute URL or `loader: HttpClient`. The fetched text is handed to the
+  browser through `TransferState`, so hydration does not fetch it again. HTTP interceptors do not run.
+- `MARKDOWN_SOURCE_LOADER` can be provided to load the sources another way (`(url) => Observable<string>`).
+
+> **Migrating from 22.0 to 22.1.0:** `src` no longer goes through `HttpClient`. If your app relies on HTTP interceptors
+> (auth headers, base URLs), on `HttpErrorResponse` in `(error)`, or on `HttpClient` to load relative `src` URLs during
+> server-side rendering, add one line: `provideMarkdown({ loader: HttpClient })`.
 
 #### Sanitization
 
@@ -1161,6 +1192,35 @@ provideMarkdown({
 ```
 
 > :warning: The function replaces Angular's sanitizer: it **must return safe HTML**. Whatever it returns is inserted in the page.
+
+`withDomPurify()` (22.1.0) does that wiring for you, with a private DOMPurify instance loaded on demand (Mermaid's
+shared one is left untouched), and keeps the heading slug `id`s DOMPurify's clobbering check would drop (`## Links`, `##
+Plugins`):
+
+```typescript
+import { provideMarkdown, withDomPurify } from '@fsegurai/ngx-markdown';
+
+provideMarkdown({
+  plugins: [
+    withDomPurify({
+      purify: () => import('dompurify'), // optional peer dependency
+      forbidTags: ['iframe', 'frame', 'object', 'embed', 'form', 'base', 'meta', 'link'],
+      forbidAttr: ['formaction', 'srcdoc'],
+    }),
+  ],
+})
+```
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `purify` | — | Loads DOMPurify (`() => import('dompurify')`), in the browser, before the first parse; kept for the page, retried after a failed load. |
+| `keepHeadingIds` | `true` | Keeps the slug `id`s of `h1`…`h6` that match a `document` property. |
+| `forbidTags` / `forbidAttr` | — | DOMPurify's `FORBID_TAGS` / `FORBID_ATTR`. |
+| `config` | — | Other DOMPurify settings (`ALLOWED_URI_REGEXP`, `ADD_TAGS`…); the output is always a string. |
+
+- The first parse in the browser waits for DOMPurify (`MarkdownService.parse()` returns a Promise; `<markdown>` and the
+  `markdown` pipe wait for it). Until DOMPurify is loaded, and on the server, the HTML goes through Angular's sanitizer.
+- An explicit `sanitize` option wins over `withDomPurify()` (DOMPurify is then not loaded). `disableSanitizer` skips it.
 
 > :warning: The `SECURITY_CONTEXT` injection token is deprecated in favor of `SANITIZE` and will be removed in v23. A `SECURITY_CONTEXT` provider is still honoured when `sanitize` is not set.
 
@@ -1344,7 +1404,7 @@ The same way the component works, you can use `markdown` directive to achieve th
   deliberate exception: a change re-renders the Mermaid diagrams alone (see
   [Following a light/dark theme](#following-a-lightdark-theme)).
 - The latest request wins: when `data` or `src` changes while a previous `src` request or render is still in flight,
-  the previous one is discarded (its HTTP request is cancelled and it never updates the DOM or emits).
+  the previous one is discarded (its request is aborted and it never updates the DOM or emits).
 - A non-empty `data` takes precedence over `src`: when both are set, `src` is ignored and a one-time `[ngx-markdown]`
   warning is logged. Setting `data` to `''` clears the rendered content when no `src` is set; with a `src` set, the
   `src` is loaded (as in 21.x), so wrappers that default `data` to `''` keep working.
@@ -1353,7 +1413,8 @@ The same way the component works, you can use `markdown` directive to achieve th
   as a code block of that language. The code fence is longer than any backtick run in the file, so the file content
   cannot close it early (the `language` pipe does the same).
 - `load` is emitted for `src` only, after the content has been rendered. `ready` is emitted once the content, including
-  Mermaid diagrams, is rendered. `error` emits a `MarkdownError`: an `HttpErrorResponse` when the `src` request fails,
+  Mermaid diagrams, is rendered. `error` emits a `MarkdownError`: a `MarkdownSourceError` when the `src` request fails
+  (an `HttpErrorResponse` with `loader: HttpClient`, see [Remote file configuration](#remote-file-configuration)),
   or the `Error` thrown while parsing or rendering (e.g. a missing plugin, or a `MermaidRenderError` when Mermaid
   diagrams fail; the other diagrams are still rendered).
 
@@ -1433,6 +1494,38 @@ The base is a URL, as with a `<base href>`: end a folder with `/`. `docs/guide` 
   the `renderer` of a Marked extension) receives the resolved `href` in its `link` and `image` methods.
 - There is no global default: a global `baseUrl` would also apply to every `data` and pipe content. Set the inputs where
   the content comes from.
+
+**Per-URL decisions (`resolveUrl`, 22.1.0).** To decide each URL yourself (a Markdown target to an app route, a sample
+folder to a playground URL, other files to an asset URL), pass a `resolveUrl` function in the `baseUrl` options of the
+`[plugins]` record (or of the `plugins` option of the pipe and `MarkdownService.parse()`). It runs in the same
+`walkTokens` as `baseUrl`, so the decision is part of the parse (also on the server), with no DOM walk after `ready`:
+
+```typescript
+import type { BaseUrlResolver } from '@fsegurai/ngx-markdown';
+
+readonly resolveDocsUrl: BaseUrlResolver = (url, { kind, standalone }) => {
+  if (kind === 'link' && url.endsWith('.md')) return `/docs/${url.slice(0, -3)}`;
+  if (kind === 'link' && url.startsWith('playground/')) {
+    return { href: `/playground/${url.slice(11)}`, attrs: standalone ? { class: 'playground-card' } : {} };
+  }
+  return undefined; // resolved against `url` / `[baseUrl]` as usual (left as is without one)
+};
+```
+
+```html
+<markdown [src]="page" baseUrl="https://cdn.example.com/docs/" [plugins]="{ baseUrl: { resolveUrl: resolveDocsUrl } }"></markdown>
+```
+
+- It is called with the URL as written and `{ kind, token, baseUrl, standalone }`: `kind` is `'link'` (an `href`) or
+  `'image'` (a `src`), `token` the `link`, `image` or raw `html` token, `baseUrl` the base URL, and `standalone`
+  whether the link is the only content of its paragraph. Unlike `baseUrl`, it is called for every URL (absolute URLs
+  and fragments included).
+- It returns the new URL, `{ href, attrs }` to also add attributes to the `<a>` / `<img>` (invalid names, and the tag's
+  own URL attribute — `href` on `<a>`, `src` on `<img>` — are ignored; values are escaped, but names such as `onclick`
+  are not filtered, so return only attributes you trust), or `undefined` to fall back to `baseUrl`. Raw HTML tags get the
+  attributes at the end of the tag.
+- Angular's default sanitizer removes attributes it does not know (e.g. `data-*`): keep them with a sanitize function
+  (`withDomPurify()`), or `SecurityContext.NONE` for trusted content.
 
 #### Front-matter
 
@@ -1543,6 +1636,11 @@ readonly headings = signal<MarkdownHeading[]>([]);
 - **Elements:** each heading is matched to the next `h1`…`h6` element of its level with its `id` or its text, so
   headings written as raw HTML are not listed (a raw HTML heading with the level and text of the next Markdown heading
   may be taken for it). `element` is unset when no element matches.
+- **`marked-gfm-heading-id`:** `headingIds` gives the same ids as `marked-gfm-heading-id` (GitHub's slugs through
+  `github-slugger`, `-1`, `-2`… suffixes included), so it can replace that extension (documented since 22.1.0). Two
+  known differences, pinned by the tests: consecutive spaces inside a heading give one `-` (`## a  b` is `a-b`, not
+  `a--b`), and a heading that starts with a named character reference keeps the `-` of the space after it
+  (`## &copy; 2026` is `-2026`, not `2026`).
 - **Pipe and service:** `headingIds: true` adds the slugs; the `onHeadings(headings)` callback receives the headings of
   each parse once Marked has run (`[]` for inline parsing), without `element`, and with the `id` Marked rendered,
   before sanitizing.
@@ -1594,9 +1692,10 @@ export interface MarkdownPipeOptions {
 ```
 
 The pipe resolves to an empty string for `null`/`undefined`, and for a non-string value (an `[ngx-markdown]` error is
-logged). KaTeX math is rendered while parsing, so it is scoped to the content. A pipe cannot access the element it is
-bound to, so the post-render step (highlight, clipboard, Mermaid) runs on the host element of the component that uses the pipe, i.e. on its whole template. Prefer the
-`markdown` component when that step must be scoped to the Markdown content. A pipe has no outputs: with `clipboard`, the copy
+logged). KaTeX math is rendered while parsing, so it is scoped to the content. The post-render step (highlight,
+clipboard, Mermaid) runs on the element the pipe is bound to (the element of its `[innerHTML]` binding); several
+`markdown` pipes bound to the same element render it once per change detection pass for each distinct set of options.
+A pipe has no outputs: with `clipboard`, the copy
 results are passed to the `clipboardOptions.onCopied` and `clipboardOptions.onCopyError` callbacks (see Copy events), and
 with `mermaidExport` the downloads to `mermaidExportOptions.onExported` and `onExportError` (see [SVG export](#svg-export)).
 The image lightbox is not supported through the pipe (see [Image lightbox](#image-lightbox)).
@@ -1704,7 +1803,7 @@ import { provideMarkdown, withEmoji, withKatex, withLightbox } from '@fsegurai/n
 
 provideMarkdown({
   plugins: [
-    withEmoji(), // needs the joypixels global (Emoji-Toolkit), no options
+    withEmoji(), // needs the joypixels global (Emoji-Toolkit), or a `loader`
     withKatex({ throwOnError: false, macros: { '\\RR': '\\mathbb{R}' } }), // needs the katex global
     withLightbox({ wrap: false }),
   ],
@@ -1724,6 +1823,25 @@ provideMarkdown({
 - KaTeX is an `enforce: 'pre'` plugin: it inserts the rendered math before the `postSanitize` hooks of the other plugins
   run, so they see the final math HTML.
 
+**Loading KaTeX and Emoji-Toolkit on demand (`loader`, 22.1.0).** Instead of the `katex` and `joypixels` globals of
+their script builds, give the plugin a `loader`, as `withMermaid({ loader })` does:
+
+```typescript
+provideMarkdown({
+  plugins: [
+    withKatex({ loader: () => import('katex'), throwOnError: false }),
+    withEmoji({ loader: () => import('emoji-toolkit') }),
+  ],
+});
+```
+
+- The library is loaded in the browser before the first parse the plugin is enabled in: that parse is asynchronous
+  (`MarkdownService.parse()` returns a Promise; `<markdown>` and the `markdown` pipe wait for it), the later ones are
+  synchronous again. It is loaded once per loader and kept for the page; a failed load rejects that parse and the next
+  parse loads again. A loaded value that is not the library rejects with `ERROR_KATEX_NOT_LOADED` /
+  `ERROR_JOYPIXELS_NOT_LOADED`.
+- Nothing is loaded on the server (the math and the shortcodes are left as their source text, as without the global).
+
 
 ### Clipboard and Prism plugins
 
@@ -1732,8 +1850,8 @@ import { provideMarkdown, withClipboard, withPrism } from '@fsegurai/ngx-markdow
 
 provideMarkdown({
   plugins: [
-    withClipboard({ languageButton: true }), // needs the ClipboardJS global
-    withPrism({ lineNumbers: true }), // needs the Prism global; enabled by default once provided
+    withClipboard({ languageButton: true }), // ClipboardJS global, else navigator.clipboard (secure contexts)
+    withPrism({ lineNumbers: true }), // needs the Prism global (or a `loader`); enabled by default once provided
   ],
 });
 ```
@@ -1760,6 +1878,30 @@ provideMarkdown({
   languages of the code blocks before the highlighting marks the blocks without one `language-none`. Without
   `withPrism()`, nothing is highlighted at render time and the Prism inputs do nothing.
 - `MarkdownService.highlight(element)` keeps working on its own (with or without `withPrism()`).
+- **Clipboard without ClipboardJS (22.1.0):** when the `ClipboardJS` global is not loaded, the buttons copy with
+  `navigator.clipboard.writeText` (secure contexts: HTTPS or `localhost`); ClipboardJS, when loaded, is still used
+  first. The copy is then asynchronous: `copied` / `copyError` are emitted once it settles. Without either,
+  `ERROR_CLIPBOARD_NOT_LOADED` is thrown as before.
+- **Prism on demand (`loader`, 22.1.0):** `withPrism({ loader, languages, onLoad })` loads Prism on the first render that
+  highlights, instead of reading the `Prism` global:
+
+  ```typescript
+  withPrism({
+    loader: () => import('prismjs'),
+    languages: [() => import('prismjs/components/prism-typescript'), () => import('prismjs/components/prism-bash')],
+    onLoad: (prism) => extendMyGrammar(prism),
+  })
+  ```
+
+  The loaded Prism becomes the `Prism` global when there is none (Prism's language and plugin modules extend it), then
+  `languages` load one after the other, then `onLoad` runs, once per loader. A failed load (any step) rejects that
+  render, leaving its blocks plain, and the next render loads again; a loaded value that is not Prism rejects with
+  `ERROR_PRISM_NOT_LOADED`. Nothing is loaded on the server.
+- **Marked lines of the code extension (`codeLineHighlight`, 22.1.0):** `'set'` (default) writes Prism's `data-line` /
+  `data-line-offset` on the `@fsegurai/marked-extended-code` blocks from their marked lines; `'skip'` never writes them
+  on those blocks, so the code extension alone marks the lines (`wrapLines` and `code.css`, no double highlight) and an
+  app's own `data-line` stays free; `'remove'` also removes them when present, at every render (incremental updates
+  included). The values match `attachCode`'s `prismLineHighlight`; the other `<pre>` keep `line` / `lineOffset`.
 - Code blocks of `@fsegurai/marked-extended-code`: the per-block class tokens override the Prism options for their
   block, a `figcaption` title shows in the clipboard toolbar, and `withClipboard({ skipRemovedLines })` (default
   `true`) leaves the removed diff lines out of the copied text (see
@@ -1811,9 +1953,9 @@ provideMarkdown({
 
 ### Marked Extended integration
 
-[`@fsegurai/marked-extended-*`](https://github.com/fsegurai/marked-extensions) 19.0.0-beta.0+ (tabs,
-alerts, accordions, code blocks, footnotes…) plugs in with `withMarkedExtended(features, options?)`. ngx-markdown has **no dependency** on those
-packages: install the ones you use and pass their objects in.
+[`@fsegurai/marked-extended-*`](https://github.com/fsegurai/marked-extensions) 18.1.0+ (22.1.0 targets 18.1.0; tabs, alerts, accordions, code blocks, footnotes…) plugs in with
+`withMarkedExtended(features, options?)`. ngx-markdown has **no dependency** on those packages: install the ones you use
+and pass their objects in.
 
 ```typescript
 import { provideMarkdown, withMarkedExtended, withPrism } from '@fsegurai/ngx-markdown';
@@ -1864,16 +2006,21 @@ provideMarkdown({
   `{ type, detail, event }`. The output is emitted during the dispatch, so `event.preventDefault()` cancels a
   cancelable event (e.g. `marked-extended:tabs:before-switch`). A DOM listener cannot match a prefix: the known names
   are listed in `MARKED_EXTENDED_EVENTS`, and `withMarkedExtended(features, { events: ['…'] })` adds others.
-- **Code blocks with Prism:** `withPrism()` reads the class tokens of each marked-extended `<pre>` (`mx-code-ln`,
-  `mx-code-start-N`, `mx-code-highlight-…`, `mx-code-mark-…`): they override the Prism options (`lineNumbers`, `start`,
+- **Code blocks with Prism:** `withPrism()` reads the class tokens of each marked-extended `<pre>`
+  (`mx-code--line-numbers`, `mx-code-start-N`, `mx-code-highlight-…`, `mx-code-mark-…`; the 19.0.0-beta.0 flag
+  `mx-code-ln` is still read for one release): they override the Prism options (`lineNumbers`, `start`,
   `line`, `lineOffset`) **for that block only**, and a block without tokens keeps the global and per-component
-  options. A block with its own numbering (`mx-code-ln`) and no ranges highlights no line: the global `line` and
+  options. A block with its own numbering and no ranges highlights no line: the global `line` and
   `lineOffset` count against the numbering it replaces. The `afterHighlight` function of a feature runs on each block right after Prism highlights it (inside the
   chunked loop), or on the plain blocks when Prism is disabled, not provided or not loaded: pass `wrapLines` there, and
   `lineClasses: false` to `attachCode`, since highlighting would undo a wrapping done before it.
+- **Marked lines:** when the code extension marks the lines itself (`wrapLines`, `code.css`), pass
+  `withPrism({ codeLineHighlight: 'skip' })` (or `'remove'`, as `attachCode`'s `prismLineHighlight`), so Prism's
+  line-highlight does not mark them a second time.
 - **Clipboard:** with `withClipboard()`, a titled block (`<figure class="mx-code">` with a `<figcaption>`) shows its
   title in the toolbar (`.markdown-clipboard-title`), and the removed lines of a diff (`del={…}`, `// [!code --]`) are
-  not copied (`skipRemovedLines`, default `true`).
+  not copied (`skipRemovedLines`, default `true`), whether the lines are wrapped as `span.mx-code-line.mx-code--remove`
+  (18.1.0) or `span.line.diff.remove` (19.0.0-beta.0).
 - Enabled by default once provided: `[plugins]="{ markedExtended: false }"` disables it per component, and an options
   object (`runtimes`, `events`) is merged over the `withMarkedExtended()` options (`runtimes` key by key).
 
@@ -1974,6 +2121,7 @@ export interface MarkdownPlugin<O extends object> {
   markedExtensions?(ctx: MarkdownParseContext<O>): MarkedExtension[];
   readonly tokenizerExtensions?: readonly MarkdownTokenizerExtension<O>[];
   postprocess?(html: string, ctx: MarkdownParseContext<O>): string; // before the sanitizer
+  readonly chunkSafePostprocess?: boolean; // postprocess gives the same HTML per top-level block: sanitized in slices
   postSanitize?(html: string, ctx: MarkdownParseContext<O>): string;
   render?(element: HTMLElement, ctx: MarkdownRenderContext<O>): MarkdownRenderResult;
   rerender?(element: HTMLElement, ctx: MarkdownRenderContext<O>): MarkdownRenderResult;
@@ -2159,7 +2307,10 @@ update(){
 
 ### Caches
 
-Each `MarkdownService` keeps small caches (the last 50 entries each), so repeated renders do less work:
+Each `MarkdownService` keeps small caches (the last 50 entries each), so repeated renders do less work. The KaTeX and
+Mermaid caches also keep every entry of their last parse or render (on top of the 50), so a document with more than 50
+formulas or diagrams renders none of them again when it is parsed or mounted again; their memory stays bounded by the
+last document plus 50 entries:
 
 - **`src` text (opt-in):** with `provideMarkdown({ cacheSrc: true })`, the same `src` is fetched once and shared by every `<markdown>` that loads it, including while the request is pending and when a component is mounted again. There is no expiry: a re-mounted component gets the cached text, not updated server content. A failed request is not cached, and `reload()` drops the cache, so every `src` is fetched again. Off by default: every load fetches, and the browser HTTP cache applies.
 - **KaTeX output:** identical math with the same `displayMode` and options is rendered once. An expression KaTeX throws on is never cached, nor math whose options hold a class instance or a symbol (they have no stable key); with a `macros` option, a parse stops using the cache once an expression may define a global macro (`\gdef`, `\newcommand`…).
@@ -2210,7 +2361,9 @@ When using variable binding you can optionally use `language` pipe to specify th
 
 The time-sliced parse falls back to a whole parse on the server, for an asynchronous parse (an `async` Marked
 extension), with Marked's `silent` option, and with extensions that replace `hooks.provideLexer` or
-`hooks.provideParser`. The sanitizer runs whole with a sanitize function (e.g. DOMPurify) or a `postprocess` hook.
+`hooks.provideParser`. The sanitizer runs whole with a sanitize function (e.g. DOMPurify), a Marked `hooks.postprocess`,
+or a plugin `postprocess` hook not declared `chunkSafePostprocess: true` (a hook that gives the same HTML on each
+top-level block as on the whole document; the sanitizer then still runs in chunks).
 Marked extensions that keep state between parses and reset it in a hook (e.g. `marked-gfm-heading-id`, the marked-extended
 footnotes) stay correct: when another parse runs between two slices of such a parse, that parse starts again, whole.
 Turn it off with `provideMarkdown({ timeSlicing: false })`. The `markdown` pipe parses in time slices too (it is

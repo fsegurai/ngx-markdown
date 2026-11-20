@@ -1,0 +1,1 @@
+import{St as VD,Yt as g,nt as N,wt as Vu}from"./main-7PGP3Y6F.js";var p=class t{constructor(){this.httpClient=g(VD)}get(e){return this.httpClient.get(e,{responseType:`text`}).pipe(Vu())}static{this.ɵfac=function(a){return new(a||t)}}static{this.ɵprov=N({token:t,factory:t.ɵfac,providedIn:`root`})}};export{p as t};
