@@ -1,0 +1,299 @@
+// The package stylesheets (`marked-extended.css`: each structural file, then its theme file) are linked by the page
+// while it is open, and the page mirrors the demo theme as the `light`/`dark` body class they read. The rules below
+// adapt the rendered showcases to the demo: they undo the global demo rules that clobber the package styles, map the
+// package surfaces of the dark theme to the demo palette, and work around a few package defects (see the C4b note of
+// odd/tasks/angular-22-upgrade.md). Rendered Markdown is not in the component view, hence `::ng-deep`, always under
+// `:host` so that no other page is affected.
+
+// Demo palette (Material 2 themes of demo/src/scss/themes)
+$dark-background: #303030;
+$dark-surface: #383838;
+$dark-surface-raised: #424242;
+$dark-surface-hover: #4a4a4a;
+$dark-border: #555555;
+$dark-text: rgba(255, 255, 255, 0.87);
+$dark-text-secondary: rgba(255, 255, 255, 0.7);
+$dark-accent: #4fc3f7;
+
+:host {
+  display: block;
+}
+
+// ? lists-theme.css also applies its dark colors under `prefers-color-scheme: dark` on `:root`, with no `body.light`
+// ? rule to undo it: a light demo on a dark system showed dark list colors. Pin the light ones
+:host-context(.light) {
+  --marked-lists-task-hover-bg: rgba(0, 0, 0, 0.02);
+  --marked-lists-checkbox-accent: #0066cc;
+  --marked-lists-checkbox-focus: #0066cc;
+  --marked-lists-completed-color: #6c757d;
+  --marked-lists-marker-color: #495057;
+}
+
+// ? The package variables are set on `body.dark`: redefining them on the host wins for the showcases
+:host-context(.dark) {
+  // Accordion
+  --marked-extended-accordion-border-color: #{$dark-border};
+  --marked-extended-accordion-background-color: #{$dark-surface};
+  --marked-extended-accordion-header-background-color: #{$dark-surface-raised};
+  --marked-extended-accordion-header-hover-background-color: #{$dark-surface-hover};
+  --marked-extended-accordion-text-color: #{$dark-text};
+  --marked-extended-accordion-content-color: #{$dark-text};
+
+  // Tabs
+  --marked-extended-tabs-border-color: #{$dark-border};
+  --marked-extended-tabs-container-bg: #{$dark-surface};
+  --marked-extended-tabs-nav-bg: #{$dark-surface-raised};
+  --marked-extended-tabs-nav-border-color: #{$dark-border};
+  --marked-extended-tabs-label-color: #{$dark-text-secondary};
+  --marked-extended-tabs-label-hover-bg: #{$dark-surface-hover};
+  --marked-extended-tabs-label-hover-color: #{$dark-text};
+  --marked-extended-tabs-selected-background: #{$dark-surface};
+  --marked-extended-tabs-selected-border-color: #{$dark-accent};
+  --marked-extended-tabs-selected-color: #{$dark-accent};
+  --marked-extended-tabs-content-background: #{$dark-surface};
+  --marked-extended-tabs-content-color: #{$dark-text};
+
+  // Kanban
+  --kanban-switcher-bg: #{$dark-surface};
+  --kanban-switcher-border: #{$dark-border};
+  --kanban-button-color: #{$dark-text};
+  --kanban-button-hover-bg: #{$dark-surface-hover};
+  --kanban-button-active-bg: #{$dark-surface-raised};
+  --kanban-button-active-color: #{$dark-accent};
+  --kanban-column-bg: #{$dark-surface};
+  --kanban-column-border: #{$dark-border};
+  --kanban-column-count-bg: #{$dark-surface-hover};
+  --kanban-column-count-border: #{$dark-border};
+  --kanban-column-count-color: #{$dark-text};
+  --kanban-task-bg: #{$dark-surface-raised};
+  --kanban-task-bg-hover: #{$dark-surface-hover};
+  --kanban-task-border: #{$dark-border};
+
+  // Comments
+  --marked-comments-surface: #{$dark-surface};
+  --marked-comments-body-color: #{$dark-text};
+
+  // Footnote
+  --marked-footnote-section-bg: #{$dark-surface};
+  --marked-footnote-tooltip-bg: #{$dark-surface-raised};
+  --marked-footnote-ref-color: #{$dark-accent};
+  --marked-footnote-backref-color: #{$dark-accent};
+  --marked-footnote-section-border-color: #{$dark-accent};
+
+  // Tables
+  --marked-extended-table-bg: #{$dark-surface};
+  --marked-extended-table-text: #{$dark-text};
+  --marked-extended-table-header-bg: #{$dark-surface-raised};
+  --marked-extended-table-header-color: #{$dark-text};
+  --marked-extended-table-border: #{$dark-border};
+  --marked-extended-table-border-soft: #{$dark-border};
+  --marked-extended-table-stripe-bg: #{$dark-surface-raised};
+  --marked-extended-table-hover-bg: #{$dark-surface-hover};
+  --marked-extended-table-span-bg: #{$dark-surface-raised};
+
+  // Embeds
+  --marked-embeds-caption-bg: #{$dark-surface};
+  --marked-embeds-caption-color: #{$dark-text-secondary};
+  --marked-embeds-caption-border: #{$dark-border};
+}
+
+.showcase {
+  display: block;
+
+  // ? The demo styles every `table` (styles.scss: fixed row heights, `material-theme.scss`: header color): give the
+  // ? package tables (and the kanban table view) their own header color and natural row heights back
+  ::ng-deep table {
+    th,
+    td {
+      height: auto;
+    }
+
+    th {
+      color: var(--marked-extended-table-header-color, inherit);
+    }
+  }
+
+  // Code: the fence title is already the figure caption, and the package highlights the lines itself (`.line.highlighted`):
+  // hide the clipboard toolbar title and the Prism line-highlight overlay of the same lines
+  ::ng-deep .mx-code {
+    .markdown-clipboard-title,
+    .line-highlight {
+      display: none;
+    }
+  }
+
+  // Clipboard: the toolbar is absolutely positioned at the top right of the code block, so a long single line scrolled
+  // under the copy button (e.g. in the timeline). Show it only while the block is hovered (the `hover` class the
+  // clipboard plugin toggles) or holds the keyboard focus, as on the Plugins page
+  ::ng-deep .markdown-clipboard-toolbar {
+    opacity: 0;
+    transition: opacity 150ms ease-out;
+
+    &.hover,
+    &:focus-within {
+      opacity: 1;
+    }
+  }
+
+  // Touch screens have no hover: keep the button reachable there
+  @media (hover: none) {
+    ::ng-deep .markdown-clipboard-toolbar {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::ng-deep .markdown-clipboard-toolbar {
+      transition: none;
+    }
+  }
+
+  // Lists: the package's `ol[type="A"]`/`ol[type="I"]` rules also match `type="a"`/`type="i"` (attribute values of
+  // `type` are case-insensitive in selectors), so lower-case numbering showed upper-case. `revert-layer` hands the
+  // numbering back to the `type` attribute itself (its presentational hint), which is case-sensitive
+  ::ng-deep ol[type] {
+    list-style-type: revert-layer;
+  }
+
+  // Timeline: the line is the left border of the container and the markers are centered on it, so half of each marker
+  // sat outside the content box. Indent the container by half a marker
+  ::ng-deep .marked-extended-timeline-container {
+    margin-left: 0.75rem;
+  }
+
+  // ? A collapsed entry hides its content (title included) but kept its card as an empty box: hide the card too
+  ::ng-deep .marked-extended-timeline-content:has(> .timeline-collapse-content[aria-expanded='false']) {
+    display: none;
+  }
+
+  // Slide: the deck is `height: 100vh` and the 16:9 ratio applies only to the absolutely positioned slides, which are
+  // `height: 100%`, so the ratio never took effect. Size the deck by its ratio instead
+  ::ng-deep .marked-extended-slide-presentation.mx-slide-ready {
+    &.mx-slide-ratio-16x9 {
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+
+    &.mx-slide-ratio-4x3 {
+      height: auto;
+      aspect-ratio: 4 / 3;
+    }
+  }
+}
+
+// Dark theme: rules the packages hard-code or never apply
+:host-context(.dark) .showcase {
+  // Timeline: its dark colors are fixed (slate) rather than variables
+  ::ng-deep {
+    .marked-extended-timeline-container {
+      border-left-color: $dark-border;
+    }
+
+    .marked-extended-timeline-content {
+      background: $dark-surface;
+      color: $dark-text;
+      border-color: $dark-border;
+    }
+
+    .marked-extended-timeline-date {
+      background: $dark-surface-raised;
+      color: $dark-text-secondary;
+    }
+  }
+
+  // Slide: the renderer always adds `mx-slide-theme-default`, so the `body.dark` rules of the package (written for a
+  // deck without a theme class) never match and the deck stayed light
+  ::ng-deep .marked-extended-slide-presentation.mx-slide-theme-default {
+    --slide-bg: #{$dark-surface};
+    --slide-text: #{$dark-text};
+    --slide-heading: #{$dark-text};
+    --slide-accent: #{$dark-accent};
+    --slide-link: #{$dark-accent};
+    --slide-border: #{$dark-border};
+    --slide-code-bg: #{$dark-surface-raised};
+
+    background: $dark-background;
+  }
+}
+
+.description {
+  margin-top: 0;
+  opacity: 0.85;
+
+  a {
+    margin-left: 0.25rem;
+  }
+}
+
+// ? Sticks to the bottom of the viewport while the showcases scroll above it
+.events-log {
+  position: sticky;
+  bottom: 1rem;
+  z-index: 2;
+  margin-top: 40px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 13px;
+
+  :host-context(.dark-theme) & {
+    border-color: $dark-border;
+    background-color: $dark-surface-raised;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.events-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.events-title {
+  margin: 0 0 0.25rem;
+  font-weight: 500;
+}
+
+.events-clear {
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.events {
+  max-height: 7.5rem;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+
+  li {
+    overflow-wrap: anywhere;
+
+    & + li {
+      margin-top: 0.125rem;
+    }
+  }
+
+  code {
+    margin-right: 0.375rem;
+    color: #0066cc;
+
+    :host-context(.dark-theme) & {
+      color: $dark-accent;
+    }
+  }
+
+  .events-empty {
+    opacity: 0.6;
+  }
+}

@@ -1,0 +1,71 @@
+<app-scrollspy-nav-layout [headings]="headings()">
+  <h1>Playground</h1>
+
+  <section>
+    <div class="playground">
+      <div class="editor-column">
+        <mat-form-field class="editor" subscriptSizing="dynamic">
+          <mat-label>Markdown Editor</mat-label>
+          <textarea matInput [(ngModel)]="markdownContent"></textarea>
+        </mat-form-field>
+
+        <aside class="inspector" aria-label="Render details">
+          @if (metadataEntries().length) {
+            <div class="inspector-panel">
+              <p class="inspector-title">Front-matter <code>(metadata)</code></p>
+              <dl class="metadata">
+                @for (entry of metadataEntries(); track entry.key) {
+                  <dt>{{ entry.key }}</dt>
+                  <dd>{{ entry.value }}</dd>
+                }
+              </dl>
+            </div>
+          }
+
+          <div class="inspector-panel">
+            <p class="inspector-title">Events</p>
+            <ol class="events" aria-live="polite">
+              @for (event of events(); track event.id) {
+                <li [class.failed]="event.failed">
+                  <code>({{ event.name }})</code> <span>{{ event.detail }}</span>
+                </li>
+              } @empty {
+                <li class="events-empty">Copy a code block, export a diagram or click an image.</li>
+              }
+            </ol>
+          </div>
+        </aside>
+      </div>
+
+      <markdown
+          (headings)="onHeadings($event)"
+          (metadata)="onMetadata($event)"
+          (copied)="onCopied($event)"
+          (copyError)="onCopyError($event)"
+          (mermaidExported)="onMermaidExported($event)"
+          (mermaidExportError)="onMermaidExportError($event)"
+          (imageClick)="onImageClick($event)"
+          (error)="onError($event)"
+          class="markdown"
+          [disableSanitizer]="true"
+          [frontMatter]="true"
+          [headingIds]="true"
+          [lineNumbers]="true"
+          [start]="1"
+          [emoji]="true"
+          [katex]="true"
+          [katexOptions]="katexOptions"
+          [mermaid]="true"
+          [mermaidOptions]="mermaidOptions()"
+          [mermaidExport]="true"
+          [lightbox]="true"
+          [clipboard]="true"
+          [clipboardLanguageButton]="true"
+          [data]="markdownRendering()"
+          [routerLinkOptions]="{
+          internalBrowserHandler: true,
+          externalBrowserHandler: true,
+        }"/>
+    </div>
+  </section>
+</app-scrollspy-nav-layout>

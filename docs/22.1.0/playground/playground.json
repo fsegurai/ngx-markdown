@@ -1,0 +1,38 @@
+{
+  "imports": {
+    "@angular/core": "https://cdn.jsdelivr.net/npm/@angular/core@22.3.0/+esm",
+    "@angular/compiler": "https://cdn.jsdelivr.net/npm/@angular/compiler@22.3.0/+esm",
+    "@angular/common": "https://cdn.jsdelivr.net/npm/@angular/common@22.3.0/+esm",
+    "@angular/platform-browser": "https://cdn.jsdelivr.net/npm/@angular/platform-browser@22.3.0/+esm",
+    "@fsegurai/ngx-markdown": "https://cdn.jsdelivr.net/npm/@fsegurai/ngx-markdown@{version}/+esm",
+    "katex": "https://cdn.jsdelivr.net/npm/katex@0.19.1/+esm",
+    "dompurify": "https://cdn.jsdelivr.net/npm/dompurify@3.4.18/+esm",
+    "rxjs": "https://cdn.jsdelivr.net/npm/rxjs@7.8.2/+esm"
+  },
+  "samples": [
+    {
+      "id": "live-editor",
+      "label": "Live Markdown editor",
+      "description": "Binds a textarea to a signal and renders it with <markdown [data]>. The first run downloads Angular (~1.2 MB).",
+      "files": ["main.js", "input.md", "styles.css", "index.html"]
+    },
+    {
+      "id": "plugins",
+      "label": "Prism, emoji, KaTeX and DOMPurify",
+      "description": "Enables withPrism() and withEmoji() with their global scripts from jsDelivr, loads KaTeX and DOMPurify on demand (withKatex({ loader }), withDomPurify()), and toggles each plugin per component.",
+      "files": ["main.js", "input.md", "styles.css", "index.html"]
+    },
+    {
+      "id": "pipe-and-service",
+      "label": "Pipe and MarkdownService",
+      "description": "Renders a note with the markdown pipe and builds a table of contents and the raw HTML with MarkdownService.parse().",
+      "files": ["main.js", "input.md", "styles.css", "index.html"]
+    },
+    {
+      "id": "source-loader",
+      "label": "Source loader and resolveUrl",
+      "description": "Serves the src pages from the files of the sample with a custom MARKDOWN_SOURCE_LOADER (a missing page fails with a MarkdownSourceError), and rewrites each link and image with the baseUrl resolveUrl hook, listing the resolved URLs.",
+      "files": ["main.js", "intro.md", "install.md", "logo.svg", "styles.css", "index.html"]
+    }
+  ]
+}

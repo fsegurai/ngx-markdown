@@ -1,0 +1,46 @@
+<section class="perf">
+  <h1>Performance</h1>
+  <p class="perf-summary">
+    {{ lines }} generated lines · katex {{ katex ? 'on' : 'off' }} · mermaid {{ mermaid ? 'on' : 'off' }} · clipboard
+    {{ clipboard ? 'on' : 'off' }} · emoji {{ emoji ? 'on' : 'off' }} · line numbers {{ prism ? 'on' : 'off' }} · sanitize {{ sanitize }}
+    @if (lazy) {
+      · lazy Mermaid
+    }
+    @if (lightbox) {
+      · lightbox
+    }
+    @if (mermaidExport) {
+      · Mermaid export
+    }
+    @if (contentVisibility) {
+      · content-visibility on
+    }
+    @if (repeat > 1) {
+      · rendered {{ repeat }} times
+    }
+    @if (edits > 0) {
+      · {{ edits }} edits{{ incremental ? '' : ' (rendered whole)' }}
+    }
+    @if (readyIn() !== null) {
+      · <strong>ready in {{ readyIn() }} ms</strong>
+    } @else {
+      · rendering…
+    }
+  </p>
+
+  @if (shown()) {
+    <markdown
+      [data]="content()"
+      [katex]="katex"
+      [mermaid]="mermaid"
+      [mermaidOptions]="mermaidOptions()"
+      [clipboard]="clipboard"
+      [lightbox]="lightbox"
+      [mermaidExport]="mermaidExport"
+      [emoji]="emoji"
+      [lineNumbers]="prism"
+      [contentVisibility]="contentVisibility"
+      [plugins]="plugins"
+      (ready)="onReady()" />
+  }
+</section>

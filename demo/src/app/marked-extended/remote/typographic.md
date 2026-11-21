@@ -1,0 +1,5 @@
+- **Punctuation:** He said, (:--:) "A 'simple' sentence. . ." (:---:) a fitting ending.
+- **Greek and math:** (:Omega:), (:alpha:), (:beta:), (:pi:) (:sum:) (:infinity:) (:sqrt:)
+- **Arrows:** Input (:->:) Processing (:->:) Output, P (:==>:) Q
+- **Symbols:** Copyright (:C^:) 2026, 20(:degree:), 9.99 (:euro:)
+- **Emoji:** (:check:) done, (:warning:) careful, (:star:) favourite

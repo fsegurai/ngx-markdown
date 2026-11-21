@@ -1,0 +1,22 @@
+@use '../shared/styles/layout';
+
+:host {
+  display: block;
+}
+
+@include layout.split;
+
+.split-column {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+
+  > .fill {
+    box-sizing: border-box;
+    flex: 1 1 0.000000001px;
+  }
+}
+
+textarea {
+  min-height: 340px;
+}

@@ -1,0 +1,129 @@
+/* Colors and fonts come from the --pg-* variables of the Arkodex theme, so the sample reads well in light and dark. */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--pg-border);
+  background: var(--pg-surface);
+}
+header h1 {
+  margin: 0 auto 0 0;
+  font-size: 1.05rem;
+}
+label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+input[type="checkbox"] {
+  accent-color: var(--pg-primary);
+}
+.preview {
+  display: block;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 8px 16px 24px;
+  line-height: 1.6;
+}
+.preview .katex-display {
+  padding: 8px 0;
+  overflow-x: auto;
+}
+/* KaTeX and emoji images inherit the text color, so they follow the theme too. */
+.preview .katex {
+  color: var(--pg-text);
+}
+.preview .joypixels {
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: -0.2em;
+}
+
+/* Prism: code blocks use the theme surface, tokens get one palette per scheme (light below, dark further down). */
+.preview pre[class*="language-"],
+.preview code[class*="language-"] {
+  color: var(--pg-text);
+  background: none;
+  font-family: var(--pg-mono);
+  text-shadow: none;
+  tab-size: 2;
+}
+.preview pre[class*="language-"] {
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+  background: var(--pg-code-bg);
+  font-size: 0.85rem;
+}
+.preview .line-numbers .line-numbers-rows {
+  border-right-color: var(--pg-border);
+}
+.preview .line-numbers-rows > span::before {
+  color: var(--pg-text-muted);
+}
+.preview {
+  --tok-comment: #6a737d;
+  --tok-keyword: #cf222e;
+  --tok-string: #0a3069;
+  --tok-number: #0550ae;
+  --tok-function: #8250df;
+  --tok-class: #953800;
+  --tok-punctuation: var(--pg-text-muted);
+}
+[data-theme="dark"] .preview {
+  --tok-comment: #8b949e;
+  --tok-keyword: #ff7b72;
+  --tok-string: #a5d6ff;
+  --tok-number: #79c0ff;
+  --tok-function: #d2a8ff;
+  --tok-class: #ffa657;
+}
+.preview .token.comment,
+.preview .token.prolog,
+.preview .token.doctype,
+.preview .token.cdata {
+  color: var(--tok-comment);
+  font-style: italic;
+}
+.preview .token.punctuation,
+.preview .token.operator {
+  color: var(--tok-punctuation);
+}
+.preview .token.keyword,
+.preview .token.builtin,
+.preview .token.important,
+.preview .token.atrule {
+  color: var(--tok-keyword);
+}
+.preview .token.string,
+.preview .token.char,
+.preview .token.template-string,
+.preview .token.regex,
+.preview .token.url {
+  color: var(--tok-string);
+}
+.preview .token.number,
+.preview .token.boolean,
+.preview .token.constant,
+.preview .token.property,
+.preview .token.symbol {
+  color: var(--tok-number);
+}
+.preview .token.function {
+  color: var(--tok-function);
+}
+.preview .token.class-name,
+.preview .token.tag,
+.preview .token.selector {
+  color: var(--tok-class);
+}

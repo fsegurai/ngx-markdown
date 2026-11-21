@@ -1,0 +1,29 @@
+{
+  "imports": {
+    "@angular/core": "https://cdn.jsdelivr.net/npm/@angular/core@22.2.2/+esm",
+    "@angular/compiler": "https://cdn.jsdelivr.net/npm/@angular/compiler@22.2.2/+esm",
+    "@angular/common": "https://cdn.jsdelivr.net/npm/@angular/common@22.2.2/+esm",
+    "@angular/platform-browser": "https://cdn.jsdelivr.net/npm/@angular/platform-browser@22.2.2/+esm",
+    "@fsegurai/ngx-markdown": "https://cdn.jsdelivr.net/npm/@fsegurai/ngx-markdown@{version}/+esm"
+  },
+  "samples": [
+    {
+      "id": "live-editor",
+      "label": "Live Markdown editor",
+      "description": "Binds a textarea to a signal and renders it with <markdown [data]>. The first run downloads Angular (~1.2 MB).",
+      "files": ["main.js", "input.md", "styles.css", "index.html"]
+    },
+    {
+      "id": "plugins",
+      "label": "Prism, emoji and KaTeX",
+      "description": "Enables withPrism(), withEmoji() and withKatex() with the global scripts loaded from jsDelivr, and toggles each plugin per component.",
+      "files": ["main.js", "input.md", "styles.css", "index.html"]
+    },
+    {
+      "id": "pipe-and-service",
+      "label": "Pipe and MarkdownService",
+      "description": "Renders a note with the markdown pipe and builds a table of contents and the raw HTML with MarkdownService.parse().",
+      "files": ["main.js", "input.md", "styles.css", "index.html"]
+    }
+  ]
+}

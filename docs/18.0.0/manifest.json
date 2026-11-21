@@ -1,0 +1,750 @@
+[
+  {
+    "label": "Documentation Home",
+    "description": "Documentation for @fsegurai/ngx-markdown 18.0.0, an Angular 18 library that renders Markdown with marked and highlights code with Prism.js.",
+    "route": "content/README",
+    "tags": ["documentation", "overview", "angular"],
+    "order": 0,
+    "breadcrumbTitle": "Home",
+    "publishedAt": "2024-10-25",
+    "keywords": ["markdown", "marked", "prism", "standalone component", "MarkdownModule"],
+    "breadcrumb": [
+      {
+        "label": "Home",
+        "route": "content/README"
+      }
+    ]
+  },
+  {
+    "label": "Getting Started",
+    "route": "content/getting-started",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Getting Started",
+        "route": "content/getting-started"
+      }
+    ],
+    "order": 1,
+    "children": [
+      {
+        "label": "Getting Started",
+        "description": "Install @fsegurai/ngx-markdown 18.0.0, render your first Markdown, and configure the library.",
+        "route": "content/getting-started/README",
+        "tags": ["getting-started", "overview"],
+        "order": 1,
+        "breadcrumbTitle": "Getting Started",
+        "breadcrumb": [
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started"
+          },
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started/README"
+          }
+        ]
+      },
+      {
+        "label": "Installation",
+        "description": "Install @fsegurai/ngx-markdown 18.0.0 with marked 9 to 12, then add only the optional plugin libraries you need as global scripts.",
+        "route": "content/getting-started/installation",
+        "tags": ["getting-started", "installation"],
+        "order": 1,
+        "keywords": ["npm", "peer dependencies", "angular.json", "scripts"],
+        "breadcrumb": [
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started"
+          },
+          {
+            "label": "Installation",
+            "route": "content/getting-started/installation"
+          }
+        ]
+      },
+      {
+        "label": "Quick Start",
+        "description": "Register provideMarkdown() and HttpClient, then render Markdown with the markdown component or the markdown pipe.",
+        "route": "content/getting-started/quick-start",
+        "tags": ["getting-started", "tutorial"],
+        "order": 2,
+        "keywords": ["provideMarkdown", "provideHttpClient", "first render", "data", "src"],
+        "breadcrumb": [
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started"
+          },
+          {
+            "label": "Quick Start",
+            "route": "content/getting-started/quick-start"
+          }
+        ]
+      },
+      {
+        "label": "Configuration",
+        "description": "Configure marked options, extensions, plugin defaults and sanitizing once with provideMarkdown() and its token providers.",
+        "route": "content/getting-started/configuration",
+        "tags": ["getting-started", "configuration"],
+        "order": 3,
+        "keywords": ["provideMarkdown", "MarkdownModuleConfig", "MARKED_OPTIONS", "SecurityContext"],
+        "breadcrumb": [
+          {
+            "label": "Getting Started",
+            "route": "content/getting-started"
+          },
+          {
+            "label": "Configuration",
+            "route": "content/getting-started/configuration"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Features",
+    "route": "content/features",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Features",
+        "route": "content/features"
+      }
+    ],
+    "order": 2,
+    "children": [
+      {
+        "label": "Markdown Component",
+        "description": "Render Markdown from a string, a URL or projected content with the standalone MarkdownComponent.",
+        "route": "content/features/markdown-component",
+        "tags": ["features", "component"],
+        "order": 1,
+        "keywords": ["data", "src", "transclusion", "ready", "load", "error"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Markdown Component",
+            "route": "content/features/markdown-component"
+          }
+        ]
+      },
+      {
+        "label": "Features",
+        "description": "What each building block and plugin of @fsegurai/ngx-markdown 18.0.0 does, with the inputs that control it.",
+        "route": "content/features/README",
+        "tags": ["features", "overview"],
+        "order": 2,
+        "breadcrumbTitle": "Features",
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Features",
+            "route": "content/features/README"
+          }
+        ]
+      },
+      {
+        "label": "Markdown and Language Pipes",
+        "description": "Turn template strings into HTML with the markdown pipe, and wrap code in a fenced block with the language pipe.",
+        "route": "content/features/markdown-pipe",
+        "tags": ["features", "pipe"],
+        "order": 2,
+        "keywords": ["MarkdownPipe", "LanguagePipe", "MarkdownPipeOptions", "async", "innerHTML"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Markdown and Language Pipes",
+            "route": "content/features/markdown-pipe"
+          }
+        ]
+      },
+      {
+        "label": "Markdown Service",
+        "description": "Parse, render, highlight and reload Markdown from TypeScript with MarkdownService.",
+        "route": "content/features/markdown-service",
+        "tags": ["features", "service"],
+        "order": 3,
+        "keywords": ["MarkdownService", "parse", "reload", "renderer", "highlight"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Markdown Service",
+            "route": "content/features/markdown-service"
+          }
+        ]
+      },
+      {
+        "label": "Sanitization",
+        "description": "How @fsegurai/ngx-markdown 18.0.0 sanitizes rendered HTML with Angular's DomSanitizer, and how to change or skip it.",
+        "route": "content/features/sanitization",
+        "tags": ["features", "security"],
+        "order": 4,
+        "keywords": ["DomSanitizer", "SecurityContext", "disableSanitizer", "XSS"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Sanitization",
+            "route": "content/features/sanitization"
+          }
+        ]
+      },
+      {
+        "label": "Link Handling",
+        "description": "Route internal Markdown links through the Angular Router and open external links in a new tab with routerLinkOptions.",
+        "route": "content/features/link-handling",
+        "tags": ["features", "links"],
+        "order": 5,
+        "keywords": ["routerLinkOptions", "MarkdownRouterLinkOptions", "Angular Router", "external links"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Link Handling",
+            "route": "content/features/link-handling"
+          }
+        ]
+      },
+      {
+        "label": "Syntax Highlighting",
+        "description": "Highlight fenced code blocks with Prism.js, plus the line numbers, line highlight and command line Prism plugins.",
+        "route": "content/features/syntax-highlighting",
+        "tags": ["features", "plugins"],
+        "order": 10,
+        "keywords": ["Prism.js", "lineNumbers", "lineHighlight", "commandLine", "PrismPlugin"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Syntax Highlighting",
+            "route": "content/features/syntax-highlighting"
+          }
+        ]
+      },
+      {
+        "label": "Copy to Clipboard",
+        "description": "Add a copy button to every code block with clipboard.js, and replace the default button with your own component or template.",
+        "route": "content/features/clipboard",
+        "tags": ["features", "plugins"],
+        "order": 11,
+        "keywords": ["clipboard.js", "ClipboardButtonComponent", "CLIPBOARD_OPTIONS", "copy button"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Copy to Clipboard",
+            "route": "content/features/clipboard"
+          }
+        ]
+      },
+      {
+        "label": "Emoji",
+        "description": "Convert emoji shortcodes such as :heart: to Unicode with emoji-toolkit.",
+        "route": "content/features/emoji",
+        "tags": ["features", "plugins"],
+        "order": 12,
+        "keywords": ["emoji-toolkit", "joypixels", "shortcodes"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Emoji",
+            "route": "content/features/emoji"
+          }
+        ]
+      },
+      {
+        "label": "Math with KaTeX",
+        "description": "Render math expressions with KaTeX and its Auto-Render extension, using per-component KatexOptions.",
+        "route": "content/features/katex",
+        "tags": ["features", "plugins"],
+        "order": 13,
+        "keywords": ["KaTeX", "math", "KatexOptions", "renderMathInElement", "delimiters"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Math with KaTeX",
+            "route": "content/features/katex"
+          }
+        ]
+      },
+      {
+        "label": "Mermaid Diagrams",
+        "description": "Turn mermaid code blocks into diagrams with Mermaid 11, configured per component with mermaidOptions.",
+        "route": "content/features/mermaid",
+        "tags": ["features", "plugins"],
+        "order": 14,
+        "keywords": ["Mermaid", "diagrams", "MermaidAPI", "mermaidOptions", "SecurityLevel"],
+        "breadcrumb": [
+          {
+            "label": "Features",
+            "route": "content/features"
+          },
+          {
+            "label": "Mermaid Diagrams",
+            "route": "content/features/mermaid"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Guides",
+    "route": "content/guides",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Guides",
+        "route": "content/guides"
+      }
+    ],
+    "order": 3,
+    "children": [
+      {
+        "label": "Upgrading from 17.x",
+        "description": "Move an application from @fsegurai/ngx-markdown 17.0.0 to 18.0.0 by upgrading Angular to 18; the library API is unchanged.",
+        "route": "content/guides/upgrading-from-17",
+        "tags": ["guides", "upgrade"],
+        "order": 1,
+        "keywords": ["Angular 18", "17.0.0", "peer dependencies", "Mermaid 11"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Upgrading from 17.x",
+            "route": "content/guides/upgrading-from-17"
+          }
+        ]
+      },
+      {
+        "label": "Marked Options and Extensions",
+        "description": "Provide marked options with MARKED_OPTIONS, including factories with dependencies, and marked extensions as a plain array.",
+        "route": "content/guides/marked-options-and-extensions",
+        "tags": ["guides", "configuration"],
+        "order": 2,
+        "keywords": ["MARKED_OPTIONS", "MARKED_EXTENSIONS", "marked-gfm-heading-id", "useFactory"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Marked Options and Extensions",
+            "route": "content/guides/marked-options-and-extensions"
+          }
+        ]
+      },
+      {
+        "label": "Custom Renderer",
+        "description": "Override how marked renders tokens, app-wide with MARKED_OPTIONS or at runtime through MarkdownService.renderer.",
+        "route": "content/guides/custom-renderer",
+        "tags": ["guides", "customization"],
+        "order": 3,
+        "keywords": ["MarkedRenderer", "renderer", "headings", "blockquote", "positional arguments"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Custom Renderer",
+            "route": "content/guides/custom-renderer"
+          }
+        ]
+      },
+      {
+        "label": "Guides",
+        "description": "Task-oriented guides for @fsegurai/ngx-markdown 18.0.0, from upgrading off 17.x to custom renderers and server rendering.",
+        "route": "content/guides/README",
+        "tags": ["guides", "overview"],
+        "order": 3,
+        "breadcrumbTitle": "Guides",
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "Guides",
+            "route": "content/guides/README"
+          }
+        ]
+      },
+      {
+        "label": "SSR and Prerendering",
+        "description": "What @fsegurai/ngx-markdown 18.0.0 does on the server, and the limits to plan for with SSR and prerendering.",
+        "route": "content/guides/ssr-and-prerendering",
+        "tags": ["guides", "ssr"],
+        "order": 4,
+        "keywords": ["server-side rendering", "prerendering", "isPlatformBrowser", "PendingTasks"],
+        "breadcrumb": [
+          {
+            "label": "Guides",
+            "route": "content/guides"
+          },
+          {
+            "label": "SSR and Prerendering",
+            "route": "content/guides/ssr-and-prerendering"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "API",
+    "route": "content/api",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "API",
+        "route": "content/api"
+      }
+    ],
+    "order": 4,
+    "children": [
+      {
+        "label": "MarkdownComponent",
+        "description": "Selectors, inputs, outputs and the public render() method of MarkdownComponent, plus the default ClipboardButtonComponent.",
+        "route": "content/api/markdown-component",
+        "tags": ["api", "component"],
+        "order": 1,
+        "keywords": ["inputs", "outputs", "selectors", "ClipboardButtonComponent", "render"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "MarkdownComponent",
+            "route": "content/api/markdown-component"
+          }
+        ]
+      },
+      {
+        "label": "Pipes",
+        "description": "Signatures of the markdown and language pipes and the MarkdownPipeOptions type.",
+        "route": "content/api/pipes",
+        "tags": ["api", "pipe"],
+        "order": 2,
+        "keywords": ["MarkdownPipe", "LanguagePipe", "MarkdownPipeOptions", "transform"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "Pipes",
+            "route": "content/api/pipes"
+          }
+        ]
+      },
+      {
+        "label": "MarkdownService",
+        "description": "Methods, properties and option types of MarkdownService in @fsegurai/ngx-markdown 18.0.0.",
+        "route": "content/api/markdown-service",
+        "tags": ["api", "service"],
+        "order": 3,
+        "keywords": ["parse", "render", "highlight", "getSource", "reload", "ParseOptions", "RenderOptions"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "MarkdownService",
+            "route": "content/api/markdown-service"
+          }
+        ]
+      },
+      {
+        "label": "API Reference",
+        "description": "Exact inputs, outputs, methods, provider functions, injection tokens and types exported by @fsegurai/ngx-markdown 18.0.0.",
+        "route": "content/api/README",
+        "tags": ["api", "overview"],
+        "order": 4,
+        "breadcrumbTitle": "API",
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "API",
+            "route": "content/api/README"
+          }
+        ]
+      },
+      {
+        "label": "provideMarkdown and Tokens",
+        "description": "provideMarkdown(), MarkdownModule, MarkdownModuleConfig and every injection token.",
+        "route": "content/api/provide-markdown",
+        "tags": ["api", "configuration"],
+        "order": 4,
+        "keywords": ["provideMarkdown", "MarkdownModule", "MarkdownModuleConfig", "InjectionToken"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "provideMarkdown and Tokens",
+            "route": "content/api/provide-markdown"
+          }
+        ]
+      },
+      {
+        "label": "Types",
+        "description": "Option interfaces, re-exported marked types, the MermaidAPI namespace and the PrismPlugin enum.",
+        "route": "content/api/types",
+        "tags": ["api", "types"],
+        "order": 5,
+        "keywords": ["MarkdownRouterLinkOptions", "ClipboardOptions", "KatexOptions", "MermaidAPI", "PrismPlugin"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "Types",
+            "route": "content/api/types"
+          }
+        ]
+      },
+      {
+        "label": "Errors",
+        "description": "The camelCase error message constants thrown by @fsegurai/ngx-markdown 18.0.0 and what causes each one.",
+        "route": "content/api/errors",
+        "tags": ["api", "errors"],
+        "order": 6,
+        "keywords": ["errorKatexNotLoaded", "errorMermaidNotLoaded", "errorSrcWithoutHttpClient", "exceptions"],
+        "breadcrumb": [
+          {
+            "label": "API",
+            "route": "content/api"
+          },
+          {
+            "label": "Errors",
+            "route": "content/api/errors"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Examples",
+    "route": "content/examples",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Examples",
+        "route": "content/examples"
+      }
+    ],
+    "order": 5,
+    "children": [
+      {
+        "label": "App-wide Setup",
+        "description": "A standalone application that configures every ngx-markdown token, modeled on the 18.0.0 demo.",
+        "route": "content/examples/app-wide-setup",
+        "tags": ["examples", "configuration"],
+        "order": 1,
+        "keywords": ["ApplicationConfig", "markedOptionsFactory", "provideHttpClient"],
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "App-wide Setup",
+            "route": "content/examples/app-wide-setup"
+          }
+        ]
+      },
+      {
+        "label": "NgModule Setup",
+        "description": "Configure an NgModule application with MarkdownModule.forRoot() and forChild(), or with provideMarkdown() and standalone imports.",
+        "route": "content/examples/ngmodule-setup",
+        "tags": ["examples", "ngmodule"],
+        "order": 2,
+        "keywords": ["MarkdownModule", "forRoot", "forChild", "AppModule"],
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "NgModule Setup",
+            "route": "content/examples/ngmodule-setup"
+          }
+        ]
+      },
+      {
+        "label": "Code Snippets with Pipes",
+        "description": "Show highlighted code from a TypeScript string with the language and markdown pipes, including plugin options.",
+        "route": "content/examples/pipe-with-language",
+        "tags": ["examples", "pipe"],
+        "order": 3,
+        "keywords": ["LanguagePipe", "MarkdownPipe", "async pipe", "code sample"],
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "Code Snippets with Pipes",
+            "route": "content/examples/pipe-with-language"
+          }
+        ]
+      },
+      {
+        "label": "Custom Copy Button",
+        "description": "Replace the default clipboard button with your own component or an ng-template.",
+        "route": "content/examples/custom-copy-button",
+        "tags": ["examples", "plugins"],
+        "order": 4,
+        "keywords": ["clipboardButtonComponent", "clipboardButtonTemplate", "clipboard.js"],
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "Custom Copy Button",
+            "route": "content/examples/custom-copy-button"
+          }
+        ]
+      },
+      {
+        "label": "Examples",
+        "description": "Complete, copyable examples of @fsegurai/ngx-markdown 18.0.0 setups and pages.",
+        "route": "content/examples/README",
+        "tags": ["examples", "overview"],
+        "order": 5,
+        "breadcrumbTitle": "Examples",
+        "breadcrumb": [
+          {
+            "label": "Examples",
+            "route": "content/examples"
+          },
+          {
+            "label": "Examples",
+            "route": "content/examples/README"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Help",
+    "route": "content/help",
+    "isParent": true,
+    "breadcrumb": [
+      {
+        "label": "Help",
+        "route": "content/help"
+      }
+    ],
+    "order": 6,
+    "children": [
+      {
+        "label": "What's New in 18.0.0",
+        "description": "Release notes for @fsegurai/ngx-markdown 18.0.0, the first stable release for Angular 18.",
+        "route": "content/help/whats-new",
+        "tags": ["help", "changelog", "release-notes"],
+        "order": 1,
+        "keywords": ["18.0.0", "Angular 18", "stable", "Mermaid 11"],
+        "breadcrumb": [
+          {
+            "label": "Help",
+            "route": "content/help"
+          },
+          {
+            "label": "What's New in 18.0.0",
+            "route": "content/help/whats-new"
+          }
+        ]
+      },
+      {
+        "label": "FAQ",
+        "description": "Frequently asked questions about @fsegurai/ngx-markdown 18.0.0.",
+        "route": "content/help/faq",
+        "tags": ["help", "faq"],
+        "order": 2,
+        "keywords": ["questions", "NgModule", "zone.js", "directive"],
+        "breadcrumb": [
+          {
+            "label": "Help",
+            "route": "content/help"
+          },
+          {
+            "label": "FAQ",
+            "route": "content/help/faq"
+          }
+        ]
+      },
+      {
+        "label": "Troubleshooting",
+        "description": "Fixes for common problems with @fsegurai/ngx-markdown 18.0.0, from missing plugin scripts to unhighlighted code.",
+        "route": "content/help/troubleshooting",
+        "tags": ["help", "troubleshooting"],
+        "order": 3,
+        "keywords": ["NullInjectorError", "Prism", "not loaded", "highlight", "whitespace"],
+        "breadcrumb": [
+          {
+            "label": "Help",
+            "route": "content/help"
+          },
+          {
+            "label": "Troubleshooting",
+            "route": "content/help/troubleshooting"
+          }
+        ]
+      },
+      {
+        "label": "Help",
+        "description": "Release notes, answers to common questions and fixes for common problems with @fsegurai/ngx-markdown 18.0.0.",
+        "route": "content/help/README",
+        "tags": ["help", "overview"],
+        "order": 6,
+        "breadcrumbTitle": "Help",
+        "breadcrumb": [
+          {
+            "label": "Help",
+            "route": "content/help"
+          },
+          {
+            "label": "Help",
+            "route": "content/help/README"
+          }
+        ]
+      }
+    ]
+  }
+]

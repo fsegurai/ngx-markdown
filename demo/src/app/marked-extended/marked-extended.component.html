@@ -1,0 +1,71 @@
+<app-scrollspy-nav-layout [headings]="headings()">
+  <h1 id="marked-extended">Marked Extended</h1>
+
+  <section>
+    <h2 id="setup">Setup</h2>
+
+    <markdown ngPreserveWhitespaces>
+      The [`@fsegurai/marked-extended-*`](https://github.com/fsegurai/marked-extensions) packages plug in with
+      `withMarkedExtended(features)`: each feature passes the Marked extension of a package and its browser runtime
+      (`attachX`). This page provides them in its own `MarkdownService` and keeps **Angular's sanitizer on**: the
+      markup of the packages survives it, and the runtimes restore the behaviour in the browser.
+
+      ```typescript
+      import markedExtendedTabs, &#123; attachTabs &#125; from '&#64;fsegurai/marked-extended-tabs';
+      import markedExtendedCode, &#123; attachCode, wrapLines &#125; from '&#64;fsegurai/marked-extended-code';
+
+      provideMarkdown(&#123;
+        plugins: [
+          withPrism(),
+          withMarkedExtended([
+            &#123; name: 'tabs', extension: markedExtendedTabs(), attach: attachTabs &#125;,
+            &#123; name: 'code', extension: markedExtendedCode(), attach: attachCode, options: &#123; lineClasses: false &#125;, afterHighlight: wrapLines &#125;,
+          ]),
+        ],
+      &#125;);
+      ```
+
+      The `marked-extended:*` events of the content are emitted by the `(extendedEvent)` output: interact with the
+      examples below and watch the events log.
+
+      ```html
+      &lt;markdown [src]="'tabs.md'" (extendedEvent)="onExtendedEvent($event)">&lt;/markdown>
+      ```
+    </markdown>
+  </section>
+
+  @for (showcase of showcases; track showcase.id) {
+    <section>
+      <h2 [id]="showcase.id">{{ showcase.title }}</h2>
+      <p class="description">
+        {{ showcase.description }}
+        <!-- biome-ignore lint/a11y/useValidAnchor: the href is bound at runtime -->
+        <a [href]="'https://www.npmjs.com/package/@fsegurai/marked-extended-' + showcase.pkg">
+          <code>&#64;fsegurai/marked-extended-{{ showcase.pkg }}</code>
+        </a>
+      </p>
+      <markdown
+        class="showcase"
+        [src]="'app/marked-extended/remote/' + showcase.id + '.md'"
+        [clipboard]="true"
+        (extendedEvent)="onExtendedEvent($event)"
+      />
+    </section>
+  }
+
+  <aside class="events-log" aria-label="Events log">
+    <div class="events-header">
+      <p class="events-title">Events <code>(extendedEvent)</code></p>
+      <button type="button" class="events-clear" (click)="clearEvents()" [disabled]="events().length === 0">Clear</button>
+    </div>
+    <ol class="events" aria-live="polite">
+      @for (event of events(); track event.id) {
+        <li>
+          <code>{{ event.type }}</code> <span>{{ event.detail }}</span>
+        </li>
+      } @empty {
+        <li class="events-empty">Switch a tab, check a task, open an accordion…</li>
+      }
+    </ol>
+  </aside>
+</app-scrollspy-nav-layout>
